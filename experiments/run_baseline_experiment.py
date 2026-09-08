@@ -34,7 +34,7 @@ def run_experiment():
     n_harmful = len(harmful_records)
     n_healthy = len(healthy_records)
 
-    print(f"\n[DATASET SUMMARY]")
+    print("\n[DATASET SUMMARY]")
     print(f"  Total Change Tickets Evaluated: {total_records}")
     print(f"  Ground Truth Harmful Changes:   {n_harmful} ({n_harmful / total_records * 100:.1f}%)")
     print(f"  Ground Truth Healthy Changes:   {n_healthy} ({n_healthy / total_records * 100:.1f}%)")
@@ -45,8 +45,8 @@ def run_experiment():
     # In status quo, without automated canary telemetry and risk gating:
     # Only ~20% of harmful releases are caught during rudimentary manual checks.
     # 0% structured audit evidence is maintained.
-    baseline_tp = int(round(n_harmful * 0.20))  # 20% stopped
-    baseline_fn = n_harmful - baseline_tp       # 80% slip through to customers
+    baseline_tp = round(n_harmful * 0.20)  # 20% stopped
+    baseline_fn = n_harmful - baseline_tp  # 80% slip through to customers
     baseline_fp = 0                             # Status quo blindly approves changes
     baseline_tn = n_healthy
 
@@ -115,9 +115,12 @@ def run_experiment():
 
     interv_stop_rate = (interv_tp / n_harmful) * 100
     interv_fp_rate = (interv_fp / n_healthy) * 100
-    interv_precision = (interv_tp / (interv_tp + interv_fp)) * 100 if (interv_tp + interv_fp) else 0
+    interv_precision = (
+        (interv_tp / (interv_tp + interv_fp)) * 100 if (interv_tp + interv_fp) else 0
+    )
     interv_recall = interv_stop_rate
-    interv_f1 = (2 * interv_precision * interv_recall) / (interv_precision + interv_recall) if (interv_precision + interv_recall) else 0
+    denom = interv_precision + interv_recall
+    interv_f1 = (2 * interv_precision * interv_recall) / denom if denom else 0
     interv_accuracy = ((interv_tp + interv_tn) / total_records) * 100
     interv_evidence_rate = (evidence_count / total_records) * 100
 
