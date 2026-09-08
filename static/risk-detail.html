@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Risk Detail — View detailed risk assessment and scoring breakdown for a deployment release.">
+    <title>Risk Detail — Pre-Release Risk Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>Risk Monitor</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                    <span class="nav-icon">📊</span> Dashboard
+                </a>
+                <a href="audit.html" class="nav-link" id="nav-audit">
+                    <span class="nav-icon">📋</span> Audit History
+                </a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">?</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-role" id="userRole">—</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="width: 100%;" id="logoutBtn">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <div class="page-header">
+                <div>
+                    <h1 id="releaseTitle">Release Details</h1>
+                    <p class="subtitle" id="releaseSubtitle">Loading...</p>
+                </div>
+                <div class="flex gap-sm">
+                    <a href="dashboard.html" class="btn btn-outline btn-sm">← Back</a>
+                    <a href="#" class="btn btn-outline btn-sm" id="evidenceLink">📄 Evidence Report</a>
+                </div>
+            </div>
+
+            <!-- Risk Score & Decision -->
+            <div class="summary-cards" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="glass-card" style="text-align: center;">
+                    <h3 class="text-sm text-muted mb-md">Risk Score</h3>
+                    <div class="risk-meter">
+                        <div class="risk-score-value" id="riskScoreValue">—</div>
+                        <div class="risk-score-label" id="riskScoreLabel">of 100</div>
+                        <div class="risk-meter-bar" style="margin-top: 1rem;">
+                            <div class="risk-meter-fill" id="riskMeterFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-card" style="text-align: center;">
+                    <h3 class="text-sm text-muted mb-md">Decision</h3>
+                    <div style="margin-top: 2rem;">
+                        <span class="badge" id="decisionBadge" style="font-size: 1.2rem; padding: 0.5rem 1.5rem;">—</span>
+                    </div>
+                </div>
+                <div class="glass-card" style="text-align: center;">
+                    <h3 class="text-sm text-muted mb-md">Release Info</h3>
+                    <div style="text-align: left; margin-top: 0.5rem;">
+                        <div class="text-sm mb-md"><span class="text-muted">Version:</span> <strong id="releaseVersion">—</strong></div>
+                        <div class="text-sm mb-md"><span class="text-muted">Stage:</span> <strong id="releaseStage">—</strong></div>
+                        <div class="text-sm mb-md"><span class="text-muted">Organization:</span> <strong id="releaseOrg">—</strong></div>
+                        <div class="text-sm"><span class="text-muted">Deployed:</span> <strong id="releaseDeployed">—</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Breakdown & Metrics -->
+            <div class="charts-grid">
+                <div class="glass-card">
+                    <h3 class="mb-md">Risk Factor Breakdown</h3>
+                    <div class="risk-breakdown" id="riskBreakdown">
+                        <div class="empty-state"><p>No risk data available</p></div>
+                    </div>
+                </div>
+                <div class="chart-card glass-card">
+                    <h3>Canary vs Baseline</h3>
+                    <div class="chart-container">
+                        <canvas id="canaryChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Metrics Detail -->
+            <div class="glass-card mt-lg">
+                <h3 class="mb-md">Deployment Metrics</h3>
+                <div class="data-table-container">
+                    <table class="data-table" id="metricsTable">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                                <th>Threshold</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metricsBody">
+                            <tr><td colspan="4"><div class="spinner"></div></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Approval Actions -->
+            <div class="glass-card mt-lg" id="approvalSection" style="display: none;">
+                <h3 class="mb-md">Rollout Decision</h3>
+                <p class="text-sm text-muted mb-md">As an authorized reviewer, you can approve or reject this release for production rollout.</p>
+                <div class="flex gap-sm">
+                    <button class="btn btn-success" id="approveBtn">✅ Approve Rollout</button>
+                    <button class="btn btn-danger" id="rejectBtn">🚫 Reject Rollout</button>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+    <div class="offline-banner" id="offlineBanner">⚠️ <span>Offline — <span id="queueCount">0</span> events queued</span></div>
+
+    <script src="js/offline-queue.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        const releaseId = new URLSearchParams(window.location.search).get('id');
+
+        (async () => {
+            await requireAuth();
+            await loadUserInfo();
+
+            if (!releaseId) {
+                showToast('No release ID specified', 'error');
+                return;
+            }
+
+            document.getElementById('evidenceLink').href = `/evidence?id=${releaseId}`;
+            await loadReleaseDetail();
+        })();
+
+        async function loadReleaseDetail() {
+            try {
+                const data = await API.get(`/api/release/${releaseId}`);
+                const release = data.release;
+
+                document.getElementById('releaseTitle').textContent = `Release ${release.release_id}`;
+                document.getElementById('releaseSubtitle').textContent = `${release.org_name} · v${release.version}`;
+                document.getElementById('releaseVersion').textContent = release.version;
+                document.getElementById('releaseStage').textContent = release.stage;
+                document.getElementById('releaseOrg').textContent = release.org_name || '—';
+                document.getElementById('releaseDeployed').textContent = release.deployed_at
+                    ? new Date(release.deployed_at).toLocaleString()
+                    : '—';
+
+                // Latest decision
+                const decisions = release.decisions || [];
+                const latest = decisions.length > 0 ? decisions[decisions.length - 1] : null;
+
+                if (latest) {
+                    const score = latest.risk_score;
+                    document.getElementById('riskScoreValue').textContent = score;
+
+                    const fill = document.getElementById('riskMeterFill');
+                    fill.style.width = `${Math.min(score, 100)}%`;
+                    fill.className = `risk-meter-fill ${latest.decision.toLowerCase()}`;
+
+                    const badge = document.getElementById('decisionBadge');
+                    badge.textContent = latest.decision;
+                    badge.className = `badge badge-${latest.decision.toLowerCase()}`;
+                }
+
+                // Metrics table
+                const metrics = release.metrics || [];
+                const latestMetric = metrics.length > 0 ? metrics[metrics.length - 1] : null;
+
+                if (latestMetric) {
+                    renderMetricsTable(latestMetric);
+                    renderCanaryChart(latestMetric);
+                }
+
+                // Risk breakdown
+                if (latest && latest.reasons) {
+                    renderRiskBreakdown(latest, latestMetric);
+                }
+
+                // Show approval section for authorized roles
+                const user = await API.get('/api/me');
+                if (user.permissions && user.permissions.can_approve_release) {
+                    document.getElementById('approvalSection').style.display = 'block';
+                }
+            } catch (err) {
+                showToast('Failed to load release: ' + err.message, 'error');
+            }
+        }
+
+        function renderMetricsTable(metric) {
+            const thresholds = {
+                error_rate: { threshold: 3.0, label: 'Error Rate (%)', unit: '%', direction: '>' },
+                latency_ms: { threshold: 500, label: 'Latency (ms)', unit: 'ms', direction: '>' },
+                availability: { threshold: 99.0, label: 'Availability (%)', unit: '%', direction: '<' },
+                error_budget_remaining: { threshold: 20.0, label: 'Error Budget Remaining (%)', unit: '%', direction: '<' },
+                canary_error_rate: { threshold: 2.0, label: 'Canary Error Rate (%)', unit: '%', direction: '>' },
+                canary_latency_delta: { threshold: 100, label: 'Canary Latency Delta (ms)', unit: 'ms', direction: '>' },
+                cpu_usage: { threshold: 80, label: 'CPU Usage (%)', unit: '%', direction: '>' },
+                memory_usage: { threshold: 85, label: 'Memory Usage (%)', unit: '%', direction: '>' },
+            };
+
+            const tbody = document.getElementById('metricsBody');
+            tbody.innerHTML = Object.entries(thresholds).map(([key, info]) => {
+                const value = metric[key];
+                const displayVal = value !== null && value !== undefined ? `${value}${info.unit}` : '<span class="text-muted">N/A</span>';
+
+                let status = '✅ OK';
+                let statusClass = 'color: var(--color-allow)';
+                if (value !== null && value !== undefined) {
+                    const isTriggered = info.direction === '>'
+                        ? value > info.threshold
+                        : value < info.threshold;
+                    if (isTriggered) {
+                        status = '⚠️ Exceeded';
+                        statusClass = 'color: var(--color-block)';
+                    }
+                } else {
+                    status = '—';
+                    statusClass = 'color: var(--color-text-muted)';
+                }
+
+                return `
+                    <tr>
+                        <td>${info.label}</td>
+                        <td><strong>${displayVal}</strong></td>
+                        <td class="text-muted">${info.direction} ${info.threshold}${info.unit}</td>
+                        <td style="${statusClass}; font-weight: 600;">${status}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderRiskBreakdown(decision, metric) {
+            const factors = [
+                { label: 'Error Rate > 3%', field: 'error_rate', threshold: 3.0, score: 40 },
+                { label: 'Latency > 500ms', field: 'latency_ms', threshold: 500, score: 25 },
+                { label: 'Canary Error Rate > 2%', field: 'canary_error_rate', threshold: 2.0, score: 25 },
+                { label: 'Error Budget Remaining < 20%', field: 'error_budget_remaining', threshold: 20.0, score: 10, lessThan: true },
+            ];
+
+            const container = document.getElementById('riskBreakdown');
+            container.innerHTML = factors.map(f => {
+                const value = metric ? metric[f.field] : null;
+                const triggered = value !== null && value !== undefined && (
+                    f.lessThan ? value < f.threshold : value > f.threshold
+                );
+
+                return `
+                    <div class="risk-factor ${triggered ? 'triggered' : ''}">
+                        <div>
+                            <div class="factor-name">${f.label}</div>
+                            <div class="text-xs text-muted">Current: ${value !== null ? value : 'N/A'}</div>
+                        </div>
+                        <div class="factor-score" style="color: ${triggered ? 'var(--color-block)' : 'var(--color-text-muted)'}">
+                            ${triggered ? `+${f.score}` : '+0'}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCanaryChart(metric) {
+            const ctx = document.getElementById('canaryChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Error Rate (%)', 'Latency Delta (ms)'],
+                    datasets: [
+                        {
+                            label: 'Baseline Threshold',
+                            data: [3.0, 100],
+                            backgroundColor: 'rgba(59, 130, 246, 0.4)',
+                            borderColor: 'rgba(59, 130, 246, 0.8)',
+                            borderWidth: 1,
+                        },
+                        {
+                            label: 'Canary Value',
+                            data: [
+                                metric.canary_error_rate || 0,
+                                metric.canary_latency_delta || 0
+                            ],
+                            backgroundColor: metric.canary_error_rate > 2
+                                ? 'rgba(239, 68, 68, 0.4)'
+                                : 'rgba(16, 185, 129, 0.4)',
+                            borderColor: metric.canary_error_rate > 2
+                                ? 'rgba(239, 68, 68, 0.8)'
+                                : 'rgba(16, 185, 129, 0.8)',
+                            borderWidth: 1,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#9ca3af', font: { family: 'Inter' } }
+                        }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(75, 85, 99, 0.2)' } },
+                        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(75, 85, 99, 0.2)' } }
+                    }
+                }
+            });
+        }
+
+        // Approval buttons
+        document.getElementById('approveBtn')?.addEventListener('click', async () => {
+            try {
+                await API.post(`/api/release/${releaseId}/approve`, { action: 'approve' });
+                showToast('Release approved for production rollout!', 'success');
+                setTimeout(loadReleaseDetail, 500);
+            } catch (err) {
+                showToast('Failed to approve: ' + err.message, 'error');
+            }
+        });
+
+        document.getElementById('rejectBtn')?.addEventListener('click', async () => {
+            const reason = prompt('Reason for rejection:');
+            if (reason === null) return;
+            try {
+                await API.post(`/api/release/${releaseId}/approve`, { action: 'reject', reason });
+                showToast('Release rejected.', 'warning');
+                setTimeout(loadReleaseDetail, 500);
+            } catch (err) {
+                showToast('Failed to reject: ' + err.message, 'error');
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await API.post('/api/logout');
+            window.location.href = '/';
+        });
+        document.getElementById('menuToggle').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+    </script>
+
+</body>
+</html>

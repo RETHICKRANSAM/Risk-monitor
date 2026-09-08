@@ -1,0 +1,62 @@
+[
+  {
+    "deployment_id": "cda2e601",
+    "version": "2.4.0",
+    "environment": "staging",
+    "triggered_by": "test-user",
+    "start_time": "2026-08-14T01:22:05.227563+00:00",
+    "end_time": "2026-08-14T01:22:14.027077+00:00",
+    "status": "success",
+    "duration_seconds": 8.8
+  },
+  {
+    "deployment_id": "a1b2c3d4",
+    "version": "2.3.0",
+    "environment": "prod",
+    "triggered_by": "sarah.chen",
+    "start_time": "2026-08-13T14:00:00+00:00",
+    "end_time": "2026-08-13T14:12:35+00:00",
+    "status": "success",
+    "duration_seconds": 755.0
+  },
+  {
+    "deployment_id": "e5f6g7h8",
+    "version": "2.3.0-rc2",
+    "environment": "staging",
+    "triggered_by": "ci-pipeline",
+    "start_time": "2026-08-13T10:30:00+00:00",
+    "end_time": "2026-08-13T10:38:12+00:00",
+    "status": "success",
+    "duration_seconds": 492.0
+  },
+  {
+    "deployment_id": "i9j0k1l2",
+    "version": "2.2.9",
+    "environment": "prod",
+    "triggered_by": "mike.ops",
+    "start_time": "2026-08-12T22:00:00+00:00",
+    "end_time": "2026-08-12T22:05:44+00:00",
+    "status": "rolled_back",
+    "duration_seconds": 344.0
+  },
+  {
+    "deployment_id": "m3n4o5p6",
+    "version": "2.2.8",
+    "environment": "dev",
+    "triggered_by": "dev-auto",
+    "start_time": "2026-08-12T16:00:00+00:00",
+    "end_time": "2026-08-12T16:02:10+00:00",
+    "status": "success",
+    "duration_seconds": 130.0
+  },
+  {
+    "deployment_id": "q7r8s9t0",
+    "version": "2.2.7",
+    "environment": "staging",
+    "triggered_by": "sarah.chen",
+    "start_time": "2026-08-11T09:15:00+00:00",
+    "end_time": "2026-08-11T09:22:03+00:00",
+    "status": "failed",
+    "duration_seconds": 423.0
+  }
+]

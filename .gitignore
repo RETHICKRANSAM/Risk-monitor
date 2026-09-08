@@ -1,0 +1,54 @@
+# ==========================================================
+# Pre-Release Risk Monitor — Git Ignore Configuration
+# ==========================================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Caches & Test artifacts
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.freebuff/
+.cache/
+htmlcov/
+.coverage
+.coverage.*
+nosetests.xml
+coverage.xml
+
+# Databases & local stores
+*.db
+*.sqlite3
+instance/
+desktop-v2.db
+local_fallback.db
+
+# Secrets & Environment configuration
+.env
+.env.local
+
+# OS & Editor generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary logs
+*.log
+!data/sample_app.log

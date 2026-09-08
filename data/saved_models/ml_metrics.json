@@ -1,0 +1,203 @@
+{
+  "isolation_forest": {
+    "model_name": "Isolation Forest",
+    "type": "Unsupervised Anomaly Detection",
+    "training_time_sec": 0.678,
+    "test_accuracy": 0.9097,
+    "test_f1_macro": 0.9065,
+    "threshold": -0.0131,
+    "anomaly_ratio_detected": 0.4063
+  },
+  "random_forest": {
+    "model_name": "Random Forest",
+    "type": "Supervised Tree Ensemble",
+    "training_time_sec": 0.764,
+    "latency_per_sample_ms": 0.014,
+    "test_accuracy": 0.9996,
+    "test_f1_macro": 0.9991,
+    "test_f1_weighted": 0.9996,
+    "top_features": [
+      {
+        "feature": "dst_host_rerror_rate",
+        "importance": 0.1184
+      },
+      {
+        "feature": "dst_host_srv_rerror_rate",
+        "importance": 0.0833
+      },
+      {
+        "feature": "flag_SF",
+        "importance": 0.0771
+      },
+      {
+        "feature": "src_bytes",
+        "importance": 0.065
+      },
+      {
+        "feature": "srv_rerror_rate",
+        "importance": 0.0644
+      },
+      {
+        "feature": "rerror_rate",
+        "importance": 0.0569
+      },
+      {
+        "feature": "srv_serror_rate",
+        "importance": 0.0454
+      },
+      {
+        "feature": "dst_host_srv_serror_rate",
+        "importance": 0.0399
+      },
+      {
+        "feature": "dst_host_same_srv_rate",
+        "importance": 0.0373
+      },
+      {
+        "feature": "dst_host_diff_srv_rate",
+        "importance": 0.034
+      }
+    ],
+    "classification_report": {
+      "Info": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 2676.0
+      },
+      "Low": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 164.0
+      },
+      "Medium": {
+        "precision": 0.9989827060020345,
+        "recall": 0.9989827060020345,
+        "f1-score": 0.9989827060020345,
+        "support": 983.0
+      },
+      "High": {
+        "precision": 0.9979919678714859,
+        "recall": 1.0,
+        "f1-score": 0.9989949748743718,
+        "support": 497.0
+      },
+      "Critical": {
+        "precision": 1.0,
+        "recall": 0.9947089947089947,
+        "f1-score": 0.9973474801061007,
+        "support": 189.0
+      },
+      "accuracy": 0.9995564426702152,
+      "macro avg": {
+        "precision": 0.9993949347747041,
+        "recall": 0.9987383401422057,
+        "f1-score": 0.9990650321965016,
+        "support": 4509.0
+      },
+      "weighted avg": {
+        "precision": 0.9995568880088996,
+        "recall": 0.9995564426702152,
+        "f1-score": 0.9995562599806201,
+        "support": 4509.0
+      }
+    }
+  },
+  "xgboost": {
+    "model_name": "XGBoost",
+    "type": "Gradient Boosted Decision Trees",
+    "training_time_sec": 1.514,
+    "latency_per_sample_ms": 0.002,
+    "test_accuracy": 1.0,
+    "test_f1_macro": 1.0,
+    "test_f1_weighted": 1.0,
+    "top_features": [
+      {
+        "feature": "flag_RSTR",
+        "importance": 0.2342
+      },
+      {
+        "feature": "flag_SF",
+        "importance": 0.1465
+      },
+      {
+        "feature": "dst_host_rerror_rate",
+        "importance": 0.0896
+      },
+      {
+        "feature": "srv_serror_rate",
+        "importance": 0.0828
+      },
+      {
+        "feature": "dst_host_srv_rerror_rate",
+        "importance": 0.081
+      },
+      {
+        "feature": "dst_host_srv_serror_rate",
+        "importance": 0.0545
+      },
+      {
+        "feature": "num_compromised",
+        "importance": 0.044
+      },
+      {
+        "feature": "srv_rerror_rate",
+        "importance": 0.0378
+      },
+      {
+        "feature": "num_failed_logins",
+        "importance": 0.0301
+      },
+      {
+        "feature": "is_guest_login",
+        "importance": 0.0265
+      }
+    ],
+    "classification_report": {
+      "Info": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 2676.0
+      },
+      "Low": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 164.0
+      },
+      "Medium": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 983.0
+      },
+      "High": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 497.0
+      },
+      "Critical": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 189.0
+      },
+      "accuracy": 1.0,
+      "macro avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 4509.0
+      },
+      "weighted avg": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1-score": 1.0,
+        "support": 4509.0
+      }
+    }
+  }
+}

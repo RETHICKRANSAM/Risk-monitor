@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Regulatory Evidence Report — Pre-Release Risk Monitor">
+    <title>Evidence Report — Pre-Release Risk Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        .evidence-dossier {
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            background: rgba(17, 24, 39, 0.75);
+            border-radius: var(--radius-lg, 0.75rem);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .signature-block {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #10b981;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #93c5fd;
+        }
+        @media print {
+            .sidebar, .btn, .menu-toggle { display: none !important; }
+            .main-content { margin: 0 !important; width: 100% !important; padding: 0 !important; }
+            body { background: #fff !important; color: #000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>Risk Monitor</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                    <span class="nav-icon">📊</span> Rollout Dashboard
+                </a>
+                <a href="risk-detail.html" class="nav-link" id="nav-risk">
+                    <span class="nav-icon">🔍</span> Risk Reasoning View
+                </a>
+                <a href="evidence.html" class="nav-link active" id="nav-evidence">
+                    <span class="nav-icon">📄</span> Evidence Report
+                </a>
+                <a href="audit.html" class="nav-link" id="nav-audit">
+                    <span class="nav-icon">📋</span> Immutable Audit Trail
+                </a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">M</div>
+                    <div class="user-details">
+                        <div class="user-name">Marcus Vance</div>
+                        <div class="user-role">Compliance Officer</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.75rem;" onclick="localStorage.removeItem('user'); window.location.href='index.html';">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <div class="page-header">
+                <div>
+                    <h1 id="reportTitle">Evidence Dossier: R0042</h1>
+                    <p class="subtitle" id="reportSubtitle">Immutable Regulatory Compliance Artifact · SOX 404 / PCI-DSS Gating Proof</p>
+                </div>
+                <div class="flex gap-sm">
+                    <a href="dashboard.html" class="btn btn-outline btn-sm">← Back</a>
+                    <button class="btn btn-outline btn-sm" onclick="window.print()">🖨️ Print Dossier</button>
+                    <button class="btn btn-primary btn-sm" id="exportBtn" onclick="exportEvidenceJson()">📥 Export JSON</button>
+                </div>
+            </div>
+
+            <!-- Release Summary -->
+            <div class="evidence-dossier">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.75rem;">
+                    <div>
+                        <h3 style="margin: 0;">Production Change Record</h3>
+                        <span class="text-xs text-muted">Ticket ID: CHG-2026-08942 · Change Advisory Board (CAB) Reference</span>
+                    </div>
+                    <span class="badge badge-block" id="evDecisionBadge" style="font-size: 1rem; padding: 0.35rem 1rem;">BLOCK</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.25rem;">
+                    <div>
+                        <div class="text-xs text-muted">Release ID</div>
+                        <div style="font-weight: 700; font-size: 1rem;" id="evReleaseId">R0042</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-muted">Target Organization</div>
+                        <div style="font-weight: 600;" id="evOrg">BankA (Retail Core)</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-muted">Artifact Version</div>
+                        <div style="font-weight: 600;"><code>v2.4.2-rc4</code></div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-muted">Git Commit SHA</div>
+                        <div><code style="color: #93c5fd;">a8b3f1e94c2d7</code></div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-muted">Deployment Timestamp</div>
+                        <div id="evTimestamp">Sep 8, 2026, 09:15:00 UTC</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-muted">Canary Exposure</div>
+                        <div>10% User Traffic (Isolated Shard)</div>
+                    </div>
+                </div>
+
+                <div class="signature-block">
+                    [CRYPTOGRAPHIC VERIFICATION SEAL]<br>
+                    SHA-256 Digest: 4e9a8f23b1c8760df91b238a05c312fa89b213e477610dcab56218e84128f910<br>
+                    Status: SEALED & NON-REPUDIABLE · Stored in PostgreSQL Audit Ledger
+                </div>
+            </div>
+
+            <!-- Automated Testing & Health Evidence -->
+            <div class="glass-card mb-lg" style="margin-bottom: 1.5rem;">
+                <h3>1. Pre-Deployment Automated Test Receipts</h3>
+                <div class="data-table-container" style="margin-top: 0.75rem;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Test Suite</th>
+                                <th>Total Tests</th>
+                                <th>Passed</th>
+                                <th>Failed</th>
+                                <th>Coverage</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Unit & Regression Tests (Pytest)</td>
+                                <td>48</td>
+                                <td>48</td>
+                                <td>0</td>
+                                <td>94.2%</td>
+                                <td><span class="badge badge-allow">PASSED</span></td>
+                            </tr>
+                            <tr>
+                                <td>Static Security Analysis (SAST)</td>
+                                <td>1,420 rules</td>
+                                <td>0 Critical</td>
+                                <td>0 High</td>
+                                <td>100%</td>
+                                <td><span class="badge badge-allow">PASSED</span></td>
+                            </tr>
+                            <tr>
+                                <td>System Health Check Endpoint (/health)</td>
+                                <td>3 services</td>
+                                <td>3 Healthy</td>
+                                <td>0</td>
+                                <td>-</td>
+                                <td><span class="badge badge-allow">200 OK</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Canary Health Observations -->
+            <div class="glass-card mb-lg" style="margin-bottom: 1.5rem;">
+                <h3>2. Progressive Delivery Canary Telemetry (Snapshot at Gating)</h3>
+                <div class="data-table-container" style="margin-top: 0.75rem;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Telemetry Metric</th>
+                                <th>Canary Value</th>
+                                <th>Production Baseline</th>
+                                <th>Variance / Delta</th>
+                                <th>Engine Evaluation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>HTTP 5xx Error Rate</td>
+                                <td><code>4.80%</code></td>
+                                <td><code>0.45%</code></td>
+                                <td style="color: #f87171; font-weight: 700;">+4.35% (Spike)</td>
+                                <td><span class="badge badge-block">Violates 3.0% Limit (+40 pts)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Canary Error Rate</td>
+                                <td><code>3.60%</code></td>
+                                <td><code>0.20%</code></td>
+                                <td style="color: #f87171; font-weight: 700;">+3.40%</td>
+                                <td><span class="badge badge-block">Elevated Canary (+25 pts)</span></td>
+                            </tr>
+                            <tr>
+                                <td>p95 Response Latency</td>
+                                <td><code>380 ms</code></td>
+                                <td><code>210 ms</code></td>
+                                <td>+170 ms</td>
+                                <td><span class="badge badge-allow">Within 500ms SLA (0 pts)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Rolling Error Budget Remaining</td>
+                                <td><code>14.20%</code></td>
+                                <td><code>85.00%</code></td>
+                                <td style="color: #f87171; font-weight: 700;">-70.80%</td>
+                                <td><span class="badge badge-block">Budget Critical <20% (+10 pts)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Gating Determination & Action Taken -->
+            <div class="glass-card">
+                <h3>3. Automated Gating Decision & Action Record</h3>
+                <div style="margin-top: 0.75rem; padding: 1rem; border-radius: 8px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: #fca5a5; font-size: 1.1rem;">Automated Action: CANARY PROMOTION HALTED (BLOCK)</strong>
+                            <p style="color: #cbd5e1; font-size: 0.85rem; margin-top: 4px;">
+                                Total Risk Score reached <strong>75 points</strong> (Threshold: 60+). Automated circuit-breaker rolled traffic back from 10% canary to 100% stable baseline v2.4.1. Zero customer downtime incurred.
+                            </p>
+                        </div>
+                        <span class="badge badge-block">Score: 75 / 100</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const releaseId = urlParams.get('id') || 'R0042';
+
+        document.getElementById('reportTitle').textContent = `Evidence Dossier: ${releaseId}`;
+        document.getElementById('evReleaseId').textContent = releaseId;
+
+        function exportEvidenceJson() {
+            const evidencePayload = {
+                dossier_id: `EVD-${releaseId}-${Date.now()}`,
+                release_id: releaseId,
+                organization: 'BankA',
+                version: '2.4.2-rc4',
+                git_sha: 'a8b3f1e94c2d7',
+                timestamp: new Date().toISOString(),
+                gating_decision: 'BLOCK',
+                risk_score: 75,
+                rules_triggered: [
+                    { rule: 'High error rate (>3%)', value: 4.80, limit: 3.0, score: 40 },
+                    { rule: 'Canary error rate elevated (>2%)', value: 3.60, limit: 2.0, score: 25 },
+                    { rule: 'Low error budget (<20%)', value: 14.20, limit: 20.0, score: 10 }
+                ],
+                telemetry: {
+                    error_rate: 4.80,
+                    canary_error_rate: 3.60,
+                    latency_ms: 380,
+                    error_budget_remaining: 14.20
+                },
+                audit_hash: '4e9a8f23b1c8760df91b238a05c312fa89b213e477610dcab56218e84128f910',
+                compliance_certification: 'VERIFIED'
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(evidencePayload, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Evidence_${releaseId}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+    </script>
+</body>
+</html>

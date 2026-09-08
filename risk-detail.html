@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Risk Detail & Decision Reasoning — Pre-Release Risk Monitor">
+    <title>Risk Detail — Pre-Release Risk Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>Risk Monitor</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                    <span class="nav-icon">📊</span> Rollout Dashboard
+                </a>
+                <a href="risk-detail.html" class="nav-link active" id="nav-risk">
+                    <span class="nav-icon">🔍</span> Risk Reasoning View
+                </a>
+                <a href="evidence.html" class="nav-link" id="nav-evidence">
+                    <span class="nav-icon">📄</span> Evidence Report
+                </a>
+                <a href="audit.html" class="nav-link" id="nav-audit">
+                    <span class="nav-icon">📋</span> Immutable Audit Trail
+                </a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <div class="user-details">
+                        <div class="user-name" id="userName">Alice Johnson</div>
+                        <div class="user-role" id="userRole">Release Engineer (BankA)</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.75rem;" onclick="localStorage.removeItem('user'); window.location.href='index.html';">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <div class="page-header">
+                <div>
+                    <h1 id="releaseTitle">Release Inspection: R0042</h1>
+                    <p class="subtitle" id="releaseSubtitle">BankA · v2.4.2 · Canary Stage Evaluation</p>
+                </div>
+                <div class="flex gap-sm">
+                    <a href="dashboard.html" class="btn btn-outline btn-sm">← Back to Dashboard</a>
+                    <a href="evidence.html?id=R0042" class="btn btn-primary btn-sm" id="evidenceLink">📄 View Evidence Dossier</a>
+                </div>
+            </div>
+
+            <!-- Risk Score & Decision Cards -->
+            <div class="summary-cards" style="grid-template-columns: 1fr 1fr 1fr;">
+                <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h3 class="text-sm text-muted mb-md">Calculated Risk Score</h3>
+                    <div class="text-3xl" id="riskScoreValue" style="font-weight: 800; font-size: 3rem; margin: 0.5rem 0;">75</div>
+                    <div class="risk-meter" style="width: 80%; margin: 0 auto 0.5rem auto;">
+                        <div class="risk-meter-fill block" id="riskMeterFill" style="width: 75%;"></div>
+                    </div>
+                    <div class="text-xs text-muted">Range: 0–39 (ALLOW), 40–59 (PAUSE), 60+ (BLOCK)</div>
+                </div>
+
+                <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <h3 class="text-sm text-muted mb-md">Gating Decision</h3>
+                    <div style="margin: 1rem 0;">
+                        <span class="badge badge-block" id="decisionBadge" style="font-size: 1.25rem; padding: 0.5rem 1.5rem;">BLOCK</span>
+                    </div>
+                    <p class="text-xs text-muted" id="decisionDescription">
+                        High risk detected in canary telemetry. Release halted before customer exposure.
+                    </p>
+                </div>
+
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
+                    <h3 class="text-sm text-muted mb-md">Deployment Metadata</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
+                        <div><span class="text-muted">Version:</span> <strong id="releaseVersion">v2.4.2</strong></div>
+                        <div><span class="text-muted">Stage:</span> <span class="badge" id="releaseStage">canary</span></div>
+                        <div><span class="text-muted">Org:</span> <strong id="releaseOrg">BankA</strong></div>
+                        <div><span class="text-muted">Audited:</span> <span id="releaseDeployed">Sep 8, 2026, 09:30 UTC</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Factor Breakdown -->
+            <div class="glass-card mb-lg" style="margin-top: 1.5rem;">
+                <h3>Multi-Factor Risk Breakdown (Value Stacking)</h3>
+                <p class="text-xs text-muted mb-md">Transparent decision logic with additive penalties per PRD Section 13</p>
+                <div id="riskBreakdownContainer">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Metrics Table vs Thresholds -->
+            <div class="glass-card mb-lg" style="margin-top: 1.5rem;">
+                <h3>Telemetry Observations vs. Enterprise SLA Thresholds</h3>
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Telemetry Dimension</th>
+                                <th>Observed Value</th>
+                                <th>SLA / Policy Threshold</th>
+                                <th>Status</th>
+                                <th>Cleaning / Pre-processing State</th>
+                            </tr>
+                        </thead>
+                        <tbody id="metricsTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const releaseId = urlParams.get('id') || 'R0042';
+
+        document.getElementById('evidenceLink').href = `evidence.html?id=${releaseId}`;
+
+        // Demo release profiles
+        const mockProfiles = {
+            'R0042': {
+                release_id: 'R0042',
+                org: 'BankA',
+                version: '2.4.2',
+                stage: 'canary',
+                score: 75,
+                decision: 'BLOCK',
+                reasons: [
+                    { rule: 'High error rate (>3%)', value: 4.8, threshold: 3.0, score_added: 40 },
+                    { rule: 'Canary error rate elevated (>2%)', value: 3.6, threshold: 2.0, score_added: 25 },
+                    { rule: 'Low error budget remaining (<20%)', value: 14.2, threshold: 20.0, score_added: 10 }
+                ],
+                metrics: [
+                    { name: 'Error Rate', val: '4.80%', thresh: '< 3.0%', status: 'VIOLATION (+40 pts)', ok: false, prep: 'Smoothed via 3-point moving average' },
+                    { name: 'Canary Error Rate', val: '3.60%', thresh: '< 2.0%', status: 'VIOLATION (+25 pts)', ok: false, prep: 'Real-time telemetry stream' },
+                    { name: 'Service Latency', val: '380 ms', thresh: '< 500 ms', status: 'COMPLIANT', ok: true, prep: 'Validated & in-range' },
+                    { name: 'Error Budget Remaining', val: '14.20%', thresh: '> 20.0%', status: 'VIOLATION (+10 pts)', ok: false, prep: 'Rolling 30-day budget burn' },
+                    { name: 'Canary Latency Delta', val: '+140 ms', thresh: '< 100 ms', status: 'ELEVATED', ok: false, prep: 'Canary vs baseline delta' },
+                    { name: 'Service Availability', val: '99.45%', thresh: '> 99.0%', status: 'COMPLIANT', ok: true, prep: 'Cleaned: clamped to <= 100%' }
+                ]
+            }
+        };
+
+        function renderDetail() {
+            const data = mockProfiles[releaseId] || {
+                release_id: releaseId,
+                org: 'HealthCo',
+                version: '2.1.0',
+                stage: 'canary',
+                score: 40,
+                decision: 'PAUSE',
+                reasons: [
+                    { rule: 'High error rate (>3%)', value: 3.4, threshold: 3.0, score_added: 40 }
+                ],
+                metrics: [
+                    { name: 'Error Rate', val: '3.40%', thresh: '< 3.0%', status: 'VIOLATION (+40 pts)', ok: false, prep: 'Smoothed' },
+                    { name: 'Service Latency', val: '240 ms', thresh: '< 500 ms', status: 'COMPLIANT', ok: true, prep: 'Validated' },
+                    { name: 'Canary Error Rate', val: '1.20%', thresh: '< 2.0%', status: 'COMPLIANT', ok: true, prep: 'Validated' },
+                    { name: 'Error Budget Remaining', val: '45.0%', thresh: '> 20.0%', status: 'COMPLIANT', ok: true, prep: 'Sufficient' }
+                ]
+            };
+
+            document.getElementById('releaseTitle').textContent = `Release Inspection: ${data.release_id}`;
+            document.getElementById('releaseSubtitle').textContent = `${data.org} · v${data.version} · ${data.stage.toUpperCase()} Stage`;
+            document.getElementById('releaseVersion').textContent = `v${data.version}`;
+            document.getElementById('releaseOrg').textContent = data.org;
+            document.getElementById('releaseStage').textContent = data.stage;
+            document.getElementById('riskScoreValue').textContent = data.score;
+            document.getElementById('riskScoreValue').style.color = data.decision === 'ALLOW' ? '#10b981' : (data.decision === 'PAUSE' ? '#f59e0b' : '#ef4444');
+
+            const fill = document.getElementById('riskMeterFill');
+            fill.style.width = `${data.score}%`;
+            fill.className = `risk-meter-fill ${data.decision.toLowerCase()}`;
+
+            const badge = document.getElementById('decisionBadge');
+            badge.textContent = data.decision;
+            badge.className = `badge badge-${data.decision.toLowerCase()}`;
+
+            // Reasons
+            const rContainer = document.getElementById('riskBreakdownContainer');
+            if (!data.reasons || data.reasons.length === 0) {
+                rContainer.innerHTML = '<div style="color: #34d399; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px;">✓ All observations within safe operational tolerances. Zero risk points accumulated.</div>';
+            } else {
+                rContainer.innerHTML = data.reasons.map(r => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px;">
+                        <div>
+                            <strong style="color: #fca5a5;">${r.rule}</strong>
+                            <div class="text-xs text-muted" style="margin-top: 2px;">Trigger: Observed ${r.value} vs policy limit ${r.threshold}</div>
+                        </div>
+                        <span class="badge badge-block">+${r.score_added} pts</span>
+                    </div>
+                `).join('');
+            }
+
+            // Metrics table
+            const tbody = document.getElementById('metricsTableBody');
+            tbody.innerHTML = data.metrics.map(m => `
+                <tr>
+                    <td><strong>${m.name}</strong></td>
+                    <td><code>${m.val}</code></td>
+                    <td>${m.thresh}</td>
+                    <td>
+                        <span class="badge ${m.ok ? 'badge-allow' : 'badge-block'}">${m.status}</span>
+                    </td>
+                    <td class="text-muted" style="font-size: 0.8rem;">${m.prep}</td>
+                </tr>
+            `).join('');
+        }
+
+        renderDetail();
+    </script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Immutable Audit History — Pre-Release Risk Monitor">
+    <title>Audit History — Pre-Release Risk Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <div class="logo-icon">🛡️</div>
+                <h2>Risk Monitor</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                    <span class="nav-icon">📊</span> Rollout Dashboard
+                </a>
+                <a href="risk-detail.html?id=R0042" class="nav-link" id="nav-risk">
+                    <span class="nav-icon">🔍</span> Risk Reasoning View
+                </a>
+                <a href="evidence.html?id=R0042" class="nav-link" id="nav-evidence">
+                    <span class="nav-icon">📄</span> Evidence Report
+                </a>
+                <a href="audit.html" class="nav-link active" id="nav-audit">
+                    <span class="nav-icon">📋</span> Immutable Audit Trail
+                </a>
+            </nav>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <div class="user-avatar" id="userAvatar">I</div>
+                    <div class="user-details">
+                        <div class="user-name">Iris Chen</div>
+                        <div class="user-role">IT Auditor (All Orgs)</div>
+                    </div>
+                </div>
+                <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.75rem;" onclick="localStorage.removeItem('user'); window.location.href='index.html';">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Immutable Audit Trail</h1>
+                    <p class="subtitle">Complete non-repudiable audit ledger of deployment decisions and approvals</p>
+                </div>
+                <div class="flex gap-sm">
+                    <a href="dashboard.html" class="btn btn-outline btn-sm">← Back to Dashboard</a>
+                    <button class="btn btn-primary btn-sm" onclick="exportAuditLedger()">📥 Export Audit Ledger (CSV)</button>
+                </div>
+            </div>
+
+            <!-- Audit Filter Bar -->
+            <div class="glass-card mb-lg" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem;">
+                <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center;">
+                    <div style="flex: 1; min-width: 220px;">
+                        <input type="text" id="auditSearch" class="form-input" placeholder="🔍 Search by Release ID, Reviewer, or Rationale..." style="padding: 0.5rem 0.85rem; font-size: 0.875rem;">
+                    </div>
+                    <div>
+                        <select id="auditOrg" class="form-input" style="padding: 0.5rem 0.85rem; font-size: 0.875rem;">
+                            <option value="ALL">All Organizations</option>
+                            <option value="BankA">BankA</option>
+                            <option value="HealthCo">HealthCo</option>
+                            <option value="GovAgency">GovAgency</option>
+                        </select>
+                    </div>
+                    <div>
+                        <select id="auditDecision" class="form-input" style="padding: 0.5rem 0.85rem; font-size: 0.875rem;">
+                            <option value="ALL">All Decisions</option>
+                            <option value="ALLOW">ALLOW</option>
+                            <option value="PAUSE">PAUSE</option>
+                            <option value="BLOCK">BLOCK</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Ledger Table -->
+            <div class="glass-card">
+                <div class="data-table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp (UTC)</th>
+                                <th>Release ID</th>
+                                <th>Organization</th>
+                                <th>Version</th>
+                                <th>Risk Score</th>
+                                <th>Decision</th>
+                                <th>Gated By / Reviewer</th>
+                                <th>Decision Rationale</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Generate audit ledger from 100 historical deployments
+        const orgs = ['BankA', 'HealthCo', 'GovAgency'];
+        const reviewers = ['system_engine', 'sarah.chen (RE)', 'marcus.vance (CO)', 'automated_circuit_breaker'];
+
+        const auditRecords = [];
+        const baseDate = new Date('2026-09-08T08:00:00Z');
+
+        for (let i = 1; i <= 100; i++) {
+            const id = `R${String(i).padStart(4, '0')}`;
+            const org = orgs[(i * 7) % 3];
+            const isHarmful = (i % 5 === 0);
+            const score = isHarmful ? (i % 2 === 0 ? 75 : 50) : (i % 8 === 0 ? 25 : 0);
+            const decision = score >= 60 ? 'BLOCK' : (score >= 40 ? 'PAUSE' : 'ALLOW');
+            const reviewer = decision === 'BLOCK' ? 'automated_circuit_breaker' : reviewers[i % reviewers.length];
+
+            const time = new Date(baseDate.getTime() - (100 - i) * 3600 * 1000 * 4);
+
+            let rationale = 'All pre-release health metrics and canary deltas within safe limits.';
+            if (score === 75) rationale = 'Error rate spiked to >4.5% with elevated canary error delta (+3.4%).';
+            else if (score === 50) rationale = 'Canary latency delta >100ms exceeded warning threshold.';
+            else if (score === 25) rationale = 'Single metric warning: minor error budget burn (<30%).';
+
+            auditRecords.push({
+                timestamp: time.toISOString().replace('T', ' ').substring(0, 19),
+                release_id: id,
+                org,
+                version: `2.${Math.floor(i / 10)}.${i % 10}`,
+                risk_score: score,
+                decision,
+                reviewer,
+                rationale
+            });
+        }
+
+        function renderAudit() {
+            const query = document.getElementById('auditSearch').value.trim().toLowerCase();
+            const org = document.getElementById('auditOrg').value;
+            const dec = document.getElementById('auditDecision').value;
+
+            const filtered = auditRecords.filter(r => {
+                const matchQuery = !query || r.release_id.toLowerCase().includes(query) || r.rationale.toLowerCase().includes(query) || r.reviewer.toLowerCase().includes(query);
+                const matchOrg = org === 'ALL' || r.org === org;
+                const matchDec = dec === 'ALL' || r.decision === dec;
+                return matchQuery && matchOrg && matchDec;
+            });
+
+            const tbody = document.getElementById('auditTableBody');
+            tbody.innerHTML = filtered.map(r => `
+                <tr>
+                    <td><code>${r.timestamp}</code></td>
+                    <td><strong><a href="risk-detail.html?id=${r.release_id}" style="color: #60a5fa; text-decoration: none;">${r.release_id}</a></strong></td>
+                    <td>${r.org}</td>
+                    <td><code>v${r.version}</code></td>
+                    <td><strong style="color: ${r.decision === 'ALLOW' ? '#34d399' : (r.decision === 'PAUSE' ? '#fbbf24' : '#f87171')};">${r.risk_score}</strong></td>
+                    <td><span class="badge ${r.decision === 'ALLOW' ? 'badge-allow' : (r.decision === 'PAUSE' ? 'badge-pause' : 'badge-block')}">${r.decision}</span></td>
+                    <td><span class="badge" style="background: rgba(255,255,255,0.06); font-family: monospace;">${r.reviewer}</span></td>
+                    <td style="font-size: 0.8rem; color: #cbd5e1; max-width: 320px;">${r.rationale}</td>
+                    <td><a href="evidence.html?id=${r.release_id}" class="btn btn-outline btn-xs">Dossier</a></td>
+                </tr>
+            `).join('');
+        }
+
+        function exportAuditLedger() {
+            let csv = "Timestamp_UTC,Release_ID,Organization,Version,Risk_Score,Decision,Reviewer,Rationale\n";
+            auditRecords.forEach(r => {
+                csv += `"${r.timestamp}","${r.release_id}","${r.org}","${r.version}",${r.risk_score},"${r.decision}","${r.reviewer}","${r.rationale.replace(/"/g, '""')}"\n`;
+            });
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "PreRelease_Risk_Audit_Ledger.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        document.getElementById('auditSearch').addEventListener('input', renderAudit);
+        document.getElementById('auditOrg').addEventListener('change', renderAudit);
+        document.getElementById('auditDecision').addEventListener('change', renderAudit);
+
+        renderAudit();
+    </script>
+</body>
+</html>

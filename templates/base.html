@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>{% block title %}Dashboard{% endblock %} — Enterprise SOC</title>
+  <meta name="description" content="Cybersecurity Risk Monitoring and Threat Detection Platform">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL,GRAD@100..700,0..1,-50..200&display=block" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Sora', 'sans-serif'],
+          },
+          colors: {
+            soc: {
+              bg: '#050505',
+              card: '#111111',
+              cardHover: '#1A1A1A',
+              border: '#262626',
+              text: '#FFFFFF',
+              muted: '#A3A3A3',
+              primary: '#F97316', // Orange
+              amber: '#F59E0B',
+              deepOrange: '#EA580C',
+              green: '#10B981',
+              red: '#EF4444',
+              blue: '#38BDF8',
+              gray: '#4B5563',
+            }
+          },
+          boxShadow: {
+            'neon-primary': '0 0 15px rgba(249, 115, 22, 0.4)',
+            'neon-primary-strong': '0 0 25px rgba(249, 115, 22, 0.6)',
+            'neon-amber': '0 0 15px rgba(245, 158, 11, 0.4)',
+            'neon-deep': '0 0 15px rgba(234, 88, 12, 0.4)',
+            'neon-green': '0 0 15px rgba(16, 185, 129, 0.4)',
+            'neon-red': '0 0 15px rgba(239, 68, 68, 0.4)',
+            'glass': '0 8px 32px rgba(0, 0, 0, 0.4)',
+          },
+          borderRadius: {
+            '2xl': '1rem', // 16px
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background-color: #050505;
+      color: #FFFFFF;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    h1, h2, h3, h4, h5, h6, .font-display {
+      font-family: 'Sora', sans-serif;
+    }
+    
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #262626; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #404040; }
+
+    .glass-card {
+      background: rgba(17, 17, 17, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(38, 38, 38, 0.8);
+      border-radius: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      background: rgba(17, 17, 17, 0.8);
+      border-color: rgba(64, 64, 64, 0.8);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .glass-panel {
+      background: rgba(5, 5, 5, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-right: 1px solid rgba(38, 38, 38, 0.8);
+    }
+
+    /* Table styles */
+    .data-table th {
+      font-family: 'Sora', sans-serif;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #A3A3A3;
+      border-bottom: 1px solid #262626;
+      padding: 1rem 1.25rem;
+      background: rgba(17, 17, 17, 0.9);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    
+    .data-row {
+      transition: background-color 0.2s ease;
+      border-bottom: 1px solid rgba(38, 38, 38, 0.5);
+    }
+    .data-row:hover {
+      background-color: rgba(38, 38, 38, 0.4);
+    }
+    .data-row td {
+      padding: 1rem 1.25rem;
+    }
+
+    /* Nav active state */
+    .nav-active {
+      background: linear-gradient(90deg, rgba(249, 115, 22, 0.15) 0%, rgba(249, 115, 22, 0.0) 100%);
+      color: #F97316;
+      border-left: 3px solid #F97316;
+    }
+    .nav-active .material-symbols-outlined {
+      color: #F97316;
+    }
+    .nav-link {
+      border-left: 3px solid transparent;
+    }
+    
+    /* Animations */
+    @keyframes pulse-glow-primary {
+      0%, 100% { box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+      50% { box-shadow: 0 0 25px rgba(249, 115, 22, 0.5); }
+    }
+    .animate-pulse-primary {
+      animation: pulse-glow-primary 2.5s infinite;
+    }
+
+    /* Chart tooltips */
+    #chartjs-tooltip {
+      opacity: 1;
+      position: absolute;
+      background: rgba(17, 17, 17, 0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid #262626;
+      border-radius: 0.5rem;
+      color: white;
+      padding: 10px;
+      pointer-events: none;
+      transform: translate(-50%, 0);
+      transition: all .1s ease;
+      z-index: 50;
+    }
+  </style>
+
+  {% block head %}{% endblock %}
+</head>
+<body class="flex h-screen overflow-hidden antialiased selection:bg-soc-primary selection:text-white">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside id="sidebar" class="w-64 flex-shrink-0 glass-panel flex flex-col transition-all duration-300 absolute md:relative z-40 h-full -translate-x-full md:translate-x-0">
+    
+    <!-- Logo Area -->
+    <div class="h-16 flex items-center px-6 border-b border-soc-border justify-center sm:justify-start">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="Falcon Eye" class="max-h-12 w-auto object-contain drop-shadow-md" style="filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.4));">
+    </div>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 overflow-y-auto py-6 px-3 space-y-1.5" id="nav-menu">
+      <p class="px-4 text-xs font-semibold text-soc-border uppercase tracking-wider mb-2">Operations</p>
+      
+      <a href="/dashboard" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/dashboard' or request.path == '/' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">query_stats</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Dashboard</span>
+      </a>
+
+      <a href="/endpoints" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/endpoints' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">router</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Endpoints</span>
+      </a>
+
+      <a href="/findings" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/findings' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">troubleshoot</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Findings</span>
+      </a>
+
+      <a href="/alerts" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/alerts' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">notifications_active</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Alerts</span>
+        {% if request.path != '/alerts' %}
+        <span class="ml-auto bg-soc-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-neon-primary">3</span>
+        {% endif %}
+      </a>
+
+      <div class="mt-8 mb-2">
+        <p class="px-4 text-xs font-semibold text-soc-border uppercase tracking-wider">Management</p>
+      </div>
+
+      <a href="#" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">assessment</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Reports</span>
+      </a>
+      
+      <a href="#" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">settings</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Settings</span>
+      </a>
+
+    </nav>
+
+    <!-- Bottom Profile / Sign Out -->
+    <div class="p-4 border-t border-soc-border mt-auto">
+      <a href="/" class="flex items-center px-4 py-2.5 rounded-lg text-soc-muted hover:text-soc-primary hover:bg-soc-primary/10 transition-all group">
+        <span class="material-symbols-outlined text-[22px] transition-colors">logout</span>
+        <span class="ml-3 font-medium">Sign Out</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile Sidebar Overlay -->
+  <div id="sidebar-overlay" class="fixed inset-0 bg-black/60 z-30 hidden md:hidden backdrop-blur-sm transition-opacity opacity-0"></div>
+
+  <!-- ===== MAIN CONTENT WRAPPER ===== -->
+  <div class="flex-1 flex flex-col overflow-hidden relative">
+    
+    <!-- Background Decorators -->
+    <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-soc-primary/5 rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-1/4 w-[500px] h-[500px] bg-soc-amber/5 rounded-full blur-[120px] pointer-events-none"></div>
+
+    <!-- ===== TOP NAVBAR ===== -->
+    <header class="h-16 bg-soc-bg/80 backdrop-blur-xl border-b border-soc-border flex items-center justify-between px-4 sm:px-6 z-20 sticky top-0">
+      
+      <div class="flex items-center">
+        <button id="mobile-menu-btn" class="md:hidden mr-4 text-soc-muted hover:text-white transition-colors">
+          <span class="material-symbols-outlined text-2xl">menu</span>
+        </button>
+        
+        <div class="hidden sm:flex items-center bg-soc-card border border-soc-border rounded-lg px-3 py-1.5 cursor-pointer hover:border-soc-primary/50 hover:bg-soc-cardHover transition-all shadow-sm group">
+          <div class="w-5 h-5 rounded bg-soc-primary/20 text-soc-primary flex items-center justify-center text-[10px] font-bold mr-2">
+            <span class="material-symbols-outlined text-[14px]">corporate_fare</span>
+          </div>
+          <span class="text-sm font-medium text-white group-hover:text-soc-primary transition-colors">Acme Corporation</span>
+          <span class="material-symbols-outlined text-[18px] ml-2 text-soc-muted">unfold_more</span>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-3 sm:space-x-5">
+        
+        <!-- Global Search -->
+        <div class="relative hidden md:block group">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-soc-muted text-[18px] group-focus-within:text-soc-primary transition-colors">search</span>
+          <input type="text" placeholder="Search IP, Hash, CVE..." class="bg-soc-card border border-soc-border text-sm rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:border-soc-primary focus:ring-1 focus:ring-soc-primary w-64 lg:w-80 transition-all placeholder-soc-muted text-white shadow-inner">
+          <div class="absolute right-3 top-1/2 -translate-y-1/2 flex items-center space-x-1 pointer-events-none">
+             <span class="text-[10px] text-soc-muted bg-soc-border/50 px-1.5 py-0.5 rounded border border-soc-border">Ctrl</span>
+             <span class="text-[10px] text-soc-muted bg-soc-border/50 px-1.5 py-0.5 rounded border border-soc-border">K</span>
+          </div>
+        </div>
+
+        <button class="md:hidden text-soc-muted hover:text-soc-primary transition-colors">
+          <span class="material-symbols-outlined">search</span>
+        </button>
+
+        <div class="h-6 w-px bg-soc-border mx-2"></div>
+
+        <button id="global-refresh-btn" class="text-soc-muted hover:text-soc-primary transition-colors flex items-center justify-center" title="Refresh Data" onclick="location.reload()">
+          <span class="material-symbols-outlined text-[22px]">sync</span>
+        </button>
+
+        <button class="relative text-soc-muted hover:text-white transition-colors flex items-center justify-center group">
+          <span class="material-symbols-outlined text-[22px] group-hover:text-soc-primary transition-colors">notifications</span>
+          <span class="absolute top-0 right-0 w-2 h-2 bg-soc-primary rounded-full shadow-neon-primary"></span>
+        </button>
+
+        <!-- User Profile -->
+        <div class="flex items-center pl-2 sm:pl-4 border-l border-soc-border cursor-pointer group">
+          <div class="w-8 h-8 rounded-full border border-soc-border overflow-hidden">
+            <img src="https://ui-avatars.com/api/?name=Sarah+Chen&background=111111&color=F97316&bold=true" alt="Analyst" class="w-full h-full object-cover group-hover:scale-105 transition-transform">
+          </div>
+          <div class="hidden sm:block ml-3">
+            <p class="text-sm font-semibold leading-tight text-white group-hover:text-soc-primary transition-colors">Sarah Chen</p>
+            <p class="text-[11px] text-soc-muted font-medium">L3 Analyst</p>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- ===== PAGE CONTENT ===== -->
+    <main class="flex-1 overflow-x-hidden overflow-y-auto relative p-4 sm:p-6 lg:p-8 z-10">
+      {% block content %}{% endblock %}
+    </main>
+
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const btn = document.getElementById('mobile-menu-btn');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+
+      if (btn && sidebar && overlay) {
+        function toggleMenu() {
+          const isOpen = !sidebar.classList.contains('-translate-x-full');
+          if (isOpen) {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('opacity-0');
+            setTimeout(() => overlay.classList.add('hidden'), 300);
+          } else {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+            setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+          }
+        }
+        btn.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+      }
+      
+      // Global Chart Defaults for all pages
+      if(window.Chart) {
+          Chart.defaults.color = '#A3A3A3';
+          Chart.defaults.font.family = 'Inter, sans-serif';
+          Chart.defaults.borderColor = 'rgba(38, 38, 38, 0.5)';
+      }
+    });
+  </script>
+  {% block scripts %}{% endblock %}
+
+</body>
+</html>

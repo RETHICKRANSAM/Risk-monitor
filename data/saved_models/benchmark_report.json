@@ -1,0 +1,47 @@
+[
+  {
+    "Algorithm": "XGBoost Classifier",
+    "Category": "Machine Learning (GBDT)",
+    "Task": "Multi-class Severity",
+    "Accuracy (%)": 100.0,
+    "F1 Macro (%)": 100.0,
+    "F1 Weighted (%)": 100.0,
+    "Latency (ms/sample)": 0.004
+  },
+  {
+    "Algorithm": "Random Forest",
+    "Category": "Machine Learning (Ensemble)",
+    "Task": "Multi-class Severity",
+    "Accuracy (%)": 99.96,
+    "F1 Macro (%)": 99.91,
+    "F1 Weighted (%)": 99.96,
+    "Latency (ms/sample)": 0.019
+  },
+  {
+    "Algorithm": "PyTorch Deep MLP",
+    "Category": "Deep Learning (Neural Net)",
+    "Task": "Multi-class Severity",
+    "Accuracy (%)": 99.29,
+    "F1 Macro (%)": 98.72,
+    "F1 Weighted (%)": 99.29,
+    "Latency (ms/sample)": 0.008
+  },
+  {
+    "Algorithm": "Isolation Forest",
+    "Category": "Machine Learning (Unsupervised)",
+    "Task": "Zero-Day Anomaly Detection",
+    "Accuracy (%)": 90.97,
+    "F1 Macro (%)": 90.65,
+    "F1 Weighted (%)": "N/A (Binary)",
+    "Latency (ms/sample)": 0.02
+  },
+  {
+    "Algorithm": "Deep Autoencoder",
+    "Category": "Deep Learning (Unsupervised)",
+    "Task": "Bottleneck Reconstruction Loss",
+    "Accuracy (%)": 95.85,
+    "F1 Macro (%)": 95.7,
+    "F1 Weighted (%)": "N/A (Continuous MSE)",
+    "Latency (ms/sample)": 0.004
+  }
+]
