@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pre-Release Risk Monitor — Login to monitor and evaluate deployment risks for regulated enterprises.">
+    <title>Login — Pre-Release Risk Monitor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        :root {
+            --color-bg-primary: #0a0e1a;
+            --color-bg-secondary: #111827;
+            --color-bg-card: rgba(17, 24, 39, 0.75);
+            --color-bg-card-hover: rgba(31, 41, 55, 0.85);
+            --color-bg-input: rgba(31, 41, 55, 0.7);
+            --color-accent-primary: #3b82f6;
+            --color-accent-primary-glow: rgba(59, 130, 246, 0.35);
+            --color-accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            --color-text-primary: #f9fafb;
+            --color-text-secondary: #9ca3af;
+            --color-text-muted: #6b7280;
+            --color-border: rgba(75, 85, 99, 0.4);
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --glass-blur: 16px;
+        }
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #0a0e1a;
+            color: #f9fafb;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+            padding: 1.5rem;
+        }
+        .login-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(17, 24, 39, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            border-radius: 1rem;
+            padding: 2.5rem 2rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .login-subtitle {
+            color: #9ca3af;
+            font-size: 0.875rem;
+            margin-bottom: 1.75rem;
+            letter-spacing: 0.02em;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+            text-align: left;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: #cbd5e1;
+            margin-bottom: 0.4rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 0.5rem;
+            color: #ffffff;
+            font-size: 0.875rem;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+            background: rgba(15, 23, 42, 0.9);
+        }
+        .form-input::placeholder {
+            color: #64748b;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.8rem 1.25rem;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+            transform: translateY(-1px);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .login-error {
+            color: #ef4444;
+            font-size: 0.8125rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 0.5rem;
+            display: none;
+            text-align: left;
+        }
+        .login-error.visible {
+            display: block;
+        }
+        .demo-box {
+            margin-top: 1.75rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid rgba(75, 85, 99, 0.3);
+            text-align: left;
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+        .demo-box code {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.4);
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.25rem;
+            color: #60a5fa;
+            font-family: monospace;
+        }
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-card glass-card">
+            <img src="logo.png" alt="Risk Monitor" style="width: 180px; height: auto; margin: 0 auto 1rem; display: block; filter: drop-shadow(0 0 16px rgba(180,50,50,0.4));" />
+            <p class="login-subtitle">Pre-Release Deployment Risk Assessment</p>
+
+            <div id="loginError" class="login-error"></div>
+
+            <form id="loginForm" action="dashboard.html" method="get" autocomplete="off">
+                <div class="form-group">
+                    <label class="form-label" for="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        class="form-input"
+                        placeholder="Enter your username"
+                        value="bob_co"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        class="form-input"
+                        placeholder="Enter your password"
+                        value="demo123"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn" onclick="window.location.href='dashboard.html'; return true;">
+                    Sign In
+                </button>
+            </form>
+
+            <div class="demo-box">
+                <p><strong>Demo Accounts</strong> (password: demo123)</p>
+                <div style="margin-top: 0.5rem; text-align: left; font-size: 0.75rem; line-height: 1.8; color: var(--color-text-muted);">
+                    <div><code>alice_re</code> — Release Engineer (BankA)</div>
+                    <div><code>bob_co</code> — Compliance Officer (BankA)</div>
+                    <div><code>charlie_sre</code> — SRE (BankA)</div>
+                    <div><code>diana_re</code> — Release Engineer (HealthCo)</div>
+                    <div><code>iris_audit</code> — Auditor (All Orgs)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="js/offline-queue.js"></script>
+    <script src="js/app.js"></script>
+    <script>
+        // Check if already logged in locally
+        const savedUser = localStorage.getItem('user');
+        // Stay on login page for demo unless user clicks submit
+
+        // Handle login form
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('loginError');
+            const btn = document.getElementById('loginBtn');
+
+            if (!username || !password) {
+                errorEl.textContent = 'Please enter both username and password.';
+                errorEl.classList.add('visible');
+                return;
+            }
+
+            btn.textContent = 'Redirecting...';
+            btn.disabled = true;
+
+            // Save user session for static demo
+            const userObj = {
+                user_id: username,
+                username: username,
+                role: username.includes('audit') ? 'Auditor' : (username.includes('re') ? 'Release Engineer' : 'Compliance Officer'),
+                org_id: username.includes('diana') ? 'HealthCo' : 'BankA'
+            };
+            localStorage.setItem('user', JSON.stringify(userObj));
+
+            // Redirect immediately to dashboard
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+
+</body>
+</html>

@@ -7,7 +7,7 @@ No database or Supabase connection required.
 import json
 import os
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_from_directory
 from flask_cors import CORS
 
 
@@ -74,28 +74,51 @@ def create_app():
     # ── Page Routes ──────────────────────────────────────────────
 
     @app.route("/")
-    def serve_index():
-        return render_template("dashboard.html")
-
-    @app.route("/login")
-    def serve_login():
-        return render_template("login.html")
-
     @app.route("/dashboard")
+    @app.route("/dashboard.html")
     def dashboard():
         return render_template("dashboard.html")
 
+    @app.route("/login")
+    @app.route("/index")
+    @app.route("/index.html")
+    def serve_login():
+        return render_template("index.html")
+
     @app.route("/risk-detail")
+    @app.route("/risk-detail.html")
     def risk_detail():
         return render_template("risk-detail.html")
 
     @app.route("/evidence")
+    @app.route("/evidence.html")
     def evidence():
         return render_template("evidence.html")
 
     @app.route("/audit")
+    @app.route("/audit.html")
     def audit():
         return render_template("audit.html")
+
+    @app.route("/css/<path:filename>")
+    def serve_css(filename):
+        for candidate in [
+            os.path.join(os.path.dirname(__file__), "css"),
+            os.path.join(os.path.dirname(__file__), "static", "css"),
+        ]:
+            if os.path.exists(os.path.join(candidate, filename)):
+                return send_from_directory(candidate, filename)
+        return {"error": "CSS not found"}, 404
+
+    @app.route("/js/<path:filename>")
+    def serve_js(filename):
+        for candidate in [
+            os.path.join(os.path.dirname(__file__), "js"),
+            os.path.join(os.path.dirname(__file__), "static", "js"),
+        ]:
+            if os.path.exists(os.path.join(candidate, filename)):
+                return send_from_directory(candidate, filename)
+        return {"error": "JS not found"}, 404
 
     @app.route("/api/dashboard-summary")
     def dashboard_summary():
