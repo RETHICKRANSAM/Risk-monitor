@@ -298,7 +298,13 @@ def create_app():
             ), 400
 
         try:
-            result = evaluate_deployment_risk(data)
+            from risk_engine import evaluate_deployment_risk, evaluate_release
+
+            telemetry_fields = {"error_rate", "latency_ms", "canary_error_rate", "error_budget_remaining"}
+            if any(k in data for k in telemetry_fields):
+                result = evaluate_release(data)
+            else:
+                result = evaluate_deployment_risk(data)
             return jsonify(result)
         except (ValueError, TypeError) as e:
             return jsonify({"error": f"Invalid input: {e!s}"}), 400
