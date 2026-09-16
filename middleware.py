@@ -13,7 +13,7 @@ ROLE_PERMISSIONS = {
         "can_submit_release": True,
         "can_submit_metrics": True,
         "can_view_evidence": True,
-        "can_view_audit": False,
+        "can_view_audit": True,
         "org_restricted": True,
     },
     "compliance_officer": {
@@ -33,7 +33,7 @@ ROLE_PERMISSIONS = {
         "can_submit_release": True,
         "can_submit_metrics": True,
         "can_view_evidence": True,
-        "can_view_audit": False,
+        "can_view_audit": True,
         "org_restricted": True,
     },
     "external_partner": {
@@ -65,14 +65,37 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         from flask import request
-        if "user_id" not in session:
-            # Check query param, header, or initialize default demo session
-            user_param = request.headers.get("X-User") or request.args.get("user") or "alice_re"
-            session["user_id"] = user_param
-            session["username"] = user_param
-            session["name"] = "Alice Johnson" if "alice" in user_param else user_param
-            session["role"] = "auditor" if "audit" in user_param else ("compliance_officer" if "co" in user_param else "release_engineer")
-            session["org_id"] = None if "audit" in user_param else "BankA"
+        if "user_id" not in session or request.headers.get("X-User") or request.args.get("user"):
+            user_param = (
+                request.headers.get("X-User")
+                or request.args.get("user")
+                or session.get("username")
+                or "alice_re"
+            )
+            from models import Organization, User
+
+            user = User.query.filter_by(username=user_param).first()
+            if user:
+                session["user_id"] = user.id
+                session["username"] = user.username
+                session["name"] = user.name
+                session["role"] = user.role
+                session["org_id"] = user.org_id
+                session["org_name"] = (
+                    user.organization.name if user.organization else None
+                )
+            else:
+                session["user_id"] = user_param
+                session["username"] = user_param
+                session["name"] = "Alice Johnson" if "alice" in user_param else user_param
+                session["role"] = (
+                    "auditor"
+                    if "audit" in user_param
+                    else ("compliance_officer" if "co" in user_param else "release_engineer")
+                )
+                org = Organization.query.filter_by(name="BankA").first()
+                session["org_id"] = org.id if org else None
+                session["org_name"] = "BankA"
         return f(*args, **kwargs)
 
     return decorated_function

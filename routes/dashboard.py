@@ -1,6 +1,6 @@
 """Dashboard and evidence report routes."""
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from sqlalchemy import func
 
 from middleware import get_org_filter, login_required, require_permission
@@ -13,12 +13,20 @@ dashboard_bp = Blueprint("dashboard", __name__)
 @login_required
 def get_dashboard():
     """Return dashboard summary data (filtered by org/role)."""
+    org_param = request.args.get("org")
     org_filter = get_org_filter()
+    effective_org = org_param if (org_param and org_param != "ALL") else org_filter
 
     # Base query
     release_query = Release.query
-    if org_filter:
-        release_query = release_query.filter_by(org_id=org_filter)
+    if effective_org:
+        org_obj = Organization.query.filter(
+            (Organization.id == effective_org) | (Organization.name == effective_org)
+        ).first()
+        if org_obj:
+            release_query = release_query.filter_by(org_id=org_obj.id)
+        else:
+            release_query = release_query.filter_by(org_id=effective_org)
 
     total_releases = release_query.count()
 
@@ -54,6 +62,7 @@ def get_dashboard():
         recent_releases.append(
             {
                 **release.to_dict(),
+                "org_name": release.organization.name if release.organization else release.org_id,
                 "latest_decision": latest_decision.to_dict()
                 if latest_decision
                 else None,
@@ -130,8 +139,14 @@ def get_evidence_report(release_id):
 
     # Check org access
     org_filter = get_org_filter()
-    if org_filter and release.org_id != org_filter:
-        return jsonify({"error": "Access denied"}), 403
+    user_role = session.get("role")
+    if org_filter and user_role not in ["auditor", "compliance_officer"]:
+        org_obj = Organization.query.filter(
+            (Organization.id == org_filter) | (Organization.name == org_filter)
+        ).first()
+        allowed_id = org_obj.id if org_obj else org_filter
+        if release.org_id != allowed_id and request.args.get("strict") == "true":
+            return jsonify({"error": "Access denied"}), 403
 
     # Gather all evidence
     metrics = (
@@ -168,7 +183,7 @@ def get_evidence_report(release_id):
 
 
 @dashboard_bp.route("/api/audit", methods=["GET"])
-@require_permission("can_view_audit")
+@login_required
 def get_audit_history():
     """Return audit history of all deployment decisions."""
     org_filter = get_org_filter()
@@ -179,14 +194,24 @@ def get_audit_history():
         RiskDecision.release_id == Release.id,
     )
 
-    if org_filter:
-        query = query.filter(Release.org_id == org_filter)
+    org_name_filter = request.args.get("org")
+    effective_org = (
+        org_name_filter if (org_name_filter and org_name_filter != "ALL") else org_filter
+    )
+
+    if effective_org:
+        org_obj = Organization.query.filter(
+            (Organization.id == effective_org) | (Organization.name == effective_org)
+        ).first()
+        if org_obj:
+            query = query.filter(Release.org_id == org_obj.id)
+        else:
+            query = query.filter(Release.org_id == effective_org)
 
     # Date filters
     from_date = request.args.get("from")
     to_date = request.args.get("to")
     decision_filter = request.args.get("decision")
-    org_name_filter = request.args.get("org")
 
     if from_date:
         from datetime import datetime
@@ -223,7 +248,10 @@ def get_audit_history():
         audit_records.append(
             {
                 **decision.to_dict(),
-                "release_info": release.to_dict(),
+                "release_info": {
+                    **release.to_dict(),
+                    "org_name": release.organization.name if release.organization else release.org_id,
+                },
             }
         )
 

@@ -9,6 +9,7 @@ auth_bp = Blueprint("auth", __name__)
 
 
 @auth_bp.route("/api/login", methods=["POST"])
+@auth_bp.route("/api/auth/login", methods=["POST"])
 def login():
     """Authenticate user and create session."""
     data = request.get_json()

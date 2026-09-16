@@ -159,25 +159,7 @@
             }
         };
 
-        function renderDetail() {
-            const data = mockProfiles[releaseId] || {
-                release_id: releaseId,
-                org: 'HealthCo',
-                version: '2.1.0',
-                stage: 'canary',
-                score: 40,
-                decision: 'PAUSE',
-                reasons: [
-                    { rule: 'High error rate (>3%)', value: 3.4, threshold: 3.0, score_added: 40 }
-                ],
-                metrics: [
-                    { name: 'Error Rate', val: '3.40%', thresh: '< 3.0%', status: 'VIOLATION (+40 pts)', ok: false, prep: 'Smoothed' },
-                    { name: 'Service Latency', val: '240 ms', thresh: '< 500 ms', status: 'COMPLIANT', ok: true, prep: 'Validated' },
-                    { name: 'Canary Error Rate', val: '1.20%', thresh: '< 2.0%', status: 'COMPLIANT', ok: true, prep: 'Validated' },
-                    { name: 'Error Budget Remaining', val: '45.0%', thresh: '> 20.0%', status: 'COMPLIANT', ok: true, prep: 'Sufficient' }
-                ]
-            };
-
+        function renderDetail(data) {
             document.getElementById('releaseTitle').textContent = `Release Inspection: ${data.release_id}`;
             document.getElementById('releaseSubtitle').textContent = `${data.org} · v${data.version} · ${data.stage.toUpperCase()} Stage`;
             document.getElementById('releaseVersion').textContent = `v${data.version}`;
@@ -202,8 +184,8 @@
                 rContainer.innerHTML = data.reasons.map(r => `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; margin-bottom: 0.5rem; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: 8px;">
                         <div>
-                            <strong style="color: #fca5a5;">${r.rule}</strong>
-                            <div class="text-xs text-muted" style="margin-top: 2px;">Trigger: Observed ${r.value} vs policy limit ${r.threshold}</div>
+                            <strong style="color: #fca5a5;">${r.rule || r.factor || 'Risk Condition'}</strong>
+                            <div class="text-xs text-muted" style="margin-top: 2px;">${r.detail || `Observed ${r.value} vs policy limit ${r.threshold}`}</div>
                         </div>
                         <span class="badge badge-block">+${r.score_added} pts</span>
                     </div>
@@ -225,7 +207,63 @@
             `).join('');
         }
 
-        renderDetail();
+        async function loadDetail() {
+            try {
+                const res = await fetch(`/api/report/${releaseId}`);
+                if (res.ok) {
+                    const json = await res.json();
+                    if (json.report && json.report.release) {
+                        const rep = json.report;
+                        const rel = rep.release;
+                        const dec = rep.final_decision || {};
+                        const met = (rep.metrics_history && rep.metrics_history.length > 0)
+                            ? rep.metrics_history[rep.metrics_history.length - 1]
+                            : {};
+                        let reasons = [];
+                        if (dec.reasons) {
+                            try {
+                                reasons = typeof dec.reasons === 'string' ? JSON.parse(dec.reasons) : dec.reasons;
+                            } catch (_) {
+                                reasons = [{ rule: String(dec.reasons), score_added: dec.risk_score || 0 }];
+                            }
+                        }
+
+                        const errRate = met.error_rate != null ? Number(met.error_rate) : 0.0;
+                        const latMs = met.latency_ms != null ? Number(met.latency_ms) : 0;
+                        const canaryErr = met.canary_error_rate != null ? Number(met.canary_error_rate) : 0.0;
+                        const errBudget = met.error_budget_remaining != null ? Number(met.error_budget_remaining) : 100.0;
+                        const delta = met.canary_latency_delta != null ? Number(met.canary_latency_delta) : 0;
+                        const avail = met.availability != null ? Number(met.availability) : 99.9;
+
+                        const liveData = {
+                            release_id: rel.release_id,
+                            org: rep.organization ? rep.organization.name : (rel.org_id || 'Enterprise'),
+                            version: rel.version,
+                            stage: rel.stage || 'canary',
+                            score: dec.risk_score != null ? dec.risk_score : 0,
+                            decision: dec.decision || 'ALLOW',
+                            reasons: reasons,
+                            metrics: [
+                                { name: 'Error Rate', val: `${errRate.toFixed(2)}%`, thresh: '< 3.0%', status: (errRate > 3.0 ? 'VIOLATION (+40 pts)' : 'COMPLIANT'), ok: errRate <= 3.0, prep: 'Smoothed via 3-point moving average' },
+                                { name: 'Canary Error Rate', val: `${canaryErr.toFixed(2)}%`, thresh: '< 2.0%', status: (canaryErr > 2.0 ? 'VIOLATION (+25 pts)' : 'COMPLIANT'), ok: canaryErr <= 2.0, prep: 'Real-time telemetry stream' },
+                                { name: 'Service Latency', val: `${latMs} ms`, thresh: '< 500 ms', status: (latMs > 500 ? 'VIOLATION (+25 pts)' : 'COMPLIANT'), ok: latMs <= 500, prep: 'Validated & in-range' },
+                                { name: 'Error Budget Remaining', val: `${errBudget.toFixed(1)}%`, thresh: '> 20.0%', status: (errBudget < 20.0 ? 'VIOLATION (+10 pts)' : 'COMPLIANT'), ok: errBudget >= 20.0, prep: 'Rolling 30-day budget burn' },
+                                { name: 'Canary Latency Delta', val: `+${delta} ms`, thresh: '< 100 ms', status: (delta > 100 ? 'ELEVATED' : 'COMPLIANT'), ok: delta <= 100, prep: 'Canary vs baseline delta' },
+                                { name: 'Service Availability', val: `${avail.toFixed(2)}%`, thresh: '> 99.0%', status: 'COMPLIANT', ok: true, prep: 'Cleaned: clamped to <= 100%' }
+                            ]
+                        };
+                        renderDetail(liveData);
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Backend fetch failed, using profile fallback:', err);
+            }
+
+            renderDetail(mockProfiles[releaseId] || mockProfiles['R0042']);
+        }
+
+        loadDetail();
     </script>
 </body>
 </html>

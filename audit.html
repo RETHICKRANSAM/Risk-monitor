@@ -116,38 +116,84 @@
     </div>
 
     <script>
-        // Generate audit ledger from 100 historical deployments
-        const orgs = ['BankA', 'HealthCo', 'GovAgency'];
-        const reviewers = ['system_engine', 'sarah.chen (RE)', 'marcus.vance (CO)', 'automated_circuit_breaker'];
+        let auditRecords = [];
 
-        const auditRecords = [];
-        const baseDate = new Date('2026-09-08T08:00:00Z');
+        function generateFallbackAudit() {
+            const orgs = ['BankA', 'HealthCo', 'GovAgency'];
+            const reviewers = ['system_engine', 'sarah.chen (RE)', 'marcus.vance (CO)', 'automated_circuit_breaker'];
+            const baseDate = new Date('2026-09-08T08:00:00Z');
 
-        for (let i = 1; i <= 100; i++) {
-            const id = `R${String(i).padStart(4, '0')}`;
-            const org = orgs[(i * 7) % 3];
-            const isHarmful = (i % 5 === 0);
-            const score = isHarmful ? (i % 2 === 0 ? 75 : 50) : (i % 8 === 0 ? 25 : 0);
-            const decision = score >= 60 ? 'BLOCK' : (score >= 40 ? 'PAUSE' : 'ALLOW');
-            const reviewer = decision === 'BLOCK' ? 'automated_circuit_breaker' : reviewers[i % reviewers.length];
+            for (let i = 1; i <= 100; i++) {
+                const id = `R${String(i).padStart(4, '0')}`;
+                const org = orgs[(i * 7) % 3];
+                const isHarmful = (i % 5 === 0);
+                const score = isHarmful ? (i % 2 === 0 ? 75 : 50) : (i % 8 === 0 ? 25 : 0);
+                const decision = score >= 60 ? 'BLOCK' : (score >= 40 ? 'PAUSE' : 'ALLOW');
+                const reviewer = decision === 'BLOCK' ? 'automated_circuit_breaker' : reviewers[i % reviewers.length];
+                const time = new Date(baseDate.getTime() - (100 - i) * 3600 * 1000 * 4);
 
-            const time = new Date(baseDate.getTime() - (100 - i) * 3600 * 1000 * 4);
+                let rationale = 'All pre-release health metrics and canary deltas within safe limits.';
+                if (score === 75) rationale = 'Error rate spiked to >4.5% with elevated canary error delta (+3.4%).';
+                else if (score === 50) rationale = 'Canary latency delta >100ms exceeded warning threshold.';
+                else if (score === 25) rationale = 'Single metric warning: minor error budget burn (<30%).';
 
-            let rationale = 'All pre-release health metrics and canary deltas within safe limits.';
-            if (score === 75) rationale = 'Error rate spiked to >4.5% with elevated canary error delta (+3.4%).';
-            else if (score === 50) rationale = 'Canary latency delta >100ms exceeded warning threshold.';
-            else if (score === 25) rationale = 'Single metric warning: minor error budget burn (<30%).';
+                auditRecords.push({
+                    timestamp: time.toISOString().replace('T', ' ').substring(0, 19),
+                    release_id: id,
+                    org,
+                    version: `2.${Math.floor(i / 10)}.${i % 10}`,
+                    risk_score: score,
+                    decision,
+                    reviewer,
+                    rationale
+                });
+            }
+        }
 
-            auditRecords.push({
-                timestamp: time.toISOString().replace('T', ' ').substring(0, 19),
-                release_id: id,
-                org,
-                version: `2.${Math.floor(i / 10)}.${i % 10}`,
-                risk_score: score,
-                decision,
-                reviewer,
-                rationale
-            });
+        async function loadAudit() {
+            try {
+                const res = await fetch('/api/audit');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.audit_records && data.audit_records.length > 0) {
+                        auditRecords = data.audit_records.map(r => {
+                            const rel = r.release_info || {};
+                            let reasons = r.reasons;
+                            if (typeof reasons === 'string') {
+                                try { reasons = JSON.parse(reasons); } catch (_) {}
+                            }
+                            let rationale = 'All pre-release health metrics within policy limits.';
+                            if (Array.isArray(reasons) && reasons.length > 0) {
+                                rationale = reasons.map(x => x.rule || x.factor || x).join('; ');
+                            } else if (r.decision === 'BLOCK') {
+                                rationale = 'Violation: Telemetry or error rate exceeded gating thresholds.';
+                            } else if (r.decision === 'PAUSE') {
+                                rationale = 'Warning: Elevated latency or canary variance detected.';
+                            }
+
+                            return {
+                                timestamp: (r.decided_at || new Date().toISOString()).replace('T', ' ').substring(0, 19),
+                                release_id: rel.release_id || `R${String(r.release_id || 1).padStart(4, '0')}`,
+                                org: rel.org_name || (rel.organization ? rel.organization.name : rel.org_id) || 'BankA',
+                                version: rel.version || '2.0.0',
+                                risk_score: r.risk_score != null ? r.risk_score : 0,
+                                decision: r.decision || 'ALLOW',
+                                reviewer: r.reviewer || (r.decision === 'BLOCK' ? 'automated_circuit_breaker' : 'system_engine'),
+                                rationale: rationale
+                            };
+                        });
+                        renderAudit();
+                        return;
+                    }
+                }
+            } catch (err) {
+                console.warn('Backend /api/audit unavailable, falling back to local audit ledger:', err);
+            }
+
+            if (auditRecords.length === 0) {
+                generateFallbackAudit();
+            }
+            renderAudit();
         }
 
         function renderAudit() {
@@ -196,7 +242,7 @@
         document.getElementById('auditOrg').addEventListener('change', renderAudit);
         document.getElementById('auditDecision').addEventListener('change', renderAudit);
 
-        renderAudit();
+        loadAudit();
     </script>
 </body>
 </html>

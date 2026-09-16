@@ -206,7 +206,7 @@
                         autocomplete="current-password"
                     >
                 </div>
-                <button type="submit" class="btn btn-primary" id="loginBtn" onclick="window.location.href='dashboard.html'; return true;">
+                <button type="submit" class="btn btn-primary" id="loginBtn">
                     Sign In
                 </button>
             </form>
@@ -230,12 +230,8 @@
     <script src="js/offline-queue.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // Check if already logged in locally
-        const savedUser = localStorage.getItem('user');
-        // Stay on login page for demo unless user clicks submit
-
         // Handle login form
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const username = document.getElementById('username').value.trim();
@@ -249,19 +245,44 @@
                 return;
             }
 
-            btn.textContent = 'Redirecting...';
+            btn.textContent = 'Authenticating...';
             btn.disabled = true;
 
-            // Save user session for static demo
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.user) {
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                } else if (res.status === 401) {
+                    const errData = await res.json().catch(() => ({}));
+                    errorEl.textContent = errData.error || 'Invalid credentials. Use demo password demo123.';
+                    errorEl.classList.add('visible');
+                    btn.textContent = 'Sign In';
+                    btn.disabled = false;
+                    return;
+                }
+            } catch (err) {
+                console.warn('Backend login endpoint unavailable, using offline fallback:', err);
+            }
+
+            // Save user session for static demo fallback
             const userObj = {
                 user_id: username,
                 username: username,
-                role: username.includes('audit') ? 'Auditor' : (username.includes('re') ? 'Release Engineer' : 'Compliance Officer'),
+                name: username.replace('_', ' ').toUpperCase(),
+                role: username.includes('audit') ? 'auditor' : (username.includes('re') ? 'release_engineer' : 'compliance_officer'),
                 org_id: username.includes('diana') ? 'HealthCo' : 'BankA'
             };
             localStorage.setItem('user', JSON.stringify(userObj));
-
-            // Redirect immediately to dashboard
             window.location.href = 'dashboard.html';
         });
     </script>

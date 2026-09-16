@@ -291,22 +291,42 @@
                 if (res.ok) {
                     const data = await res.json();
                     if (data.recent_releases && data.recent_releases.length > 0) {
-                        releasesData = data.recent_releases.map(r => ({
-                            release_id: r.release_id,
-                            org: r.org_name || r.org_id,
-                            version: r.version,
-                            stage: r.stage || 'canary',
-                            risk_score: r.latest_decision ? r.latest_decision.risk_score : 0,
-                            decision: r.latest_decision ? r.latest_decision.decision : 'ALLOW',
-                            reasons: r.latest_decision && r.latest_decision.reasons ? JSON.parse(r.latest_decision.reasons) : [],
-                            metrics: r.latest_metric || { error_rate: 0.5, latency_ms: 180, canary_error_rate: 0.4, error_budget_remaining: 85.0 }
-                        }));
+                        releasesData = data.recent_releases.map(r => {
+                            let parsedReasons = [];
+                            if (r.latest_decision && r.latest_decision.reasons) {
+                                try {
+                                    parsedReasons = typeof r.latest_decision.reasons === 'string'
+                                        ? JSON.parse(r.latest_decision.reasons)
+                                        : r.latest_decision.reasons;
+                                } catch (_) {
+                                    parsedReasons = [{ rule: String(r.latest_decision.reasons) }];
+                                }
+                            }
+                            const lm = r.latest_metric || {};
+                            return {
+                                release_id: r.release_id,
+                                org: r.org_name || (r.organization ? r.organization.name : r.org_id) || 'BankA',
+                                version: r.version,
+                                stage: r.stage || 'canary',
+                                risk_score: r.latest_decision ? (r.latest_decision.risk_score != null ? r.latest_decision.risk_score : 0) : 0,
+                                decision: r.latest_decision ? (r.latest_decision.decision || 'ALLOW') : 'ALLOW',
+                                reasons: parsedReasons,
+                                warnings: [],
+                                metrics: {
+                                    error_rate: lm.error_rate != null ? Number(lm.error_rate) : 0.5,
+                                    latency_ms: lm.latency_ms != null ? Number(lm.latency_ms) : 180,
+                                    canary_error_rate: lm.canary_error_rate != null ? Number(lm.canary_error_rate) : 0.4,
+                                    error_budget_remaining: lm.error_budget_remaining != null ? Number(lm.error_budget_remaining) : 85.0,
+                                    canary_latency_delta: lm.canary_latency_delta != null ? Number(lm.canary_latency_delta) : 15
+                                }
+                            };
+                        });
                         renderDashboard();
                         return;
                     }
                 }
             } catch (e) {
-                // Static / GitHub Pages mode - generate full 100 releases client-side
+                console.warn('Backend API unavailable, using client demo baseline:', e);
             }
 
             // Client-side generation of the 100 experimental releases

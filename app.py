@@ -68,6 +68,11 @@ def create_app():
     with app.app_context():
         try:
             db.create_all()
+            from models import Release
+            if Release.query.count() == 0:
+                print("[DB] Empty database detected. Seeding initial records...")
+                from database.seed_data import seed_database
+                seed_database()
         except Exception as e:
             print(f"[DB] Notice on init: {e}")
 
