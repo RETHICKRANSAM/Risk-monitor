@@ -57,11 +57,13 @@ def create_app():
     from routes.releases import releases_bp
     from routes.metrics import metrics_bp
     from routes.auth import auth_bp
+    from routes.ml import ml_bp
 
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(releases_bp)
     app.register_blueprint(metrics_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(ml_bp)
 
     with app.app_context():
         try:

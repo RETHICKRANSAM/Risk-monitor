@@ -150,18 +150,22 @@ def check_disk_space():
 
         total, used, free = shutil.disk_usage(os.path.dirname(__file__))
 
+        free_gb = round(free / (1024**3), 2)
         free_pct = round(free / total * 100, 1)
-        status = "healthy"
-        if free_pct < 10:
+
+        # Critical only when absolute free space is dangerously low (< 1 GB or < 1%)
+        if free_gb < 1.0 or free_pct < 1.0:
             status = "critical"
-        elif free_pct < 20:
+        elif free_gb < 5.0 or free_pct < 10.0:
             status = "warning"
+        else:
+            status = "healthy"
 
         return {
             "status": status,
             "total_gb": round(total / (1024**3), 2),
             "used_gb": round(used / (1024**3), 2),
-            "free_gb": round(free / (1024**3), 2),
+            "free_gb": free_gb,
             "free_percent": free_pct,
         }
     except Exception as e:
