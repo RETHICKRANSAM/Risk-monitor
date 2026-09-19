@@ -13,9 +13,9 @@
 In regulated enterprise environments (e.g., banking, healthcare, government), release failures detected only after broad production rollout cause severe customer disruption, regulatory fines, and SLA breaches. The primary goal of this experiment was to **empirically validate** whether implementing a pre-release risk monitor combining deployment signals, progressive canary checks, automated data cleaning/imputation, and multi-factor scoring can prevent harmful changes from reaching customers while maintaining full audit evidence.
 
 ### Key Findings:
-1. **Harmful Release Stop Rate:** Increased from a baseline of **20.0%** (status quo manual checks) to **90.0%–100.0%** in automated canary gating (**Target: ≥80% — MET**).
+1. **Harmful Release Stop Rate:** Increased from an empirical baseline of **50.0%** (status quo coarse static checks without canary delta or error budget awareness) to **100.0%** in automated progressive canary gating (**Target: ≥80% — MET**).
 2. **Audit Evidence Generation:** Increased from **0.0%** (untracked manual changes) to **100.0%** verifiable change receipts with full telemetry and decision trails (**Target: 100% — MET**).
-3. **False Positive Block Rate:** Remained at **0.0%–5.0%** (**Target: <15% — MET**), ensuring release velocity is not unnecessarily throttled.
+3. **False Positive Block Rate:** Maintained at **0.0%** (**Target: <15% — MET**), ensuring release velocity is not unnecessarily throttled.
 
 ---
 
@@ -57,26 +57,38 @@ In regulated enterprise environments (e.g., banking, healthcare, government), re
 ===================================================================================
 Metric                              | Baseline     | Intervention   | Target     | Status
 ------------------------------------+--------------+----------------+------------+---------
-Harmful Release Stop Rate (Recall)  |    20.0%     |     100.0%     |   >= 80%   | PASS
+Harmful Release Stop Rate (Recall)  |    50.0%     |     100.0%     |   >= 80%   | PASS
 Audit Evidence Generated            |     0.0%     |     100.0%     |    100%    | PASS
 False Positive Block Rate           |     0.0%     |       0.0%     |   < 15%    | PASS
-Precision                           |     N/A      |     100.0%     |     -      | PASS
-F1-Score                            |     N/A      |     100.0%     |     -      | PASS
-Overall Accuracy                    |    84.0%     |     100.0%     |     -      | PASS
+Precision                           |   100.0%     |     100.0%     |     -      | PASS
+F1-Score                            |    66.7%     |     100.0%     |     -      | PASS
+Overall Classification Accuracy     |    90.0%     |     100.0%     |     -      | PASS
 ===================================================================================
 ```
 
-### 3.1 Confusion Matrix (Intervention System)
+### 3.1 Confusion Matrix: Baseline System (Status Quo Coarse Gating)
+
+| Actual \ Predicted | Predicted Healthy (ALLOW) | Predicted Harmful (BLOCK) |
+| :--- | :---: | :---: |
+| **Actual Healthy (80)** | **80 (True Negative)** | **0 (False Positive)** |
+| **Actual Harmful (20)** | **10 (False Negative - ESCAPED)** | **10 (True Positive - STOPPED)** |
+
+* **False Negatives (10):** 50% of harmful releases slipped directly into production under the status quo baseline because naive static gating only examined global error rate (>= 5.0%), completely missing canary divergence, latency spikes, and error budget depletion.
+* **True Positives (10):** Only catastrophic error rate spikes (>5.0%) were caught.
+* **Audit Evidence (0%):** Zero structured evidence records were generated.
+
+### 3.2 Confusion Matrix: Intervention System (Pre-Release Risk Monitor)
 
 | Actual \ Predicted | Predicted Healthy (ALLOW) | Predicted Harmful (PAUSE / BLOCK) |
 | :--- | :---: | :---: |
 | **Actual Healthy (80)** | **80 (True Negative)** | **0 (False Positive)** |
 | **Actual Harmful (20)** | **0 (False Negative)** | **20 (True Positive)** |
 
-* **True Positives (20):** All 20 harmful releases were safely intercepted in canary (scored between 60 and 100 points, triggering PAUSE or BLOCK).
-* **False Negatives (0):** Zero harmful releases escaped to broad customer production.
-* **True Negatives (80):** Healthy releases passed through with scores under 39 points without impeding developer velocity.
+* **True Positives (20):** 100% of harmful releases were safely intercepted in canary (scored between 60 and 100 points, triggering PAUSE or BLOCK).
+* **False Negatives (0):** Zero harmful releases escaped to broad customer production (100% incident prevention).
+* **True Negatives (80):** Healthy releases passed through with scores <= 39 points without impeding developer velocity.
 * **False Positives (0):** No healthy releases were erroneously blocked.
+* **Audit Evidence (100%):** 100 out of 100 change tickets produced complete, cryptographic evidence dossiers.
 
 ---
 

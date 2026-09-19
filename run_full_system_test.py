@@ -24,7 +24,7 @@ def print_banner(text):
     print("=" * 70)
 
 
-def test_http_endpoint(name, url, method="GET", data=None, expected_status=200):
+def check_http_endpoint(name, url, method="GET", data=None, expected_status=200):
     try:
         req = urllib.request.Request(
             url,
@@ -83,7 +83,7 @@ def main():
     ]
     page_pass = True
     for name, url in pages:
-        ok, _ = test_http_endpoint(name, url)
+        ok, _ = check_http_endpoint(name, url)
         if not ok:
             page_pass = False
     results.append(("Frontend UI Pages", page_pass))
@@ -95,22 +95,22 @@ def main():
     api_pass = True
 
     # Health API
-    ok, _ = test_http_endpoint("Health Check API", f"{BASE_URL}/health")
+    ok, _ = check_http_endpoint("Health Check API", f"{BASE_URL}/health")
     if not ok:
         api_pass = False
 
     # Dashboard summary API
-    ok, _ = test_http_endpoint("Dashboard Summary API", f"{BASE_URL}/api/dashboard")
+    ok, _ = check_http_endpoint("Dashboard Summary API", f"{BASE_URL}/api/dashboard")
     if not ok:
         api_pass = False
 
     # Deployments list API
-    ok, _ = test_http_endpoint("Deployments List API", f"{BASE_URL}/api/deployments")
+    ok, _ = check_http_endpoint("Deployments List API", f"{BASE_URL}/api/deployments")
     if not ok:
         api_pass = False
 
     # CI/CD Trigger API
-    ok, _ = test_http_endpoint(
+    ok, _ = check_http_endpoint(
         "CI/CD Pipeline Simulator",
         f"{BASE_URL}/api/cicd/run",
         method="POST",
@@ -121,7 +121,7 @@ def main():
         api_pass = False
 
     # Log Parsing Engine API
-    ok, _ = test_http_endpoint(
+    ok, _ = check_http_endpoint(
         "Log Analysis Engine",
         f"{BASE_URL}/api/logs/analyze",
         method="POST",
@@ -140,7 +140,7 @@ def main():
     gate_pass = True
 
     # Test ALLOW (Healthy)
-    ok, body = test_http_endpoint(
+    ok, body = check_http_endpoint(
         "Decision Gate 1: ALLOW (Healthy Telemetry)",
         f"{BASE_URL}/api/risk/evaluate",
         method="POST",
@@ -153,7 +153,7 @@ def main():
         gate_pass = False
 
     # Test PAUSE (Moderate Risk)
-    ok, body = test_http_endpoint(
+    ok, body = check_http_endpoint(
         "Decision Gate 2: PAUSE (Moderate Risk / High Error Rate)",
         f"{BASE_URL}/api/risk/evaluate",
         method="POST",
@@ -166,7 +166,7 @@ def main():
         gate_pass = False
 
     # Test BLOCK (Critical Risk / Circuit Breaker)
-    ok, body = test_http_endpoint(
+    ok, body = check_http_endpoint(
         "Decision Gate 3: BLOCK (Critical Risk / Circuit Breaker Activated)",
         f"{BASE_URL}/api/risk/evaluate",
         method="POST",
@@ -187,7 +187,7 @@ def main():
     ml_pass = True
 
     # ML Benchmarks
-    ok, _ = test_http_endpoint("ML Model Benchmark Endpoint", f"{BASE_URL}/api/ml/metrics")
+    ok, _ = check_http_endpoint("ML Model Benchmark Endpoint", f"{BASE_URL}/api/ml/metrics")
     if not ok:
         ml_pass = False
 
@@ -199,7 +199,7 @@ def main():
         "wrong_fragment": 1,
         "num_compromised": 2,
     }
-    ok, body = test_http_endpoint(
+    ok, body = check_http_endpoint(
         "Live ML Inference (XGBoost + Random Forest + Autoencoder + MLP)",
         f"{BASE_URL}/api/ml/predict-risk",
         method="POST",

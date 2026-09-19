@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><title>Risk Monitor: Regulated Change Assurance</title><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>
+  @layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:rgba(10, 10, 12, 0.8);}
+  ::-webkit-scrollbar-thumb{background:rgba(255, 255, 255, 0.2);border-radius:9999px;}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255, 255, 255, 0.4);}
+  
+  .glass-card {
+    background: rgba(18, 19, 26, 0.68);
+    backdrop-filter: blur(24px) saturate(130%);
+    -webkit-backdrop-filter: blur(24px) saturate(130%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  }
+  .glass-card-hover {
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-card-hover:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+    border-top-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 14px 40px 0 rgba(0, 0, 0, 0.75), 0 0 20px 0 rgba(255, 255, 255, 0.06), inset 0 1px 0 0 rgba(255, 255, 255, 0.22);
+    transform: translateY(-2px);
+  }
+  .glass-panel {
+    background: rgba(18, 19, 26, 0.6);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .glass-pill {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+  }
+  .star-field {
+    background-image: 
+      radial-gradient(1px 1px at 25px 35px, rgba(255, 255, 255, 0.35), transparent),
+      radial-gradient(1.2px 1.2px at 120px 80px, rgba(255, 255, 255, 0.3), transparent),
+      radial-gradient(1px 1px at 240px 190px, rgba(255, 255, 255, 0.22), transparent),
+      radial-gradient(1.2px 1.2px at 380px 110px, rgba(255, 255, 255, 0.28), transparent),
+      radial-gradient(1px 1px at 500px 320px, rgba(255, 255, 255, 0.2), transparent),
+      radial-gradient(1.2px 1.2px at 680px 220px, rgba(255, 255, 255, 0.28), transparent),
+      radial-gradient(1px 1px at 820px 90px, rgba(255, 255, 255, 0.3), transparent),
+      radial-gradient(1.2px 1.2px at 980px 260px, rgba(255, 255, 255, 0.25), transparent);
+    background-size: 1100px 420px;
+  }
+  @keyframes shootingStar {
+    0% { transform: translateX(0) translateY(0) rotate(-45deg) scale(0); opacity: 0; }
+    15% { opacity: 0.8; transform: translateX(-40px) translateY(40px) rotate(-45deg) scale(1); }
+    70% { opacity: 0.6; transform: translateX(-180px) translateY(180px) rotate(-45deg) scale(1); }
+    100% { opacity: 0; transform: translateX(-260px) translateY(260px) rotate(-45deg) scale(0.2); }
+  }
+  .shooting-star-1 {
+    animation: shootingStar 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .shooting-star-2 {
+    animation: shootingStar 18s cubic-bezier(0.4, 0, 0.2, 1) 6s infinite;
+  }
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary-fixed-variant": "#45464e",
+          "inverse-on-surface": "#2f3038",
+          "surface-container-highest": "#33343c",
+          "tertiary-fixed-dim": "#c6c6c7",
+          "on-tertiary-container": "#636565",
+          "tertiary-fixed": "#e2e2e2",
+          "error-container": "#93000a",
+          "on-error-container": "#ffdad6",
+          "on-primary-fixed": "#1a1c1c",
+          "primary-fixed-dim": "#c6c6c7",
+          "primary": "#ffffff",
+          "surface-container-high": "#292931",
+          "secondary": "#c6c6cf",
+          "on-error": "#690005",
+          "on-surface": "#e3e1ec",
+          "background": "#09090b",
+          "inverse-primary": "#5d5f5f",
+          "secondary-container": "#45464e",
+          "on-secondary-container": "#b4b4bd",
+          "surface-tint": "#c6c6c7",
+          "error": "#ffb4ab",
+          "outline-variant": "#444748",
+          "on-secondary-fixed": "#1a1b22",
+          "on-primary": "#2f3131",
+          "on-background": "#e3e1ec",
+          "on-primary-fixed-variant": "#454747",
+          "on-tertiary-fixed": "#1a1c1c",
+          "surface-bright": "#383941",
+          "on-secondary": "#2f3037",
+          "on-tertiary-fixed-variant": "#454747",
+          "surface-container-low": "#1a1b22",
+          "on-surface-variant": "#c4c7c8",
+          "inverse-surface": "#e3e1ec",
+          "secondary-fixed": "#e2e1eb",
+          "surface-container": "#1e1f26",
+          "surface-container-lowest": "#0d0e15",
+          "surface-dim": "#12131a",
+          "on-primary-container": "#636565",
+          "surface": "#12131a",
+          "on-tertiary": "#2f3131",
+          "tertiary": "#ffffff",
+          "secondary-fixed-dim": "#c6c6cf",
+          "surface-variant": "#33343c",
+          "outline": "#8e9192",
+          "primary-fixed": "#e2e2e2"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "fontFamily": {
+          "body-sm": ["Geist", "sans-serif"],
+          "body-md": ["Geist", "sans-serif"],
+          "body-lg": ["Geist", "sans-serif"],
+          "headline-sm": ["Geist", "sans-serif"],
+          "headline-md": ["Geist", "sans-serif"],
+          "headline-lg": ["Geist", "sans-serif"],
+          "label-sm": ["JetBrains Mono", "monospace"],
+          "label-md": ["JetBrains Mono", "monospace"],
+          "code-sm": ["JetBrains Mono", "monospace"],
+          "code-md": ["JetBrains Mono", "monospace"],
+          "label-caps": ["JetBrains Mono", "monospace"],
+          "code-xs": ["JetBrains Mono", "monospace"]
+        }
+      }
+    }
+  };
+</script></head><body class="bg-[#09090b] text-zinc-300 font-body-md text-sm antialiased min-h-screen relative overflow-x-hidden selection:bg-white/20 selection:text-white"><!-- Pure Refined Monochrome Ambient Radial Gradients & Star Field Canvas --><div class="fixed inset-0 pointer-events-none z-0 overflow-hidden star-field">
+<div class="absolute -top-36 left-1/4 w-[640px] h-[640px] rounded-full bg-white/[0.04] blur-[150px]"></div>
+<div class="absolute top-1/4 -right-36 w-[680px] h-[680px] rounded-full bg-zinc-400/[0.03] blur-[170px]"></div>
+<div class="absolute bottom-10 left-5 w-[620px] h-[620px] rounded-full bg-zinc-300/[0.02] blur-[160px]"></div>
+<div class="absolute top-2/3 right-1/4 w-[520px] h-[520px] rounded-full bg-white/[0.03] blur-[140px]"></div>
+<!-- Subtle shooting stars in crisp silver -->
+<div class="absolute top-24 right-1/3 w-28 h-[1px] bg-gradient-to-r from-transparent via-zinc-200 to-transparent shooting-star-1 opacity-0"></div>
+<div class="absolute top-1/2 left-2/3 w-36 h-[1px] bg-gradient-to-r from-transparent via-white to-transparent shooting-star-2 opacity-0"></div>
+</div><header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#09090b]/80 backdrop-blur-xl border-b border-white/[0.1] shadow-[0_8px_30px_rgba(0,0,0,0.7)]"><div class="h-16 w-full px-4 lg:px-8 flex items-center justify-between gap-4"><div class="flex items-center gap-6 shrink-0"><div class="flex items-center gap-2.5"><div class="w-8 h-8 rounded-xl bg-white/[0.07] flex items-center justify-center text-white border border-white/25 shadow-[0_0_15px_rgba(255,255,255,0.08)]"><span class="material-symbols-outlined text-[19px]">verified_user</span></div><div class="flex items-center gap-2"><span class="font-headline-md font-semibold text-white tracking-tight text-base sm:text-lg">Risk Monitor</span><span class="font-label-caps text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 tracking-wider font-semibold shadow-[0_0_10px_rgba(255,255,255,0.05)]">Regulated Change Assurance</span></div></div><nav class="hidden lg:flex items-center gap-1"><a aria-current="page" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/15 text-white border border-white/30 shadow-[0_0_14px_rgba(255,255,255,0.1)]" data-path="rollout-dashboard" href="#">Rollout Dashboard</a><a class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" data-path="risk-reasoning-view" href="#">Risk Reasoning View</a><a class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" data-path="evidence-report" href="#">Evidence Report</a><a class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" data-path="immutable-audit-trail" href="#">Immutable Audit Trail</a></nav></div><div class="flex items-center gap-3 shrink-0"><div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.06)]"><span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span><span class="font-label-caps text-[10px] uppercase text-zinc-200 font-semibold tracking-wider">Canary Telemetry Active</span></div><a class="hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 hover:text-white font-code-sm text-xs border border-white/15 hover:border-white/30 transition-all shadow-sm" data-path="baseline-experiment" href="#"><span class="material-symbols-outlined text-[15px] text-white">biotech</span><span>Baseline Experiment</span></a><div class="flex items-center gap-2.5 pl-2 border-l border-white/10"><div class="hidden xl:flex flex-col text-right"><span class="text-xs font-medium text-white">Alice Johnson</span><span class="font-code-xs text-[10px] text-zinc-400">Release Engineer • BankA</span></div><div class="w-8 h-8 rounded-full bg-zinc-900/90 border border-white/25 flex items-center justify-center shrink-0 text-zinc-200 shadow-inner"><span class="material-symbols-outlined text-[17px]">person</span></div><a class="p-1.5 rounded-lg text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-all flex items-center border border-transparent hover:border-white/10" data-path="login" href="#" title="Sign Out"><span class="material-symbols-outlined text-[17px]">logout</span></a></div></div></div></header><main class="relative z-10 w-full pt-20 pb-12"><div class="flex flex-col w-full">
+<div class="w-full px-4 lg:px-8 py-4 flex flex-col gap-6 max-w-[1780px] mx-auto">
+<!-- Title & Status Header Banner -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-1">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2.5">
+<span class="font-label-caps text-[10px] uppercase px-2.5 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 tracking-wider font-semibold shadow-[0_0_10px_rgba(255,255,255,0.06)]">Automated Change Governance</span>
+<span class="font-code-xs text-[11px] text-zinc-300 flex items-center gap-1.5 glass-pill px-2.5 py-0.5 rounded-full border-white/15">
+<span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)]"></span> Enclave: <span class="text-white font-medium">us-east-fed-01</span>
+</span>
+</div>
+<h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight flex items-center gap-3">Pre-Release Risk Monitor</h1>
+<p class="text-xs sm:text-sm text-zinc-400 max-w-2xl">Multi-tenant deployment gating &amp; real-time evidence engine for high-assurance regulated enterprises</p>
+</div>
+<div class="flex flex-wrap items-center gap-2.5 shrink-0">
+<div class="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-white/[0.05] border border-white/20 shadow-[0_0_16px_rgba(255,255,255,0.06)]">
+<span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.9)]"></span>
+<span class="font-code-sm text-xs text-zinc-200 font-medium">Canary Telemetry Active</span>
+</div>
+<button class="px-4 py-1.5 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold border border-white/40 font-code-sm text-xs transition-all flex items-center gap-1.5 shadow-[0_4px_18px_rgba(255,255,255,0.15)] cursor-pointer hover:scale-[1.02] active:scale-[0.98]" id="btn-baseline-exp">
+<span class="material-symbols-outlined text-[16px] text-black font-bold">bolt</span>
+<span>Baseline Experiment</span>
+</button>
+</div>
+</div>
+<!-- 5-Metric KPI Row (Monochrome Glassmorphic Floating Cards) -->
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+<!-- KPI 1 -->
+<div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Total Changes</span>
+<div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-zinc-200 shadow-inner group-hover:border-white/40 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+</div>
+</div>
+<div class="my-3">
+<div class="text-2xl lg:text-3xl font-bold text-white tracking-tight">100</div>
+<div class="font-code-xs text-[11px] text-zinc-400 mt-0.5">Production Changes Monitored</div>
+</div>
+<div class="flex items-center gap-1.5 font-code-xs text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+<span class="material-symbols-outlined text-[14px] text-zinc-400">query_stats</span>
+<span>100% In-Pipeline Coverage</span>
+</div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/60 via-white/20 to-transparent"></div>
+</div>
+<!-- KPI 2 -->
+<div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Canary Verified</span>
+<div class="w-8 h-8 rounded-xl bg-white/10 border border-white/25 flex items-center justify-center text-white shadow-[0_0_12px_rgba(255,255,255,0.1)] group-hover:border-white/50 transition-colors">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+</div>
+<div class="my-3">
+<div class="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-baseline gap-1">80<span class="text-xs font-normal text-zinc-400 font-code-xs">/100</span></div>
+<div class="font-code-xs text-[11px] text-zinc-400 mt-0.5">Allowed (Passed Canary)</div>
+</div>
+<div class="flex items-center gap-1.5 font-code-xs text-[11px] text-zinc-200 pt-1 border-t border-white/[0.08]">
+<span class="material-symbols-outlined text-[14px] text-zinc-300">trending_up</span>
+<span>80.0% Pass Rate Target &gt; 75%</span>
+</div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/80 via-white/30 to-transparent"></div>
+</div>
+<!-- KPI 3 -->
+<div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Threshold Holds</span>
+<div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-zinc-300 shadow-[0_0_12px_rgba(255,255,255,0.06)] group-hover:border-white/40 transition-colors">
+<span class="material-symbols-outlined text-[18px]">warning</span>
+</div>
+</div>
+<div class="my-3">
+<div class="text-2xl lg:text-3xl font-bold text-zinc-100 tracking-tight flex items-baseline gap-1">12<span class="text-xs font-normal text-zinc-400 font-code-xs">/100</span></div>
+<div class="font-code-xs text-[11px] text-zinc-400 mt-0.5">Paused (Hold Thresholds)</div>
+</div>
+<div class="flex items-center gap-1.5 font-code-xs text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+<span class="material-symbols-outlined text-[14px] text-zinc-400">hourglass_top</span>
+<span>12.0% Under Investigation</span>
+</div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-zinc-300/80 via-zinc-400/30 to-transparent"></div>
+</div>
+<!-- KPI 4 -->
+<div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Regressions Gated</span>
+<div class="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-600 flex items-center justify-center text-zinc-300 shadow-[0_0_12px_rgba(255,255,255,0.05)] group-hover:border-zinc-400 transition-colors">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</div>
+</div>
+<div class="my-3">
+<div class="text-2xl lg:text-3xl font-bold text-zinc-100 tracking-tight flex items-baseline gap-1">8<span class="text-xs font-normal text-zinc-400 font-code-xs">/100</span></div>
+<div class="font-code-xs text-[11px] text-zinc-400 mt-0.5">Blocked (Harmful Prevented)</div>
+</div>
+<div class="flex items-center gap-1.5 font-code-xs text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+<span class="material-symbols-outlined text-[14px] text-zinc-400">shield</span>
+<span>8 Prevented Major Outages</span>
+</div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-zinc-400/80 via-zinc-600/30 to-transparent"></div>
+</div>
+<!-- KPI 5 -->
+<div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group col-span-2 md:col-span-1">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Compliance Gating</span>
+<div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-white shadow-[0_0_12px_rgba(255,255,255,0.08)] group-hover:border-white/40 transition-colors">
+<span class="material-symbols-outlined text-[18px]">history_edu</span>
+</div>
+</div>
+<div class="my-3">
+<div class="text-2xl lg:text-3xl font-bold text-white tracking-tight">100%</div>
+<div class="font-code-xs text-[11px] text-zinc-400 mt-0.5">Audit Evidence Generated</div>
+</div>
+<div class="flex items-center gap-1.5 font-code-xs text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+<span class="material-symbols-outlined text-[14px] text-white">verified</span>
+<span>Cryptographically Signed</span>
+</div>
+<div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white via-zinc-400/40 to-transparent"></div>
+</div>
+</div>
+<!-- Edge Cases & System Fallback Demonstrations (PRD Section 15 - Monochrome Glass Card) -->
+<div class="rounded-2xl glass-card p-5 flex flex-col gap-4 relative overflow-hidden">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-xl bg-white/[0.08] flex items-center justify-center text-white border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.08)] shrink-0">
+<span class="material-symbols-outlined text-[20px]">build_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-headline-md text-sm sm:text-base font-semibold text-white tracking-tight">Edge Cases &amp; System Fallback Demonstrations</span>
+<span class="font-label-caps text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 font-medium">PRD Section 15</span>
+</div>
+<p class="text-xs text-zinc-400 mt-0.5">Simulate risk engine reactions to noisy metrics, missing observations, delayed canaries, and store-and-forward fallbacks:</p>
+</div>
+</div>
+<div class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full glass-pill text-zinc-300 font-code-xs text-[11px] border-white/20" id="sim-status-pill">
+<span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)]"></span> Engine Status: <span class="text-white font-medium">Baseline</span>
+</div>
+</div>
+<!-- Simulation Action Triggers (Monochrome Frosted Action Pills) -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<button class="sim-btn px-3.5 py-1.5 rounded-xl bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white font-code-sm text-xs flex items-center gap-2 transition-all cursor-pointer border border-white/10 hover:border-white/30 shadow-sm" onclick="runSimulation('missing')">
+<span class="text-white font-bold">1.</span>
+<span>Missing Telemetry → Median Imputation &amp; Quality Warning</span>
+</button>
+<button class="sim-btn px-3.5 py-1.5 rounded-xl bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white font-code-sm text-xs flex items-center gap-2 transition-all cursor-pointer border border-white/10 hover:border-white/30 shadow-sm" onclick="runSimulation('noisy')">
+<span class="text-white font-bold">2.</span>
+<span>Noisy Sensor Spike → Moving Average Smoothing</span>
+</button>
+<button class="sim-btn px-3.5 py-1.5 rounded-xl bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white font-code-sm text-xs flex items-center gap-2 transition-all cursor-pointer border border-white/10 hover:border-white/30 shadow-sm" onclick="runSimulation('delayed')">
+<span class="text-white font-bold">3.</span>
+<span>Delayed Canary → Automatic Fallback to PAUSE</span>
+</button>
+<button class="sim-btn px-3.5 py-1.5 rounded-xl bg-zinc-900/70 hover:bg-zinc-800 text-zinc-300 hover:text-white font-code-sm text-xs flex items-center gap-2 transition-all cursor-pointer border border-white/10 hover:border-white/30 shadow-sm" onclick="runSimulation('outage')">
+<span class="text-white font-bold">4.</span>
+<span>Monitoring Outage → LocalStorage Store-and-Forward</span>
+</button>
+<button class="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-code-sm text-xs flex items-center gap-1.5 transition-all cursor-pointer border border-white/25 shadow-sm ml-auto" onclick="runSimulation('reset')">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+<span>↺ Reset To Full 100-Release Dataset</span>
+</button>
+</div>
+<!-- Refined Monochrome Frosted Storage Fallback Alert -->
+<div class="p-3 rounded-xl bg-zinc-900/80 backdrop-blur-md border border-white/15 shadow-[0_0_20px_rgba(0,0,0,0.5)] flex flex-wrap items-center justify-between gap-2 text-zinc-200 font-code-xs text-[11px]" id="offline-alert">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-zinc-300 shrink-0">inventory_2</span>
+<span>Offline: Monitoring telemetry stored locally in localStorage (store-and-forward queue active: 0 pending sync)</span>
+</div>
+<span class="text-zinc-400 font-mono">Buffer ID: #SYNC-LOCAL-STORE</span>
+</div>
+</div>
+<!-- Filters, Multi-Tenant Toggles & Search Bar (Frosted Monochrome Segment Control) -->
+<div class="flex flex-col gap-3.5 glass-card p-4 rounded-2xl">
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3.5">
+<!-- Search Input -->
+<div class="relative flex-1 max-w-xl">
+<span class="material-symbols-outlined absolute left-3.5 top-2.5 text-zinc-400 text-[18px]">search</span>
+<input class="w-full pl-10 pr-4 py-2 rounded-xl bg-black/60 text-white placeholder:text-zinc-500 font-code-sm text-xs border border-white/15 focus:outline-none focus:border-white/50 focus:bg-black/80 focus:ring-1 focus:ring-white/30 transition-all shadow-inner" id="release-search" oninput="applyFilter()" placeholder="Search by Release ID (e.g. REL-0042), Service, or Commit..." type="text"/>
+</div>
+<!-- Tenant Dropdown Selector (Monochrome Pills) -->
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 mr-1 tracking-wider">Tenant:</span>
+<button class="tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-white text-black font-semibold border border-white shadow-[0_0_12px_rgba(255,255,255,0.2)] transition-all" onclick="setTenantFilter('all', this)">All Organizations</button>
+<button class="tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setTenantFilter('BankA', this)">BankA (Financial)</button>
+<button class="tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setTenantFilter('HealthCo', this)">HealthCo (Healthcare)</button>
+<button class="tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setTenantFilter('GovAgency', this)">GovAgency (Public Sector)</button>
+</div>
+</div>
+<!-- Decision & Stage Horizontal Secondary Filter Row -->
+<div class="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-white/[0.08]">
+<div class="flex flex-wrap items-center gap-1.5">
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Decision:</span>
+<button class="decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-white text-black font-semibold border border-white shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-all" onclick="setDecisionFilter('all', this)">All Decisions</button>
+<button class="decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-200 hover:bg-white/15 border border-white/20 transition-all" onclick="setDecisionFilter('ALLOW', this)">ALLOW (0-39 pts)</button>
+<button class="decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-white/15 border border-white/20 transition-all" onclick="setDecisionFilter('PAUSE', this)">PAUSE (40-59 pts)</button>
+<button class="decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-400 hover:bg-white/15 border border-white/20 transition-all" onclick="setDecisionFilter('BLOCK', this)">BLOCK (60+ pts)</button>
+<div class="w-px h-4 bg-white/15 mx-1.5 hidden md:block"></div>
+<span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Stage:</span>
+<button class="stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-white text-black font-semibold border border-white shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-all" onclick="setStageFilter('all', this)">All Stages</button>
+<button class="stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setStageFilter('Canary', this)">Canary (10%)</button>
+<button class="stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setStageFilter('Staged', this)">Staged (50%)</button>
+<button class="stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all" onclick="setStageFilter('Production', this)">Production (100%)</button>
+</div>
+<div class="flex items-center gap-2.5 ml-auto">
+<span class="font-code-xs text-[11px] text-zinc-300 px-3 py-1 rounded-xl glass-pill" id="counter-badge">Showing 100 of 100 releases</span>
+<button class="px-3 py-1 rounded-xl bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 hover:text-white font-code-xs text-[11px] flex items-center gap-1.5 cursor-pointer border border-white/15 hover:border-white/35 transition-all" onclick="exportCSV()">
+<span class="material-symbols-outlined text-[14px] text-white">download</span>
+<span>Export CSV</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Active Releases & Deployment Decisions Table (Glass Container) -->
+<div class="rounded-2xl glass-card overflow-hidden flex flex-col">
+<div class="p-4 bg-black/60 backdrop-blur-md flex items-center justify-between border-b border-white/[0.1]">
+<div class="flex items-center gap-2.5">
+<div class="w-7 h-7 rounded-lg bg-white/[0.08] flex items-center justify-center text-white border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.08)]">
+<span class="material-symbols-outlined text-[18px]">dataset</span>
+</div>
+<h2 class="font-headline-md font-semibold text-white text-base sm:text-lg tracking-tight">Active Releases &amp; Deployment Decisions</h2>
+</div>
+<div class="flex items-center gap-3 font-code-xs text-[11px] text-zinc-400">
+<span class="flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> Live Ingestion: SSE Active</span>
+<span class="hidden sm:inline text-white/20">•</span>
+<span class="hidden sm:inline">Telemetry Frequency: 1.0s</span>
+</div>
+</div>
+<!-- High-Density Responsive Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-black/80 backdrop-blur-md font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider border-b border-white/[0.1] sticky top-0 z-20">
+<th class="py-3 px-4 whitespace-nowrap">Release ID</th>
+<th class="py-3 px-4 whitespace-nowrap">Organization</th>
+<th class="py-3 px-4 whitespace-nowrap">Version &amp; Service</th>
+<th class="py-3 px-4 whitespace-nowrap">Rollout Stage</th>
+<th class="py-3 px-4 whitespace-nowrap">Telemetry Metrics</th>
+<th class="py-3 px-4 whitespace-nowrap">Risk Score</th>
+<th class="py-3 px-4 whitespace-nowrap">Decision</th>
+<th class="py-3 px-4 min-w-[280px]">Triggered Reasons &amp; Governance</th>
+<th class="py-3 px-4 text-right whitespace-nowrap">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-none font-code-xs text-xs" id="releases-tbody">
+<!-- Dynamically Populated Rows -->
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination Controls -->
+<div class="p-4 bg-black/70 backdrop-blur-md flex flex-col sm:flex-row items-center justify-between gap-3 font-code-xs text-xs text-zinc-400 border-t border-white/[0.1]">
+<div class="flex items-center gap-3">
+<span>Showing page 1 of 1 (100 releases loaded into cache)</span>
+<span class="text-zinc-600 hidden md:inline">• Hash: sha256:d894b92c47aef1</span>
+</div>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-1 rounded-lg bg-white/[0.02] text-zinc-600 cursor-not-allowed border border-white/5">Previous</button>
+<button class="px-3 py-1 rounded-lg bg-white text-black font-semibold border border-white shadow-[0_0_10px_rgba(255,255,255,0.2)]">1</button>
+<button class="px-3 py-1 rounded-lg bg-white/[0.02] text-zinc-600 cursor-not-allowed border border-white/5">Next</button>
+</div>
+</div>
+</div>
+<!-- Additional Evidence Report Preview / Modal (Monochrome Glassmorphic Modal) -->
+<div class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur-2xl flex items-center justify-center p-4" id="risk-modal">
+<div class="bg-zinc-950/95 backdrop-blur-2xl border border-white/20 max-w-2xl w-full rounded-2xl p-6 shadow-[0_20px_60px_rgba(0,0,0,0.9),inset_0_1px_0_0_rgba(255,255,255,0.15)] flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-white/10">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-xl bg-white/[0.08] flex items-center justify-center text-white border border-white/20">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+</div>
+<h3 class="font-headline-md font-semibold text-base sm:text-lg text-white" id="modal-title">Release Detail</h3>
+</div>
+<button class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors" onclick="closeModal()">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-3 font-body-sm text-xs text-zinc-300" id="modal-content">
+<!-- Populated by JS -->
+</div>
+<div class="flex justify-end gap-2.5 pt-2 border-t border-white/10">
+<button class="px-4 py-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white font-code-sm text-xs border border-white/15 transition-all cursor-pointer" onclick="closeModal()">Close</button>
+<button class="px-4 py-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold border border-white font-code-sm text-xs transition-all shadow-[0_0_20px_rgba(255,255,255,0.2)] cursor-pointer" onclick="alert('Cryptographic attestations verified by BankA Ledger.'); closeModal();">Verify Signed Evidence</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Complete mock generation for 100 enterprise releases adhering to pure monochrome system
+  const tenants = [
+    { name: 'BankA', label: 'Financial', badge: 'bg-white/10 text-white border border-white/25 shadow-sm' },
+    { name: 'HealthCo', label: 'Healthcare', badge: 'bg-zinc-800/80 text-zinc-200 border border-zinc-600 shadow-sm' },
+    { name: 'GovAgency', label: 'Public Sector', badge: 'bg-zinc-900/90 text-zinc-300 border border-white/15 shadow-sm' }
+  ];
+
+  const services = [
+    'payment-service', 'auth-gateway', 'claims-processor', 'ledger-sync', 
+    'user-profile', 'compliance-auditor', 'transaction-router', 'hl7-bridge',
+    'security-token-svc', 'fed-reporting-agent', 'fraud-evaluator'
+  ];
+
+  const stages = [
+    { name: 'Canary', pct: '10%' },
+    { name: 'Staged', pct: '50%' },
+    { name: 'Production', pct: '100%' }
+  ];
+
+  // Deterministic seed data generator for 100 releases matching the 80/12/8 breakdown
+  let allReleases = [];
+
+  function initReleases() {
+    allReleases = [];
+    for (let i = 100; i >= 1; i--) {
+      const relId = 'REL-' + (i < 10 ? '000' : i < 100 ? '00' : '0') + i;
+      const tenant = tenants[(i * 7) % tenants.length];
+      const service = services[(i * 13) % services.length];
+      const stage = stages[i % stages.length];
+      const version = 'v' + (1 + (i % 4)) + '.' + (i % 15) + '.' + (i % 9);
+
+      let decision = 'ALLOW';
+      let score = 5 + (i % 30);
+      let reasons = 'Passed Canary: No metric anomalies detected. p99 within SLA.';
+      let p99 = (28 + (i % 45)) + 'ms';
+      let errRate = '0.0' + (i % 5) + '%';
+      let cpu = (25 + (i % 35)) + '%';
+
+      // 12 Paused
+      if (i % 8 === 0 && allReleases.filter(r => r.decision === 'PAUSE').length < 12) {
+        decision = 'PAUSE';
+        score = 42 + (i % 16);
+        p99 = (260 + (i % 90)) + 'ms';
+        errRate = '0.78%';
+        reasons = 'Hold: p99 latency spiked > 250ms threshold. Anomaly index elevated.';
+      }
+      // 8 Blocked
+      else if ((i % 11 === 0 || i === 83 || i === 52) && allReleases.filter(r => r.decision === 'BLOCK').length < 8) {
+        decision = 'BLOCK';
+        score = 72 + (i % 22);
+        p99 = (480 + (i % 150)) + 'ms';
+        errRate = '4.21%';
+        cpu = '92%';
+        reasons = 'Blocked: Error rate 4.2% exceeded 1.0% limit - automated rollback triggered.';
+      }
+
+      allReleases.push({
+        id: relId,
+        tenant: tenant.name,
+        tenantLabel: tenant.label,
+        tenantBadge: tenant.badge,
+        service: service,
+        version: version,
+        stage: stage.name,
+        stagePct: stage.pct,
+        p99: p99,
+        errRate: errRate,
+        cpu: cpu,
+        score: score,
+        decision: decision,
+        reasons: reasons,
+        commit: 'git:' + Math.random().toString(16).substring(2, 9)
+      });
+    }
+
+    // Ensure exact counts: 80 ALLOW, 12 PAUSE, 8 BLOCK
+    let pauses = allReleases.filter(r => r.decision === 'PAUSE').length;
+    let blocks = allReleases.filter(r => r.decision === 'BLOCK').length;
+
+    allReleases.forEach((r, idx) => {
+      if (pauses < 12 && r.decision === 'ALLOW' && idx % 7 === 0) {
+        r.decision = 'PAUSE';
+        r.score = 48;
+        r.reasons = 'Hold: Memory saturation slope > 15MB/min detected in canary pool.';
+        pauses++;
+      }
+      if (blocks < 8 && r.decision === 'ALLOW' && idx % 13 === 0) {
+        r.decision = 'BLOCK';
+        r.score = 84;
+        r.reasons = 'Blocked: Regulated compliance audit invariant violation (PII token leakage risk).';
+        blocks++;
+      }
+    });
+  }
+
+  let currentTenant = 'all';
+  let currentDecision = 'all';
+  let currentStage = 'all';
+
+  function renderTable(data) {
+    const tbody = document.getElementById('releases-tbody');
+    tbody.innerHTML = '';
+
+    data.forEach((item, index) => {
+      const row = document.createElement('tr');
+      row.className = 'hover:bg-white/[0.04] transition-all border-b border-white/[0.06] ' + (index % 2 === 0 ? 'bg-transparent' : 'bg-white/[0.015]');
+
+      // High-Contrast Pure Monochrome Decision Badges
+      let badgeClass = 'border-white bg-white text-black font-bold shadow-[0_0_12px_rgba(255,255,255,0.25)]';
+      if (item.decision === 'PAUSE') badgeClass = 'border-zinc-500 bg-zinc-800 text-zinc-200 font-semibold shadow-[0_0_8px_rgba(255,255,255,0.06)]';
+      if (item.decision === 'BLOCK') badgeClass = 'border-zinc-700 bg-black text-zinc-400 font-bold border-dashed';
+
+      // Risk score styling in refined monochrome
+      let scoreColor = 'text-white bg-white/10 border-white/20';
+      if (item.score >= 40 && item.score < 60) scoreColor = 'text-zinc-300 bg-zinc-800 border-zinc-600';
+      if (item.score >= 60) scoreColor = 'text-zinc-400 bg-black border-zinc-700';
+
+      row.innerHTML = `
+        <td class="py-3 px-4 whitespace-nowrap">
+          <a href="javascript:void(0)" onclick="openModal('${item.id}')" class="text-white hover:text-zinc-200 font-code-sm font-semibold transition-colors flex items-center gap-1 underline-offset-2 hover:underline">${item.id}</a>
+          <span class="block text-zinc-500 text-[10px] font-mono mt-0.5">${item.commit}</span>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <span class="px-2 py-0.5 rounded-full ${item.tenantBadge} font-label-caps text-[10px] font-medium inline-block">${item.tenant}</span>
+          <span class="text-zinc-400 text-[11px] block mt-0.5">${item.tenantLabel}</span>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <span class="text-white font-medium">${item.version}</span>
+          <span class="block text-zinc-400 text-[11px] font-mono">${item.service}</span>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <div class="flex items-center gap-2">
+            <div class="w-14 bg-zinc-900 rounded-full h-1.5 overflow-hidden border border-white/15">
+              <div class="bg-gradient-to-r from-zinc-200 to-white h-full rounded-full" style="width: ${item.stagePct};"></div>
+            </div>
+            <span class="text-zinc-300 text-[11px]">${item.stage} (${item.stagePct})</span>
+          </div>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <div class="flex items-center gap-1 font-code-xs text-[11px]">
+            <span class="px-1.5 py-0.5 rounded bg-zinc-900/90 text-zinc-300 border border-white/10">p99: ${item.p99}</span>
+            <span class="px-1.5 py-0.5 rounded bg-zinc-900/90 text-zinc-300 border border-white/10">err: ${item.errRate}</span>
+            <span class="px-1.5 py-0.5 rounded bg-zinc-900/90 text-zinc-300 border border-white/10">cpu: ${item.cpu}</span>
+          </div>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <span class="font-bold font-mono ${scoreColor} px-2 py-0.5 rounded-lg border text-[11px]">${item.score} pts</span>
+        </td>
+        <td class="py-3 px-4 whitespace-nowrap">
+          <span class="font-label-caps text-[10px] px-2.5 py-1 rounded-full border ${badgeClass} uppercase tracking-wider">${item.decision}</span>
+        </td>
+        <td class="py-3 px-4 max-w-sm truncate text-zinc-300 text-xs" title="${item.reasons}">
+          ${item.reasons}
+        </td>
+        <td class="py-3 px-4 text-right whitespace-nowrap">
+          <div class="flex items-center justify-end gap-1">
+            <button onclick="openModal('${item.id}')" title="Inspect Risk Reasoning" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/20">
+              <span class="material-symbols-outlined text-[16px]">visibility</span>
+            </button>
+            <button onclick="downloadEvidence('${item.id}')" title="Evidence Report (Cryptographic Ledger)" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/20">
+              <span class="material-symbols-outlined text-[16px]">verified</span>
+            </button>
+            <button onclick="alert('Audit log for ${item.id} exported to secure retention cluster.');" title="Audit Log Trace" class="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer border border-transparent hover:border-white/20">
+              <span class="material-symbols-outlined text-[16px]">receipt_long</span>
+            </button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(row);
+    });
+
+    document.getElementById('counter-badge').innerText = `Showing ${data.length} of ${allReleases.length} releases`;
+  }
+
+  function applyFilter() {
+    const searchVal = document.getElementById('release-search').value.toLowerCase();
+
+    let filtered = allReleases.filter(r => {
+      const matchSearch = r.id.toLowerCase().includes(searchVal) || 
+                          r.service.toLowerCase().includes(searchVal) || 
+                          r.commit.toLowerCase().includes(searchVal) ||
+                          r.version.toLowerCase().includes(searchVal);
+      const matchTenant = currentTenant === 'all' || r.tenant === currentTenant;
+      const matchDecision = currentDecision === 'all' || r.decision === currentDecision;
+      const matchStage = currentStage === 'all' || r.stage === currentStage;
+
+      return matchSearch && matchTenant && matchDecision && matchStage;
+    });
+
+    renderTable(filtered);
+  }
+
+  function setTenantFilter(tenant, btn) {
+    currentTenant = tenant;
+    document.querySelectorAll('.tenant-btn').forEach(b => {
+      b.className = 'tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all';
+    });
+    btn.className = 'tenant-btn px-3 py-1.5 rounded-xl font-code-sm text-xs bg-white text-black font-semibold border border-white shadow-[0_0_12px_rgba(255,255,255,0.2)] transition-all';
+    applyFilter();
+  }
+
+  function setDecisionFilter(decision, btn) {
+    currentDecision = decision;
+    document.querySelectorAll('.decision-btn').forEach(b => {
+      b.className = 'decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all';
+    });
+    btn.className = 'decision-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-white text-black font-semibold border border-white shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-all';
+    applyFilter();
+  }
+
+  function setStageFilter(stage, btn) {
+    currentStage = stage;
+    document.querySelectorAll('.stage-btn').forEach(b => {
+      b.className = 'stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-zinc-900/80 text-zinc-300 hover:bg-zinc-800 hover:text-white border border-white/10 transition-all';
+    });
+    btn.className = 'stage-btn px-2.5 py-1 rounded-lg font-code-xs text-[11px] bg-white text-black font-semibold border border-white shadow-[0_0_10px_rgba(255,255,255,0.18)] transition-all';
+    applyFilter();
+  }
+
+  // Simulation triggers for PRD Section 15 (Monochrome Styled)
+  function runSimulation(type) {
+    const pill = document.getElementById('sim-status-pill');
+    const offlineAlert = document.getElementById('offline-alert');
+
+    if (type === 'missing') {
+      pill.classList.remove('hidden');
+      pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span> Simulating: <span class="text-white font-medium">Median Imputation Active</span>`;
+      allReleases.slice(0, 8).forEach(r => {
+        r.p99 = '[Imputed 34ms]';
+        r.reasons = 'Quality Warning: 4 Telemetry gaps imputed using rolling 1h median.';
+      });
+      applyFilter();
+    } else if (type === 'noisy') {
+      pill.classList.remove('hidden');
+      pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-zinc-300 animate-pulse"></span> Simulating: <span class="text-zinc-200 font-medium">Moving Average Smoothing</span>`;
+      allReleases.slice(0, 10).forEach(r => {
+        r.cpu = '44% (smoothed from 89%)';
+        r.reasons = 'Telemetry spike filtered by Exponential Moving Average (window=15s).';
+      });
+      applyFilter();
+    } else if (type === 'delayed') {
+      pill.classList.remove('hidden');
+      pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-zinc-400 animate-bounce"></span> Simulating: <span class="text-zinc-200 font-medium">Canary Heartbeat Stalled</span>`;
+      allReleases.slice(0, 15).forEach(r => {
+        r.decision = 'PAUSE';
+        r.score = 55;
+        r.reasons = 'Hold: Canary telemetry heartbeat delayed > 180s. Automatic hold triggered.';
+      });
+      applyFilter();
+    } else if (type === 'outage') {
+      pill.classList.remove('hidden');
+      pill.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-white"></span> LocalStorage Store-and-Forward Active`;
+      offlineAlert.classList.remove('hidden');
+      offlineAlert.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-white">cloud_off</span>
+          <span class="text-zinc-200 font-medium">Offline Mode Active: Telemetry buffers persisting to browser LocalStorage (24 queued records)</span>
+        </div>
+        <button onclick="syncQueue()" class="px-3 py-1 rounded-lg bg-white hover:bg-zinc-200 text-black border border-white text-xs font-bold uppercase transition-all shadow-[0_0_12px_rgba(255,255,255,0.2)]">Sync Now</button>
+      `;
+    } else if (type === 'reset') {
+      initReleases();
+      pill.classList.add('hidden');
+      offlineAlert.innerHTML = `
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-[18px] text-zinc-300">inventory_2</span>
+          <span class="text-zinc-200">Offline: Monitoring telemetry stored locally in localStorage (store-and-forward queue active: 0 pending sync)</span>
+        </div>
+        <span class="text-zinc-400 font-mono">Buffer ID: #SYNC-LOCAL-STORE</span>
+      `;
+      applyFilter();
+    }
+  }
+
+  function syncQueue() {
+    alert('Store-and-forward queue flushed successfully: 24 attestations written to central audit log.');
+    runSimulation('reset');
+  }
+
+  function exportCSV() {
+    let csv = "ReleaseID,Organization,Service,Version,Stage,Score,Decision,Reasons\n";
+    allReleases.forEach(r => {
+      csv += `${r.id},${r.tenant},${r.service},${r.version},${r.stage},${r.score},${r.decision},"${r.reasons}"\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `risk-monitor-releases-100-${Date.now()}.csv`;
+    a.click();
+  }
+
+  function openModal(id) {
+    const item = allReleases.find(r => r.id === id);
+    if (!item) return;
+
+    let decisionColor = item.decision === 'ALLOW' ? 'text-white' : item.decision === 'PAUSE' ? 'text-zinc-300' : 'text-zinc-400';
+
+    document.getElementById('modal-title').innerText = `${item.id} — Risk Reasoning & Attestation`;
+    document.getElementById('modal-content').innerHTML = `
+      <div class="grid grid-cols-2 gap-2.5 p-3.5 rounded-xl bg-black/60 font-code-xs border border-white/10">
+        <div><span class="text-zinc-400">Organization:</span> <span class="text-white font-medium">${item.tenant} (${item.tenantLabel})</span></div>
+        <div><span class="text-zinc-400">Service:</span> <span class="text-white font-medium">${item.service} (${item.version})</span></div>
+        <div><span class="text-zinc-400">Rollout Stage:</span> <span class="text-white font-medium">${item.stage} (${item.stagePct})</span></div>
+        <div><span class="text-zinc-400">Commit Ref:</span> <span class="text-zinc-200">${item.commit}</span></div>
+      </div>
+      <div class="p-4 rounded-xl bg-black/60 flex flex-col gap-2 border border-white/10">
+        <span class="font-label-caps text-[10px] uppercase text-zinc-400 tracking-wider">Risk Analysis &amp; Gate Decision</span>
+        <div class="flex items-center gap-3">
+          <span class="font-code-sm font-bold text-xl ${decisionColor}">${item.decision}</span>
+          <span class="font-code-xs text-zinc-400">(Overall Risk Score: <span class="text-white font-semibold">${item.score}</span> / 100)</span>
+        </div>
+        <p class="text-zinc-300 mt-1 text-xs sm:text-sm">${item.reasons}</p>
+      </div>
+      <div class="p-3 rounded-xl bg-white/10 text-white font-code-xs text-[11px] flex items-center justify-between border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.06)]">
+        <span>Attestation Signer: BankA Governance Policy Enclave v4.18</span>
+        <span class="text-white font-mono font-semibold">SHA256: VALID</span>
+      </div>
+    `;
+    document.getElementById('risk-modal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('risk-modal').classList.add('hidden');
+  }
+
+  function downloadEvidence(id) {
+    alert(`Generating cryptographically signed Evidence Report PDF for ${id}...\n\nCompliance Framework: FedRAMP High / PCI-DSS 4.0\nAttestation Signature verified.`);
+  }
+
+  // Baseline script action mock
+  document.getElementById('btn-baseline-exp').addEventListener('click', function() {
+    alert('Baseline Experiment execution triggered:\nRunning "experiments/run_baseline_experiment.py" on 100 canary batches.\nOutput logged to Immutable Audit Trail.');
+  });
+
+  // Initial load
+  initReleases();
+  applyFilter();
+</script></main><footer class="relative z-10 w-full bg-[#09090b]/85 backdrop-blur-xl border-t border-white/[0.1]"><div class="w-full px-4 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-2 font-code-xs text-xs text-zinc-400"><div class="flex items-center gap-3"><span>Risk Assurance Engine <span class="text-white font-medium">v4.18.2-regulated</span></span><span class="text-white/20">•</span><span class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_6px_rgba(255,255,255,0.9)]"></span> Status: Verified Enclave</span></div><div><span>BankA Policy Compliance Core © 2025. All attestations cryptographically signed.</span></div></div></footer></body></html>

@@ -31,6 +31,7 @@ coverage.xml
 
 # Databases & local stores
 *.db
+cache.*.db
 *.sqlite3
 instance/
 desktop-v2.db

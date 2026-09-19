@@ -39,33 +39,108 @@ def run_experiment():
     print(f"  Ground Truth Harmful Changes:   {n_harmful} ({n_harmful / total_records * 100:.1f}%)")
     print(f"  Ground Truth Healthy Changes:   {n_healthy} ({n_healthy / total_records * 100:.1f}%)")
 
-    # -------------------------------------------------------------
-    # 2. Baseline System Simulation (Status Quo)
-    # -------------------------------------------------------------
-    # In status quo, without automated canary telemetry and risk gating:
-    # Only ~20% of harmful releases are caught during rudimentary manual checks.
-    # 0% structured audit evidence is maintained.
-    baseline_tp = round(n_harmful * 0.20)  # 20% stopped
-    baseline_fn = n_harmful - baseline_tp  # 80% slip through to customers
-    baseline_fp = 0                             # Status quo blindly approves changes
-    baseline_tn = n_healthy
+def evaluate_status_quo_baseline(record):
+    """Status Quo Baseline gating heuristic (Pre-Intervention):
+    Enterprise standard change validation without progressive canary telemetry
+    or multi-factor error budget scoring. Evaluates only coarse aggregate metrics:
+    - Halts only if aggregate raw error rate exceeds 5.0%
+    - Completely blind to canary_error_rate and canary_latency_delta
+    - Completely blind to error_budget depletion
+    - Missing telemetry slips through uninspected
+    - Produces zero automated audit evidence
+    """
+    raw_error = record.get("error_rate")
+    if raw_error == "" or raw_error is None:
+        return {
+            "is_stopped": False,
+            "decision": "ALLOW",
+            "reason": "Missing telemetry; bypassed without inspection",
+            "evidence_generated": False,
+        }
+    try:
+        err = float(raw_error)
+        if err >= 5.0:
+            return {
+                "is_stopped": True,
+                "decision": "BLOCK",
+                "reason": f"Coarse error threshold exceeded: {err}% >= 5.0%",
+                "evidence_generated": False,
+            }
+        return {
+            "is_stopped": False,
+            "decision": "ALLOW",
+            "reason": f"Coarse error check passed: {err}% < 5.0%",
+            "evidence_generated": False,
+        }
+    except Exception:
+        return {
+            "is_stopped": False,
+            "decision": "ALLOW",
+            "reason": "Telemetry parse error; uninspected pass",
+            "evidence_generated": False,
+        }
 
-    baseline_stop_rate = (baseline_tp / n_harmful) * 100
-    baseline_fp_rate = (baseline_fp / n_healthy) * 100 if n_healthy else 0
-    baseline_evidence_rate = 0.0
+
+def run_experiment():
+    print("=" * 70)
+    print("  PRE-RELEASE RISK MONITOR: END-TO-END BASELINE EXPERIMENT")
+    print("=" * 70)
+
+    # 1. Generate 100 synthetic change records with ground truth
+    records = generate_records()
+    total_records = len(records)
+    harmful_records = [r for r in records if r.get("is_harmful")]
+    healthy_records = [r for r in records if not r.get("is_harmful")]
+
+    n_harmful = len(harmful_records)
+    n_healthy = len(healthy_records)
+
+    print("\n[DATASET SUMMARY]")
+    print(f"  Total Change Tickets Evaluated: {total_records}")
+    print(f"  Ground Truth Harmful Changes:   {n_harmful} ({n_harmful / total_records * 100:.1f}%)")
+    print(f"  Ground Truth Healthy Changes:   {n_healthy} ({n_healthy / total_records * 100:.1f}%)")
 
     # -------------------------------------------------------------
-    # 3. Intervention System (Pre-Release Risk Monitor)
+    # 2. Baseline System Simulation (Status Quo End-to-End Run)
     # -------------------------------------------------------------
-    interv_tp = 0  # Harmful correctly PAUSED or BLOCKED
-    interv_fn = 0  # Harmful mistakenly ALLOWED
-    interv_fp = 0  # Healthy mistakenly PAUSED or BLOCKED
-    interv_tn = 0  # Healthy correctly ALLOWED
-    evidence_count = 0
+    baseline_tp = 0
+    baseline_fn = 0
+    baseline_fp = 0
+    baseline_tn = 0
+    baseline_evidence_count = 0
+
+    # -------------------------------------------------------------
+    # 3. Intervention System (Pre-Release Risk Monitor End-to-End Run)
+    # -------------------------------------------------------------
+    interv_tp = 0
+    interv_fn = 0
+    interv_fp = 0
+    interv_tn = 0
+    interv_evidence_count = 0
 
     detailed_evaluations = []
 
     for r in records:
+        is_harmful = r.get("is_harmful", False)
+
+        # Evaluate Status Quo Baseline
+        base_res = evaluate_status_quo_baseline(r)
+        base_stopped = base_res["is_stopped"]
+        if is_harmful:
+            if base_stopped:
+                baseline_tp += 1
+            else:
+                baseline_fn += 1
+        else:
+            if base_stopped:
+                baseline_fp += 1
+            else:
+                baseline_tn += 1
+
+        if base_res["evidence_generated"]:
+            baseline_evidence_count += 1
+
+        # Evaluate Intervention Risk Engine Pipeline
         metrics_input = {
             "error_rate": r.get("error_rate"),
             "latency_ms": r.get("latency_ms"),
@@ -77,52 +152,67 @@ def run_experiment():
             "memory_usage": r.get("memory_usage"),
         }
 
-        # Run through full Risk Engine pipeline
         evaluation = evaluate_release(metrics_input)
         decision = evaluation["decision"]
         risk_score = evaluation["risk_score"]
-        is_harmful = r.get("is_harmful", False)
-
-        # In pre-release gating, PAUSE or BLOCK stops broad production exposure
-        is_stopped = decision in ("PAUSE", "BLOCK")
+        interv_stopped = decision in ("PAUSE", "BLOCK")
 
         if is_harmful:
-            if is_stopped:
+            if interv_stopped:
                 interv_tp += 1
             else:
                 interv_fn += 1
         else:
-            if is_stopped:
+            if interv_stopped:
                 interv_fp += 1
             else:
                 interv_tn += 1
 
-        # Evidence record generated for every production change
         if "decision" in evaluation and "risk_score" in evaluation:
-            evidence_count += 1
+            interv_evidence_count += 1
 
         detailed_evaluations.append({
             "release_id": r.get("release_id"),
             "org": r.get("org"),
             "version": r.get("version"),
             "is_harmful": is_harmful,
-            "risk_score": risk_score,
-            "decision": decision,
-            "is_stopped": is_stopped,
-            "reasons": evaluation.get("reasons", []),
-            "imputation_warnings": evaluation.get("imputation_warnings", [])
+            "baseline": {
+                "decision": base_res["decision"],
+                "is_stopped": base_stopped,
+                "reason": base_res["reason"],
+            },
+            "intervention": {
+                "decision": decision,
+                "risk_score": risk_score,
+                "is_stopped": interv_stopped,
+                "reasons": evaluation.get("reasons", []),
+                "imputation_warnings": evaluation.get("imputation_warnings", []),
+            },
         })
 
-    interv_stop_rate = (interv_tp / n_harmful) * 100
-    interv_fp_rate = (interv_fp / n_healthy) * 100
+    # Baseline calculations
+    baseline_stop_rate = (baseline_tp / n_harmful) * 100 if n_harmful else 0
+    baseline_fp_rate = (baseline_fp / n_healthy) * 100 if n_healthy else 0
+    baseline_precision = (
+        (baseline_tp / (baseline_tp + baseline_fp)) * 100 if (baseline_tp + baseline_fp) else 0
+    )
+    baseline_recall = baseline_stop_rate
+    base_denom = baseline_precision + baseline_recall
+    baseline_f1 = (2 * baseline_precision * baseline_recall) / base_denom if base_denom else 0
+    baseline_accuracy = ((baseline_tp + baseline_tn) / total_records) * 100
+    baseline_evidence_rate = (baseline_evidence_count / total_records) * 100
+
+    # Intervention calculations
+    interv_stop_rate = (interv_tp / n_harmful) * 100 if n_harmful else 0
+    interv_fp_rate = (interv_fp / n_healthy) * 100 if n_healthy else 0
     interv_precision = (
         (interv_tp / (interv_tp + interv_fp)) * 100 if (interv_tp + interv_fp) else 0
     )
     interv_recall = interv_stop_rate
-    denom = interv_precision + interv_recall
-    interv_f1 = (2 * interv_precision * interv_recall) / denom if denom else 0
+    interv_denom = interv_precision + interv_recall
+    interv_f1 = (2 * interv_precision * interv_recall) / interv_denom if interv_denom else 0
     interv_accuracy = ((interv_tp + interv_tn) / total_records) * 100
-    interv_evidence_rate = (evidence_count / total_records) * 100
+    interv_evidence_rate = (interv_evidence_count / total_records) * 100
 
     results = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -133,6 +223,10 @@ def run_experiment():
             "harmful_stop_rate_pct": round(baseline_stop_rate, 2),
             "false_positive_block_rate_pct": round(baseline_fp_rate, 2),
             "evidence_generated_pct": round(baseline_evidence_rate, 2),
+            "precision_pct": round(baseline_precision, 2),
+            "recall_pct": round(baseline_recall, 2),
+            "f1_score_pct": round(baseline_f1, 2),
+            "accuracy_pct": round(baseline_accuracy, 2),
             "tp": baseline_tp,
             "fn": baseline_fn,
             "fp": baseline_fp,
@@ -155,7 +249,7 @@ def run_experiment():
             "harmful_stop_rate_met": interv_stop_rate >= 80.0,
             "evidence_generated_met": interv_evidence_rate == 100.0,
             "false_positive_rate_met": interv_fp_rate < 15.0,
-        }
+        },
     }
 
     print("\n" + "=" * 70)

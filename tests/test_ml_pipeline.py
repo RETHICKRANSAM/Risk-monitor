@@ -1,6 +1,10 @@
 """Unit and integration tests for the ML/DL pipeline and API endpoints."""
 
 import pytest
+
+# Skip this module gracefully if ML dependencies (joblib, scikit-learn, etc.) are not installed
+joblib = pytest.importorskip("joblib", reason="ML pipeline dependencies (joblib, scikit-learn) not installed")
+
 from app import create_app
 from ml_pipeline.service import MLRiskEngine
 

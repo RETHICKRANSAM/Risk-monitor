@@ -7,25 +7,32 @@
     <title>Evidence Report — Pre-Release Risk Monitor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.0">
+    <link rel="stylesheet" href="static/css/style.css?v=2.0">
     <style>
         .evidence-dossier {
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            background: rgba(17, 24, 39, 0.75);
-            border-radius: var(--radius-lg, 0.75rem);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(18, 19, 26, 0.68);
+            backdrop-filter: blur(24px) saturate(130%);
+            -webkit-backdrop-filter: blur(24px) saturate(130%);
+            border-radius: var(--radius-lg, 1rem);
             padding: 1.5rem;
             margin-bottom: 1.5rem;
+            box-shadow: 0 10px 32px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
         }
         .signature-block {
             margin-top: 1.5rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.3);
+            padding: 1.15rem;
+            background: rgba(0, 0, 0, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-left: 3px solid #10b981;
-            font-family: monospace;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
             font-size: 0.8rem;
-            color: #93c5fd;
+            color: #d4d4d8;
         }
         @media print {
             .sidebar, .btn, .menu-toggle { display: none !important; }
@@ -35,6 +42,11 @@
     </style>
 </head>
 <body>
+    <!-- Pure Refined Monochrome Ambient Radial Gradients & Star Field Canvas -->
+    <div class="star-field">
+        <div class="shooting-star-1"></div>
+        <div class="shooting-star-2"></div>
+    </div>
 
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
 

@@ -1,4 +1,4 @@
-"""FalconEye — Enterprise SOC Flask Application
+"""Pre-Release Risk Monitor — Enterprise Deployment Risk & Governance Application
 Reads all data from JSON files in the data/ folder.
 Includes backend APIs: deployments, CI/CD, log analysis, health, risk evaluation.
 No database or Supabase connection required.

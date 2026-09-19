@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-  <title>{% block title %}Dashboard{% endblock %} — Enterprise SOC</title>
-  <meta name="description" content="Cybersecurity Risk Monitoring and Threat Detection Platform">
+  <title>{% block title %}Dashboard{% endblock %} — Pre-Release Risk Monitor</title>
+  <meta name="description" content="Pre-Release Risk Monitor for Regulated Enterprise Deployments — Automated canary gating, evidence generation, and immutable audit history.">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -181,39 +181,31 @@
       
       <a href="/dashboard" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/dashboard' or request.path == '/' %}nav-active{% endif %}">
         <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">query_stats</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Dashboard</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Rollout Dashboard</span>
       </a>
 
-      <a href="/endpoints" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/endpoints' %}nav-active{% endif %}">
-        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">router</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Endpoints</span>
-      </a>
-
-      <a href="/findings" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/findings' %}nav-active{% endif %}">
+      <a href="/risk-detail" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/risk-detail' %}nav-active{% endif %}">
         <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">troubleshoot</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Findings</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Risk Reasoning</span>
       </a>
 
-      <a href="/alerts" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/alerts' %}nav-active{% endif %}">
-        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">notifications_active</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Alerts</span>
-        {% if request.path != '/alerts' %}
-        <span class="ml-auto bg-soc-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-neon-primary">3</span>
-        {% endif %}
+      <a href="/evidence" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/evidence' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">description</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Evidence Reports</span>
+      </a>
+
+      <a href="/audit" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group {% if request.path == '/audit' %}nav-active{% endif %}">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">receipt_long</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Audit Ledger</span>
       </a>
 
       <div class="mt-8 mb-2">
-        <p class="px-4 text-xs font-semibold text-soc-border uppercase tracking-wider">Management</p>
+        <p class="px-4 text-xs font-semibold text-soc-border uppercase tracking-wider">Assurance & Gating</p>
       </div>
 
-      <a href="#" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group">
-        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">assessment</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Reports</span>
-      </a>
-      
-      <a href="#" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group">
-        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">settings</span>
-        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Settings</span>
+      <a href="/dashboard#walkthrough" onclick="if(window.startRiskWalkthrough){startRiskWalkthrough();return false;}" class="nav-link flex items-center px-4 py-2.5 rounded-r-lg text-soc-muted hover:text-white hover:bg-soc-cardHover transition-all group">
+        <span class="material-symbols-outlined text-[22px] transition-colors group-hover:text-soc-primary">help_center</span>
+        <span class="ml-3 font-medium group-hover:text-soc-primary transition-colors">Decision Walkthrough</span>
       </a>
 
     </nav>

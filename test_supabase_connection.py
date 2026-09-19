@@ -3,6 +3,10 @@ Run this to check if your Supabase credentials are working correctly.
 """
 
 import os
+import sys
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from dotenv import load_dotenv
 

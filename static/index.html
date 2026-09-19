@@ -7,27 +7,25 @@
     <title>Login — Pre-Release Risk Monitor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=2.0">
+    <link rel="stylesheet" href="static/css/style.css?v=2.0">
     <style>
         :root {
-            --color-bg-primary: #0a0e1a;
-            --color-bg-secondary: #111827;
-            --color-bg-card: rgba(17, 24, 39, 0.75);
-            --color-bg-card-hover: rgba(31, 41, 55, 0.85);
-            --color-bg-input: rgba(31, 41, 55, 0.7);
-            --color-accent-primary: #3b82f6;
-            --color-accent-primary-glow: rgba(59, 130, 246, 0.35);
-            --color-accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
-            --color-text-primary: #f9fafb;
-            --color-text-secondary: #9ca3af;
-            --color-text-muted: #6b7280;
-            --color-border: rgba(75, 85, 99, 0.4);
+            --color-bg-primary: #09090b;
+            --color-bg-secondary: #0d0e15;
+            --color-bg-card: rgba(18, 19, 26, 0.72);
+            --color-bg-input: rgba(0, 0, 0, 0.65);
+            --color-accent-primary: #ffffff;
+            --color-accent-primary-glow: rgba(255, 255, 255, 0.2);
+            --color-text-primary: #f4f4f5;
+            --color-text-secondary: #a1a1aa;
+            --color-text-muted: #71717a;
+            --color-border: rgba(255, 255, 255, 0.1);
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --glass-blur: 16px;
+            --radius-xl: 1.25rem;
         }
         *, *::before, *::after {
             margin: 0;
@@ -35,41 +33,40 @@
             box-sizing: border-box;
         }
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #0a0e1a;
-            color: #f9fafb;
+            font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-primary);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-image:
-                radial-gradient(ellipse at 20% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.08) 0%, transparent 50%);
-            background-attachment: fixed;
             padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
         }
         .login-container {
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1;
+            position: relative;
+            z-index: 10;
         }
         .login-card {
             width: 100%;
             max-width: 440px;
-            background: rgba(17, 24, 39, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(75, 85, 99, 0.4);
-            border-radius: 1rem;
+            background: rgba(18, 19, 26, 0.75);
+            backdrop-filter: blur(28px) saturate(130%);
+            -webkit-backdrop-filter: blur(28px) saturate(130%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: var(--radius-xl);
             padding: 2.5rem 2rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
             text-align: center;
         }
         .login-subtitle {
-            color: #9ca3af;
+            color: var(--color-text-secondary);
             font-size: 0.875rem;
             margin-bottom: 1.75rem;
             letter-spacing: 0.02em;
@@ -88,8 +85,8 @@
         .form-input {
             width: 100%;
             padding: 0.75rem 1rem;
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(75, 85, 99, 0.5);
+            background: var(--color-bg-input);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 0.5rem;
             color: #ffffff;
             font-size: 0.875rem;
@@ -98,12 +95,12 @@
             transition: all 0.2s ease;
         }
         .form-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
-            background: rgba(15, 23, 42, 0.9);
+            border-color: rgba(255, 255, 255, 0.45);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.85);
         }
         .form-input::placeholder {
-            color: #64748b;
+            color: #71717a;
         }
         .btn {
             display: inline-flex;
@@ -120,13 +117,13 @@
             text-decoration: none;
         }
         .btn-primary {
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            color: #ffffff;
-            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.15);
         }
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+            background: #e4e4e7;
+            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.25);
             transform: translateY(-1px);
         }
         .btn-primary:disabled {
@@ -151,18 +148,18 @@
         .demo-box {
             margin-top: 1.75rem;
             padding-top: 1.25rem;
-            border-top: 1px solid rgba(75, 85, 99, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             text-align: left;
             font-size: 0.75rem;
-            color: #9ca3af;
+            color: var(--color-text-secondary);
         }
         .demo-box code {
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(75, 85, 99, 0.4);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             padding: 0.15rem 0.4rem;
             border-radius: 0.25rem;
-            color: #60a5fa;
-            font-family: monospace;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
         }
         .toast-container {
             position: fixed;
@@ -173,6 +170,11 @@
     </style>
 </head>
 <body>
+    <!-- Pure Refined Monochrome Ambient Radial Gradients & Star Field Canvas -->
+    <div class="star-field">
+        <div class="shooting-star-1"></div>
+        <div class="shooting-star-2"></div>
+    </div>
 
     <div class="login-container">
         <div class="login-card glass-card">
@@ -206,9 +208,21 @@
                         autocomplete="current-password"
                     >
                 </div>
-                <button type="submit" class="btn btn-primary" id="loginBtn" onclick="window.location.href='dashboard.html'; return true;">
+                <button type="submit" class="btn btn-primary" id="loginBtn">
                     Sign In
                 </button>
+
+                <div style="margin: 1.25rem 0 0.75rem; position: relative; text-align: center;">
+                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(75,85,99,0.4);"></div>
+                    <span style="position: relative; background: #111827; padding: 0 0.75rem; font-size: 0.725rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Or Instant Demo Access</span>
+                </div>
+
+                <a href="dashboard.html?walkthrough=true" class="btn" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); text-decoration: none; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 0.75rem 1rem; border-radius: 0.5rem;" onclick="preAuthDemo();">
+                    🚀 Launch Risk Dashboard & Walkthrough
+                </a>
+                <p style="font-size: 0.725rem; color: #94a3b8; margin-top: 0.4rem;">
+                    Instant zero-click access to live telemetry, Allow/Pause/Block decisions & audit records.
+                </p>
             </form>
 
             <div class="demo-box">
@@ -230,12 +244,19 @@
     <script src="js/offline-queue.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // Check if already logged in locally
-        const savedUser = localStorage.getItem('user');
-        // Stay on login page for demo unless user clicks submit
+        function preAuthDemo() {
+            const demoUser = {
+                user_id: 'alice_re',
+                username: 'alice_re',
+                name: 'Alice Johnson',
+                role: 'release_engineer',
+                org_id: 'BankA'
+            };
+            localStorage.setItem('user', JSON.stringify(demoUser));
+        }
 
         // Handle login form
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const username = document.getElementById('username').value.trim();
@@ -249,19 +270,44 @@
                 return;
             }
 
-            btn.textContent = 'Redirecting...';
+            btn.textContent = 'Authenticating...';
             btn.disabled = true;
 
-            // Save user session for static demo
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.user) {
+                        localStorage.setItem('user', JSON.stringify(data.user));
+                        window.location.href = 'dashboard.html';
+                        return;
+                    }
+                } else if (res.status === 401) {
+                    const errData = await res.json().catch(() => ({}));
+                    errorEl.textContent = errData.error || 'Invalid credentials. Use demo password demo123.';
+                    errorEl.classList.add('visible');
+                    btn.textContent = 'Sign In';
+                    btn.disabled = false;
+                    return;
+                }
+            } catch (err) {
+                console.warn('Backend login endpoint unavailable, using offline fallback:', err);
+            }
+
+            // Save user session for static demo fallback
             const userObj = {
                 user_id: username,
                 username: username,
-                role: username.includes('audit') ? 'Auditor' : (username.includes('re') ? 'Release Engineer' : 'Compliance Officer'),
+                name: username.replace('_', ' ').toUpperCase(),
+                role: username.includes('audit') ? 'auditor' : (username.includes('re') ? 'release_engineer' : 'compliance_officer'),
                 org_id: username.includes('diana') ? 'HealthCo' : 'BankA'
             };
             localStorage.setItem('user', JSON.stringify(userObj));
-
-            // Redirect immediately to dashboard
             window.location.href = 'dashboard.html';
         });
     </script>

@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Compliance](https://img.shields.io/badge/compliance-SOX%20%7C%20PCI--DSS-orange.svg)](#production-deployment--compliance-checklist)
 
-> **Live Interactive Demo:** [https://rethikransem.github.io/Riskmonitor/](https://rethikransem.github.io/Riskmonitor/)  
+> **Live Interactive Demo:** [https://rethikransem.github.io/Riskmonitor/](https://rethikransem.github.io/Riskmonitor/) *(Features 1-click zero-login **Guided Risk Dashboard Walkthrough** mode)*  
 > **Empirical Evaluation Report:** [`EXPERIMENT_REPORT.md`](EXPERIMENT_REPORT.md)  
 > **Stakeholder Validation:** [`STAKEHOLDER_VALIDATION.md`](STAKEHOLDER_VALIDATION.md)  
 > **Product Requirements Document:** [`prd.md`](prd.md)
@@ -98,10 +98,12 @@ We executed an end-to-end empirical experiment evaluating 100 historical change 
 
 | Quantitative Metric | Baseline (Status Quo) | Intervention (Risk Monitor) | PRD Target | Status |
 | :--- | :---: | :---: | :---: | :---: |
-| **Harmful Release Stop Rate (Recall)** | 20.0% | **100.0%** | ≥ 80% | **PASS** |
+| **Harmful Release Stop Rate (Recall)** | 50.0% | **100.0%** | ≥ 80% | **PASS** |
 | **Audit Evidence Generation Rate** | 0.0% | **100.0%** | 100% | **PASS** |
 | **False Positive Block Rate** | 0.0% | **0.0%** | < 15% | **PASS** |
-| **Overall Classification Accuracy** | 84.0% | **100.0%** | - | **PASS** |
+| **Precision** | 100.0% | **100.0%** | - | **PASS** |
+| **F1-Score** | 66.7% | **100.0%** | - | **PASS** |
+| **Overall Classification Accuracy** | 90.0% | **100.0%** | - | **PASS** |
 | **Dashboard Response Latency** | - | **< 80 ms** | < 2.0s | **PASS** |
 
 *For complete confusion matrices, methodology, and precision/recall analysis, see [`EXPERIMENT_REPORT.md`](EXPERIMENT_REPORT.md).*
