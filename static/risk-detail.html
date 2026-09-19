@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=2.0">
     <link rel="stylesheet" href="static/css/style.css?v=2.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body>
     <!-- Pure Refined Monochrome Ambient Radial Gradients & Star Field Canvas -->
@@ -19,44 +20,51 @@
         <div class="shooting-star-2"></div>
     </div>
 
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <!-- Top Enterprise Header (Stitch Monochrome Glass) -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#09090b]/85 backdrop-blur-xl border-b border-white/[0.1] shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
+        <div class="h-16 w-full px-4 lg:px-8 flex items-center justify-between gap-4 max-w-[1780px] mx-auto">
+            <div class="flex items-center gap-6 shrink-0">
+                <a href="dashboard.html" class="flex items-center gap-2.5 text-decoration-none">
+                    <div class="w-8 h-8 rounded-xl bg-white/[0.07] flex items-center justify-center text-white border border-white/25 shadow-[0_0_15px_rgba(255,255,255,0.08)]">
+                        <span class="material-symbols-outlined text-[19px]">verified_user</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-white tracking-tight text-base sm:text-lg">Risk Monitor</span>
+                        <span class="text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 tracking-wider font-semibold shadow-[0_0_10px_rgba(255,255,255,0.05)]">Regulated Change Assurance</span>
+                    </div>
+                </a>
+                <nav class="hidden lg:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-dashboard">Rollout Dashboard</a>
+                    <a href="risk-detail.html?id=v2.4.1" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/15 text-white border border-white/30 shadow-[0_0_14px_rgba(255,255,255,0.1)]" id="nav-risk">Risk Reasoning View</a>
+                    <a href="evidence.html?id=R0042" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-evidence">Evidence Report</a>
+                    <a href="audit.html" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-audit">Immutable Audit Trail</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.06)]">
+                    <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
+                    <span class="text-[10px] uppercase text-zinc-200 font-semibold tracking-wider font-mono">Canary Telemetry Active</span>
+                </div>
+                <button onclick="window.location.href='dashboard.html#baseline';" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 hover:text-white text-xs border border-white/15 hover:border-white/30 transition-all font-mono">
+                    <span class="material-symbols-outlined text-[15px] text-white">biotech</span>
+                    <span>Baseline Experiment</span>
+                </button>
+                <div class="flex items-center gap-2.5 pl-2 border-l border-white/10">
+                    <div class="hidden xl:flex flex-col text-right">
+                        <span class="text-xs font-medium text-white" id="userName">Alice Johnson</span>
+                        <span class="text-[10px] text-zinc-400 font-mono" id="userRole">Release Engineer • BankA</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-zinc-900/90 border border-white/25 flex items-center justify-center shrink-0 text-zinc-200 shadow-inner" id="userAvatar">A</div>
+                    <button class="p-1.5 rounded-lg text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-all flex items-center border border-transparent hover:border-white/10" id="logoutBtn" onclick="localStorage.removeItem('user'); window.location.href='index.html';" title="Sign Out">
+                        <span class="material-symbols-outlined text-[17px]">logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <div class="app-layout">
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">
-                <div class="logo-icon">🛡️</div>
-                <h2>Risk Monitor</h2>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-link" id="nav-dashboard">
-                    <span class="nav-icon">📊</span> Rollout Dashboard
-                </a>
-                <a href="risk-detail.html" class="nav-link active" id="nav-risk">
-                    <span class="nav-icon">🔍</span> Risk Reasoning View
-                </a>
-                <a href="evidence.html" class="nav-link" id="nav-evidence">
-                    <span class="nav-icon">📄</span> Evidence Report
-                </a>
-                <a href="audit.html" class="nav-link" id="nav-audit">
-                    <span class="nav-icon">📋</span> Immutable Audit Trail
-                </a>
-            </nav>
-            <div class="sidebar-user">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">A</div>
-                    <div class="user-details">
-                        <div class="user-name" id="userName">Alice Johnson</div>
-                        <div class="user-role" id="userRole">Release Engineer (BankA)</div>
-                    </div>
-                </div>
-                <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.75rem;" onclick="localStorage.removeItem('user'); window.location.href='index.html';">Sign Out</button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content">
+        <main class="main-content" style="margin-left: 0 !important; width: 100% !important; max-width: 1780px; margin: 0 auto; padding: 5.5rem 1.5rem 3rem 1.5rem; box-sizing: border-box;">
 
             <div class="page-header">
                 <div>

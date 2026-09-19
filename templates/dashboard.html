@@ -11,6 +11,25 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=2.0">
     <link rel="stylesheet" href="static/css/style.css?v=2.0">
+        <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              background: "#09090b",
+              surface: "#12131a",
+            },
+            fontFamily: {
+              sans: ["Geist", "Inter", "sans-serif"],
+              mono: ["JetBrains Mono", "monospace"]
+            }
+          }
+        }
+      };
+    </script>
+
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -767,49 +786,147 @@
         <div class="shooting-star-2"></div>
     </div>
 
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
-
-    <div class="app-layout">
-
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-logo">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 1.25rem;">🛡️</span>
-                    <h2>Risk Monitor</h2>
-                </div>
-            </div>
-            <div style="font-size: 0.7rem; color: var(--text-muted); margin: 0 0 1.25rem 0; padding-left: 1rem;">
-                Canary Deployment Assurance
-            </div>
-            <nav class="sidebar-nav">
-                <a href="dashboard.html" class="nav-link active" id="nav-dashboard">
-                    <span class="nav-icon">📊</span> Pre-Release Gating
-                </a>
-                <a href="risk-detail.html?id=v2.4.1" class="nav-link" id="nav-risk">
-                    <span class="nav-icon">🔍</span> Risk Reasoning View
-                </a>
-                <a href="evidence.html?id=R0042" class="nav-link" id="nav-evidence">
-                    <span class="nav-icon">📄</span> Evidence Dossier
-                </a>
-                <a href="audit.html" class="nav-link" id="nav-audit">
-                    <span class="nav-icon">📋</span> Immutable Audit Trail
-                </a>
-            </nav>
-            <div class="sidebar-user">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">A</div>
-                    <div class="user-details">
-                        <div class="user-name" id="userName">Alice Johnson</div>
-                        <div class="user-role" id="userRole">Release Engineer (BankA)</div>
+        <!-- Top Enterprise Header (Stitch Monochrome Glass) -->
+    <header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#09090b]/85 backdrop-blur-xl border-b border-white/[0.1] shadow-[0_8px_30px_rgba(0,0,0,0.7)]">
+        <div class="h-16 w-full px-4 lg:px-8 flex items-center justify-between gap-4 max-w-[1780px] mx-auto">
+            <div class="flex items-center gap-6 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-white/[0.07] flex items-center justify-center text-white border border-white/25 shadow-[0_0_15px_rgba(255,255,255,0.08)]">
+                        <span class="material-symbols-outlined text-[19px]">verified_user</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-white tracking-tight text-base sm:text-lg">Risk Monitor</span>
+                        <span class="text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/10 text-zinc-200 border border-white/20 tracking-wider font-semibold shadow-[0_0_10px_rgba(255,255,255,0.05)]">Regulated Change Assurance</span>
                     </div>
                 </div>
-                <button class="btn btn-outline btn-sm" style="width: 100%; margin-top: 0.75rem;" id="logoutBtn" onclick="localStorage.removeItem('user'); window.location.href='index.html';">Sign Out</button>
+                <nav class="hidden lg:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white/15 text-white border border-white/30 shadow-[0_0_14px_rgba(255,255,255,0.1)]" id="nav-dashboard">Rollout Dashboard</a>
+                    <a href="risk-detail.html?id=v2.4.1" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-risk">Risk Reasoning View</a>
+                    <a href="evidence.html?id=R0042" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-evidence">Evidence Report</a>
+                    <a href="audit.html" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-white/[0.06] hover:text-white transition-all border border-transparent hover:border-white/10" id="nav-audit">Immutable Audit Trail</a>
+                </nav>
             </div>
-        </aside>
+            <div class="flex items-center gap-3 shrink-0">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.05] border border-white/20 shadow-[0_0_15px_rgba(255,255,255,0.06)]">
+                    <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_rgba(255,255,255,0.8)]"></span>
+                    <span class="text-[10px] uppercase text-zinc-200 font-semibold tracking-wider font-mono">Canary Telemetry Active</span>
+                </div>
+                <button id="btn-baseline-exp" onclick="alert('Baseline Experiment execution triggered on 100 canary batches.');" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900/80 hover:bg-zinc-800 text-zinc-200 hover:text-white text-xs border border-white/15 hover:border-white/30 transition-all font-mono">
+                    <span class="material-symbols-outlined text-[15px] text-white">biotech</span>
+                    <span>Baseline Experiment</span>
+                </button>
+                <div class="flex items-center gap-2.5 pl-2 border-l border-white/10">
+                    <div class="hidden xl:flex flex-col text-right">
+                        <span class="text-xs font-medium text-white" id="userName">Alice Johnson</span>
+                        <span class="text-[10px] text-zinc-400 font-mono" id="userRole">Release Engineer • BankA</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-zinc-900/90 border border-white/25 flex items-center justify-center shrink-0 text-zinc-200 shadow-inner" id="userAvatar">A</div>
+                    <button class="p-1.5 rounded-lg text-zinc-400 hover:bg-white/[0.08] hover:text-white transition-all flex items-center border border-transparent hover:border-white/10" id="logoutBtn" onclick="localStorage.removeItem('user'); window.location.href='index.html';" title="Sign Out">
+                        <span class="material-symbols-outlined text-[17px]">logout</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <!-- Main Content -->
-        <main class="main-content">
+    <div class="app-layout">
+        <!-- Main Content (Full-width with top spacing for fixed header) -->
+        <main class="main-content" style="margin-left: 0 !important; width: 100% !important; max-width: 1780px; margin: 0 auto; padding: 5.5rem 1.5rem 3rem 1.5rem; box-sizing: border-box;">
+
+            <!-- 5-Metric KPI Row (Stitch Monochrome Glassmorphic Floating Cards) -->
+            <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
+                <!-- KPI 1 -->
+                <div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] uppercase text-zinc-400 tracking-wider font-mono">Total Changes</span>
+                        <div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-zinc-200 shadow-inner group-hover:border-white/40 group-hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">rocket_launch</span>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="text-2xl lg:text-3xl font-bold text-white tracking-tight font-mono">100</div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">Production Changes Monitored</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+                        <span class="material-symbols-outlined text-[14px] text-zinc-400">query_stats</span>
+                        <span>100% In-Pipeline Coverage</span>
+                    </div>
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/60 via-white/20 to-transparent"></div>
+                </div>
+                <!-- KPI 2 -->
+                <div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] uppercase text-zinc-400 tracking-wider font-mono">Canary Verified</span>
+                        <div class="w-8 h-8 rounded-xl bg-white/10 border border-white/25 flex items-center justify-center text-white shadow-[0_0_12px_rgba(255,255,255,0.1)] group-hover:border-white/50 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">check_circle</span>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="text-2xl lg:text-3xl font-bold text-white tracking-tight flex items-baseline gap-1 font-mono">80<span class="text-xs font-normal text-zinc-400">/100</span></div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">Allowed (Passed Canary)</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-zinc-200 pt-1 border-t border-white/[0.08]">
+                        <span class="material-symbols-outlined text-[14px] text-zinc-300">trending_up</span>
+                        <span>80.0% Pass Rate Target &gt; 75%</span>
+                    </div>
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white/80 via-white/30 to-transparent"></div>
+                </div>
+                <!-- KPI 3 -->
+                <div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] uppercase text-zinc-400 tracking-wider font-mono">Threshold Holds</span>
+                        <div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-zinc-300 shadow-[0_0_12px_rgba(255,255,255,0.06)] group-hover:border-white/40 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">warning</span>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="text-2xl lg:text-3xl font-bold text-zinc-100 tracking-tight flex items-baseline gap-1 font-mono">12<span class="text-xs font-normal text-zinc-400">/100</span></div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">Paused (Hold Thresholds)</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+                        <span class="material-symbols-outlined text-[14px] text-zinc-400">hourglass_top</span>
+                        <span>12.0% Under Investigation</span>
+                    </div>
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-zinc-300/80 via-zinc-400/30 to-transparent"></div>
+                </div>
+                <!-- KPI 4 -->
+                <div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] uppercase text-zinc-400 tracking-wider font-mono">Regressions Gated</span>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 border border-zinc-600 flex items-center justify-center text-zinc-300 shadow-[0_0_12px_rgba(255,255,255,0.05)] group-hover:border-zinc-400 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">cancel</span>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="text-2xl lg:text-3xl font-bold text-zinc-100 tracking-tight flex items-baseline gap-1 font-mono">8<span class="text-xs font-normal text-zinc-400">/100</span></div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">Blocked (Harmful Prevented)</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+                        <span class="material-symbols-outlined text-[14px] text-zinc-400">shield</span>
+                        <span>8 Prevented Major Outages</span>
+                    </div>
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-zinc-400/80 via-zinc-600/30 to-transparent"></div>
+                </div>
+                <!-- KPI 5 -->
+                <div class="p-4 rounded-2xl glass-card glass-card-hover flex flex-col justify-between relative overflow-hidden group col-span-2 md:col-span-1">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] uppercase text-zinc-400 tracking-wider font-mono">Compliance Gating</span>
+                        <div class="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/20 flex items-center justify-center text-white shadow-[0_0_12px_rgba(255,255,255,0.08)] group-hover:border-white/40 transition-colors">
+                            <span class="material-symbols-outlined text-[18px]">history_edu</span>
+                        </div>
+                    </div>
+                    <div class="my-3">
+                        <div class="text-2xl lg:text-3xl font-bold text-white tracking-tight font-mono">100%</div>
+                        <div class="text-[11px] text-zinc-400 mt-0.5">Audit Evidence Generated</div>
+                    </div>
+                    <div class="flex items-center gap-1.5 text-[11px] text-zinc-300 pt-1 border-t border-white/[0.08]">
+                        <span class="material-symbols-outlined text-[14px] text-white">verified</span>
+                        <span>Cryptographically Signed</span>
+                    </div>
+                    <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-white via-zinc-400/40 to-transparent"></div>
+                </div>
+            </div>
+
 
             <!-- 1. Page Header & Identity -->
             <div class="page-header">

@@ -716,3 +716,23 @@ body {
 .gap-sm { gap: var(--spacing-sm); }
 .gap-md { gap: var(--spacing-md); }
 .hidden { display: none !important; }
+
+/* Layout Override for Stitch Monochrome Glass Top Header */
+.sidebar, .menu-toggle {
+    display: none !important;
+}
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+}
+.main-content {
+    flex: 1;
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 1780px;
+    margin: 0 auto;
+    padding: 5.5rem 1.5rem 3rem 1.5rem !important;
+    box-sizing: border-box;
+}
