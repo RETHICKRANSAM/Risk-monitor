@@ -11,6 +11,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=2.0">
     <link rel="stylesheet" href="static/css/style.css?v=2.0">
+    <script>
+        // Immediate theme initialization: default to light (white) unless saved as 'dark'
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.remove('light');
+            } else {
+                document.documentElement.classList.add('light');
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body>
@@ -48,6 +59,11 @@
                 <button onclick="window.location.href='dashboard.html#baseline';" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sky-950/40 hover:bg-sky-900/50 text-sky-200 hover:text-white text-xs border border-sky-400/20 hover:border-sky-400/40 transition-all font-mono shadow-sm">
                     <span class="material-symbols-outlined text-[15px] text-sky-400">biotech</span>
                     <span>Baseline Experiment</span>
+                </button>
+                <!-- Light / Dark Theme Toggle Button -->
+                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme();" title="Toggle Light / Dark Mode">
+                    <span class="material-symbols-outlined theme-toggle-icon" style="font-size: 16px;">dark_mode</span>
+                    <span class="theme-toggle-text hidden sm:inline">Dark Mode</span>
                 </button>
                 <div class="flex items-center gap-2.5 pl-2 border-l border-white/10">
                     <div class="hidden xl:flex flex-col text-right">
@@ -256,6 +272,20 @@
         document.getElementById('auditOrg').addEventListener('change', renderAudit);
         document.getElementById('auditDecision').addEventListener('change', renderAudit);
 
+        // Light / Dark Theme Management
+        function toggleTheme() {
+            const isLight = document.documentElement.classList.toggle('light');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
+            updateThemeUI();
+        }
+
+        function updateThemeUI() {
+            const isLight = document.documentElement.classList.contains('light');
+            document.querySelectorAll('.theme-toggle-icon').forEach(el => el.textContent = isLight ? 'dark_mode' : 'light_mode');
+            document.querySelectorAll('.theme-toggle-text').forEach(el => el.textContent = isLight ? 'Dark Mode' : 'Light Mode');
+        }
+
+        updateThemeUI();
         loadAudit();
     </script>
 </body>
