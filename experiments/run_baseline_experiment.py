@@ -16,28 +16,9 @@ sys.path.insert(0, BASE_DIR)
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-from database.seed_data import generate_records
-from risk_engine import evaluate_release
+from database.seed_data import generate_records  # noqa: E402
+from risk_engine import evaluate_release  # noqa: E402
 
-
-def run_experiment():
-    print("=" * 70)
-    print("  PRE-RELEASE RISK MONITOR: END-TO-END BASELINE EXPERIMENT")
-    print("=" * 70)
-
-    # 1. Generate 100 synthetic change records with ground truth
-    records = generate_records()
-    total_records = len(records)
-    harmful_records = [r for r in records if r.get("is_harmful")]
-    healthy_records = [r for r in records if not r.get("is_harmful")]
-
-    n_harmful = len(harmful_records)
-    n_healthy = len(healthy_records)
-
-    print("\n[DATASET SUMMARY]")
-    print(f"  Total Change Tickets Evaluated: {total_records}")
-    print(f"  Ground Truth Harmful Changes:   {n_harmful} ({n_harmful / total_records * 100:.1f}%)")
-    print(f"  Ground Truth Healthy Changes:   {n_healthy} ({n_healthy / total_records * 100:.1f}%)")
 
 def evaluate_status_quo_baseline(record):
     """Status Quo Baseline gating heuristic (Pre-Intervention):
@@ -257,12 +238,21 @@ def run_experiment():
     print("=" * 70)
     print(f"{'Metric':<35} | {'Baseline':<12} | {'Intervention':<14} | {'Target':<10} | {'Status'}")
     print("-" * 80)
-    print(f"{'Harmful Stop Rate (Recall)':<35} | {baseline_stop_rate:>5.1f}%      | {interv_stop_rate:>6.1f}%       | >= 80%     | {'PASS' if interv_stop_rate >= 80 else 'FAIL'}")
-    print(f"{'Evidence Generated':<35} | {baseline_evidence_rate:>5.1f}%      | {interv_evidence_rate:>6.1f}%       | 100%       | {'PASS' if interv_evidence_rate == 100 else 'FAIL'}")
-    print(f"{'False Positive Block Rate':<35} | {baseline_fp_rate:>5.1f}%      | {interv_fp_rate:>6.1f}%       | < 15%      | {'PASS' if interv_fp_rate < 15 else 'PASS'}")
+    p_rec = 'PASS' if interv_stop_rate >= 80 else 'FAIL'
+    p_ev = 'PASS' if interv_evidence_rate == 100 else 'FAIL'
+    p_fp = 'PASS' if interv_fp_rate < 15 else 'FAIL'
+    acc_bl = (baseline_tp + baseline_tn) / total_records * 100
+
+    print(f"{'Harmful Stop Rate (Recall)':<35} | {baseline_stop_rate:>5.1f}%      | "
+          f"{interv_stop_rate:>6.1f}%       | >= 80%     | {p_rec}")
+    print(f"{'Evidence Generated':<35} | {baseline_evidence_rate:>5.1f}%      | "
+          f"{interv_evidence_rate:>6.1f}%       | 100%       | {p_ev}")
+    print(f"{'False Positive Block Rate':<35} | {baseline_fp_rate:>5.1f}%      | "
+          f"{interv_fp_rate:>6.1f}%       | < 15%      | {p_fp}")
     print(f"{'Precision':<35} | {'N/A':<12} | {interv_precision:>6.1f}%       | -          | -")
     print(f"{'F1-Score':<35} | {'N/A':<12} | {interv_f1:>6.1f}%       | -          | -")
-    print(f"{'Overall Classification Accuracy':<35} | {((baseline_tp + baseline_tn) / total_records * 100):>5.1f}%      | {interv_accuracy:>6.1f}%       | -          | -")
+    print(f"{'Overall Classification Accuracy':<35} | {acc_bl:>5.1f}%      | "
+          f"{interv_accuracy:>6.1f}%       | -          | -")
 
     print("\n[CONFUSION MATRIX: INTERVENTION]")
     print(f"  True Positives  (Harmful Stopped in Canary):  {interv_tp}")

@@ -18,7 +18,8 @@ def _load_deployments():
         return []
     try:
         with open(DEPLOYMENTS_FILE, encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            return data if isinstance(data, list) else []
     except (OSError, json.JSONDecodeError):
         return []
 
@@ -131,9 +132,16 @@ def get_deployment(deployment_id):
 
 
 def init_deployments_file():
-    """Create deployments.json with seed data if it doesn't exist."""
+    """Create deployments.json with seed data if it doesn't exist or is empty."""
     if os.path.exists(DEPLOYMENTS_FILE):
-        return
+        try:
+            if os.path.getsize(DEPLOYMENTS_FILE) > 2:
+                with open(DEPLOYMENTS_FILE, encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list) and len(data) > 0:
+                        return
+        except (OSError, json.JSONDecodeError):
+            pass
 
     seed = [
         {

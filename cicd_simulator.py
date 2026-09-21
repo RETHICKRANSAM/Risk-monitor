@@ -6,6 +6,7 @@ Persists run history to data/cicd_results.json.
 import json
 import os
 import random
+import re
 import uuid
 from datetime import datetime, timedelta, timezone
 
@@ -38,13 +39,31 @@ PIPELINE_STAGES = [
 ]
 
 
+def _extract_test_counts(stages):
+    """Extract total passed and failed test counts from stage details."""
+    passed_count = 0
+    failed_count = 0
+    for s in stages:
+        details = s.get("details") or ""
+        if not details:
+            continue
+        m = re.search(r"(\d+)/(\d+)\s+(?:tests|integration tests)\s+passed", details)
+        if m:
+            passed_count += int(m.group(1))
+        m_fail = re.search(r"(\d+)\s+failed", details)
+        if m_fail:
+            failed_count += int(m_fail.group(1))
+    return passed_count, failed_count
+
+
 def _load_results():
     """Load CI/CD results from disk."""
     if not os.path.exists(CICD_FILE):
         return []
     try:
         with open(CICD_FILE, encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+            return data if isinstance(data, list) else []
     except (OSError, json.JSONDecodeError):
         return []
 
@@ -52,8 +71,19 @@ def _load_results():
 def _save_results(results):
     """Persist CI/CD results to disk."""
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(CICD_FILE, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2, default=str)
+    temp_file = f"{CICD_FILE}.tmp"
+    try:
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=2, default=str)
+        os.replace(temp_file, CICD_FILE)
+    except OSError:
+        with open(CICD_FILE, "w", encoding="utf-8") as f:
+            json.dump(results, f, indent=2, default=str)
+        if os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+            except OSError:
+                pass
 
 
 def run_pipeline(branch="main", commit_sha=None, triggered_by="ci-bot"):
@@ -71,60 +101,101 @@ def run_pipeline(branch="main", commit_sha=None, triggered_by="ci-bot"):
         dict: Complete pipeline run result
 
     """
-    if commit_sha is None:
+    if not branch:
+        branch = "main"
+    if not commit_sha:
         commit_sha = uuid.uuid4().hex[:7]
+    if not triggered_by:
+        triggered_by = "ci-bot"
 
     run_id = str(uuid.uuid4())[:8]
-    pipeline_start = datetime.now(timezone.utc)
-    current_time = pipeline_start
 
-    stages = []
+    # Pre-simulate stages to calculate exact total duration
+    stage_plan = []
     pipeline_failed = False
+    total_duration = 0.0
 
     for stage_def in PIPELINE_STAGES:
         if pipeline_failed:
-            stages.append(
+            stage_plan.append(
                 {
                     "name": stage_def["name"],
                     "status": "skipped",
-                    "start_time": None,
-                    "end_time": None,
-                    "duration_seconds": 0,
+                    "duration": 0.0,
                     "details": "Skipped due to previous stage failure",
                 }
             )
             continue
 
-        # Simulate stage execution
-        duration = random.uniform(stage_def["min_duration"], stage_def["max_duration"])
-        stage_start = current_time
-        stage_end = stage_start + timedelta(seconds=duration)
-        current_time = stage_end
+        min_dur = float(stage_def.get("min_duration") or 10.0)
+        max_dur = float(stage_def.get("max_duration") or 60.0)
+        if min_dur > max_dur:
+            min_dur, max_dur = max_dur, min_dur
+        duration = round(random.uniform(min_dur, max_dur), 2)
+        fail_rate = float(stage_def.get("fail_rate") or 0.0)
+        passed = random.random() >= fail_rate
 
-        passed = random.random() > stage_def["fail_rate"]
+        if not passed and stage_def.get("name") == "deployment":
+            duration = max(duration, 120.0)
 
-        stage_result = {
-            "name": stage_def["name"],
-            "status": "passed" if passed else "failed",
-            "start_time": stage_start.isoformat(),
-            "end_time": stage_end.isoformat(),
-            "duration_seconds": round(duration, 2),
-            "details": _generate_stage_details(stage_def["name"], passed),
-        }
+        stage_plan.append(
+            {
+                "name": stage_def["name"],
+                "status": "passed" if passed else "failed",
+                "duration": duration,
+                "details": _generate_stage_details(stage_def["name"], passed),
+            }
+        )
 
-        stages.append(stage_result)
-
+        total_duration += duration
         if not passed:
             pipeline_failed = True
 
-    total_duration = (current_time - pipeline_start).total_seconds()
+    # Anchor pipeline completion to the current time so timestamps don't drift into the future
+    pipeline_end = datetime.now(timezone.utc)
+    stage_cursor = pipeline_end - timedelta(seconds=total_duration)
+    pipeline_start = stage_cursor
+
+    stages = []
+    for plan in stage_plan:
+        if plan["status"] == "skipped":
+            stages.append(
+                {
+                    "name": plan["name"],
+                    "status": "skipped",
+                    "start_time": None,
+                    "end_time": None,
+                    "duration_seconds": 0.0,
+                    "details": plan["details"],
+                }
+            )
+        else:
+            s_start = stage_cursor
+            s_end = s_start + timedelta(seconds=plan["duration"])
+            stage_cursor = s_end
+
+            stages.append(
+                {
+                    "name": plan["name"],
+                    "status": plan["status"],
+                    "start_time": s_start.isoformat(),
+                    "end_time": s_end.isoformat(),
+                    "duration_seconds": round(plan["duration"], 2),
+                    "details": plan["details"],
+                }
+            )
 
     # Count vulnerabilities found in security scan
     sec_scan = next((s for s in stages if s["name"] == "security_scan"), None)
-    vulnerabilities = {}
+    vulnerabilities = {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+    }
     if sec_scan and sec_scan["status"] == "passed":
         vulnerabilities = {
-            "critical": random.randint(0, 1),
+            "critical": 0,
             "high": random.randint(0, 3),
             "medium": random.randint(1, 8),
             "low": random.randint(2, 15),
@@ -137,15 +208,22 @@ def run_pipeline(branch="main", commit_sha=None, triggered_by="ci-bot"):
             "low": random.randint(5, 25),
         }
 
+    tests_passed, tests_failed = _extract_test_counts(stages)
+    status_val = "failed" if pipeline_failed else "passed"
+
     run_result = {
         "run_id": run_id,
         "branch": branch,
         "commit_sha": commit_sha,
         "triggered_by": triggered_by,
         "start_time": pipeline_start.isoformat(),
-        "end_time": current_time.isoformat(),
+        "end_time": stage_cursor.isoformat(),
         "total_duration_seconds": round(total_duration, 2),
-        "overall_status": "failed" if pipeline_failed else "passed",
+        "duration_seconds": round(total_duration, 2),
+        "status": status_val,
+        "overall_status": status_val,
+        "tests_passed": tests_passed,
+        "tests_failed": tests_failed,
         "stages": stages,
         "vulnerabilities": vulnerabilities,
     }
@@ -210,13 +288,26 @@ def get_latest_run():
 def get_run_history(limit=10):
     """Return recent pipeline run history."""
     results = _load_results()
+    try:
+        limit = int(limit)
+    except (ValueError, TypeError):
+        limit = 10
+    if limit <= 0:
+        return []
     return results[:limit]
 
 
 def init_cicd_file():
-    """Create cicd_results.json with seed data if it doesn't exist."""
+    """Create cicd_results.json with seed data if it doesn't exist or is empty."""
     if os.path.exists(CICD_FILE):
-        return
+        try:
+            if os.path.getsize(CICD_FILE) > 2:
+                with open(CICD_FILE, encoding="utf-8") as f:
+                    data = json.load(f)
+                    if isinstance(data, list) and len(data) > 0:
+                        return
+        except (OSError, json.JSONDecodeError):
+            pass
 
     # Generate 3 seed runs
     seed_runs = []
@@ -236,22 +327,30 @@ def init_cicd_file():
                         "status": "skipped",
                         "start_time": None,
                         "end_time": None,
-                        "duration_seconds": 0,
+                        "duration_seconds": 0.0,
                         "details": "Skipped due to previous stage failure",
                     }
                 )
                 continue
 
-            dur = random.uniform(stage_def["min_duration"], stage_def["max_duration"])
-            s_start = current
-            s_end = s_start + timedelta(seconds=dur)
-            current = s_end
+            min_dur = float(stage_def.get("min_duration") or 10.0)
+            max_dur = float(stage_def.get("max_duration") or 60.0)
+            if min_dur > max_dur:
+                min_dur, max_dur = max_dur, min_dur
+            dur = round(random.uniform(min_dur, max_dur), 2)
 
             # Make the 2nd run fail at security_scan
-            if i == 1 and stage_def["name"] == "security_scan":
+            if i == 1 and stage_def.get("name") == "security_scan":
                 passed = False
             else:
                 passed = True
+
+            if not passed and stage_def.get("name") == "deployment":
+                dur = max(dur, 120.0)
+
+            s_start = current
+            s_end = s_start + timedelta(seconds=dur)
+            current = s_end
 
             stages.append(
                 {
@@ -267,6 +366,30 @@ def init_cicd_file():
                 failed = True
 
         total_dur = (current - run_time).total_seconds()
+        tests_passed, tests_failed = _extract_test_counts(stages)
+        status_val = "failed" if failed else "passed"
+
+        sec_scan = next((s for s in stages if s["name"] == "security_scan"), None)
+        vulnerabilities = {
+            "critical": 0,
+            "high": 0,
+            "medium": 0,
+            "low": 0,
+        }
+        if sec_scan and sec_scan["status"] == "passed":
+            vulnerabilities = {
+                "critical": 0,
+                "high": random.randint(0, 4),
+                "medium": random.randint(1, 10),
+                "low": random.randint(3, 15),
+            }
+        elif sec_scan and sec_scan["status"] == "failed":
+            vulnerabilities = {
+                "critical": random.randint(2, 5),
+                "high": random.randint(4, 10),
+                "medium": random.randint(5, 15),
+                "low": random.randint(5, 20),
+            }
 
         seed_runs.append(
             {
@@ -277,18 +400,32 @@ def init_cicd_file():
                 "start_time": run_time.isoformat(),
                 "end_time": current.isoformat(),
                 "total_duration_seconds": round(total_dur, 2),
-                "overall_status": "failed" if failed else "passed",
+                "duration_seconds": round(total_dur, 2),
+                "status": status_val,
+                "overall_status": status_val,
+                "tests_passed": tests_passed,
+                "tests_failed": tests_failed,
                 "stages": stages,
-                "vulnerabilities": {
-                    "critical": random.randint(0, 2)
-                    if not failed
-                    else random.randint(2, 5),
-                    "high": random.randint(0, 4),
-                    "medium": random.randint(1, 10),
-                    "low": random.randint(3, 15),
-                },
+                "vulnerabilities": vulnerabilities,
             }
         )
 
     seed_runs.reverse()  # Most recent first
     _save_results(seed_runs)
+
+
+if __name__ == "__main__":
+    init_cicd_file()
+    print("CI/CD Simulator initialized.")
+    latest = get_latest_run()
+    if latest:
+        run_id = latest.get("run_id")
+        status = latest.get("overall_status") or latest.get("status")
+        dur = latest.get("duration_seconds") or latest.get("total_duration_seconds")
+        print(f"Latest run: {run_id} | Status: {status} | Duration: {dur}s")
+    print("Triggering new pipeline run simulation...")
+    new_run = run_pipeline(branch="feature/pipeline-test", triggered_by="cli-test")
+    print(
+        f"Run completed: ID={new_run['run_id']} | Status={new_run['overall_status']} | "
+        f"Tests: {new_run['tests_passed']} passed, {new_run['tests_failed']} failed"
+    )

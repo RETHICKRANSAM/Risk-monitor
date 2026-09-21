@@ -12,8 +12,8 @@ Validates 100% of project subsystems:
 import json
 import subprocess
 import sys
-import urllib.request
 import urllib.error
+import urllib.request
 
 BASE_URL = "http://localhost:5000"
 
@@ -64,11 +64,11 @@ def main():
     res = subprocess.run(cmd, capture_output=True, text=True)
     print(res.stdout)
     if res.returncode == 0:
-        print("  --> STAGE 1 RESULT: ALL 10 TESTS PASSED [PASS]")
-        results.append(("Pytest Test Suite (10 tests)", True))
+        print("  --> STAGE 1 RESULT: ALL TESTS PASSED [PASS]")
+        results.append(("Pytest Test Suite", True))
     else:
         print(f"  --> STAGE 1 RESULT: FAILED\n{res.stderr}")
-        results.append(("Pytest Test Suite (10 tests)", False))
+        results.append(("Pytest Test Suite", False))
 
     # =========================================================================
     # Step 2: Validate Live Web GUI Pages

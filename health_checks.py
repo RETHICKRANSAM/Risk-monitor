@@ -205,7 +205,14 @@ def check_memory():
             pmc = PROCESS_MEMORY_COUNTERS()
             pmc.cb = ctypes.sizeof(PROCESS_MEMORY_COUNTERS)
             handle = ctypes.windll.kernel32.GetCurrentProcess()
-            ctypes.windll.psapi.GetProcessMemoryInfo(
+            get_process_memory_info = ctypes.windll.psapi.GetProcessMemoryInfo
+            get_process_memory_info.argtypes = [
+                wintypes.HANDLE,
+                ctypes.POINTER(PROCESS_MEMORY_COUNTERS),
+                wintypes.DWORD,
+            ]
+            get_process_memory_info.restype = wintypes.BOOL
+            get_process_memory_info(
                 handle,
                 ctypes.byref(pmc),
                 pmc.cb,
@@ -220,15 +227,21 @@ def check_memory():
                         if line.startswith("VmRSS:"):
                             rss = int(line.split()[1]) * 1024  # KB to bytes
                             break
-            except FileNotFoundError:
+            except (FileNotFoundError, PermissionError):
                 # macOS fallback
-                import resource  # pyright: ignore[reportMissingImports]
+                try:
+                    import resource  # type: ignore # pyright: ignore[reportMissingImports]
 
-                rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss  # pyright: ignore[reportUnknownMemberType, reportAttributeAccessIssue]  # noqa: E501
-                if platform.system() == "Darwin":
-                    pass  # macOS returns bytes
-                else:
-                    rss *= 1024  # Linux returns KB
+                    rusage_self = getattr(resource, "RUSAGE_SELF", 0)
+                    getrusage = getattr(resource, "getrusage", None)
+                    if getrusage:
+                        rss = getrusage(rusage_self).ru_maxrss
+                        if platform.system() == "Darwin":
+                            pass  # macOS returns bytes
+                        else:
+                            rss *= 1024  # Linux returns KB
+                except Exception:
+                    rss = 0
 
         rss_mb = round(rss / (1024 * 1024), 2)
         status = "healthy"

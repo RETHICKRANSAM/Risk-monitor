@@ -84,7 +84,7 @@ def check_connection():
 if __name__ == "__main__":
     try:
         success = check_connection()
-        exit(0 if success else 1)
+        sys.exit(0 if success else 1)
     except Exception as e:
         print(f"\n✗ Unexpected error: {e}")
-        exit(1)
+        sys.exit(1)

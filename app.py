@@ -316,8 +316,6 @@ def create_app():
         Expects JSON body with: failed_tests, critical_vulnerabilities,
         high_vulnerabilities, warning_count, error_count, health_status.
         """
-        from risk_engine import evaluate_deployment_risk
-
         data = request.get_json(force=True, silent=True) or {}
 
         if not data:
@@ -328,7 +326,12 @@ def create_app():
         try:
             from risk_engine import evaluate_deployment_risk, evaluate_release
 
-            telemetry_fields = {"error_rate", "latency_ms", "canary_error_rate", "error_budget_remaining"}
+            telemetry_fields = {
+                "error_rate",
+                "latency_ms",
+                "canary_error_rate",
+                "error_budget_remaining",
+            }
             if any(k in data for k in telemetry_fields):
                 result = evaluate_release(data)
             else:

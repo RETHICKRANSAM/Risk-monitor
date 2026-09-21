@@ -5,8 +5,8 @@ import pytest
 # Skip this module gracefully if ML dependencies (joblib, scikit-learn, etc.) are not installed
 joblib = pytest.importorskip("joblib", reason="ML pipeline dependencies (joblib, scikit-learn) not installed")
 
-from app import create_app
-from ml_pipeline.service import MLRiskEngine
+from app import create_app  # noqa: E402
+from ml_pipeline.service import MLRiskEngine  # noqa: E402
 
 
 @pytest.fixture

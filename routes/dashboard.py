@@ -3,7 +3,7 @@
 from flask import Blueprint, jsonify, request, session
 from sqlalchemy import func
 
-from middleware import get_org_filter, login_required, require_permission
+from middleware import get_org_filter, login_required
 from models import DeploymentMetric, Organization, Release, RiskDecision, db
 
 dashboard_bp = Blueprint("dashboard", __name__)

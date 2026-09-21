@@ -80,7 +80,6 @@ class MLRiskEngine:
                 self.iso_forest = loaded_iso
                 self.iso_threshold = 0.0
 
-
         rf_path = MODELS_DIR / "random_forest.joblib"
         if rf_path.exists():
             self.random_forest = joblib.load(rf_path)
@@ -178,7 +177,6 @@ class MLRiskEngine:
                 "anomaly_score": round(iso_score, 1),
                 "raw_decision": round(raw_decision, 4),
             }
-
 
         # 4. Deep Autoencoder Reconstruction Loss
         ae_score = 0.0

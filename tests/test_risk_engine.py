@@ -22,6 +22,7 @@ def test_impute_missing_values():
     raw = {"error_rate": None}
     imputed, warnings = impute_missing_values(raw)
     assert imputed["error_rate"] == 1.0  # default safe value
+    assert len(warnings) > 0
 
 
 def test_calculate_risk_score():

@@ -157,7 +157,6 @@ def train_autoencoder(
     acc = accuracy_score(y_bin_test, pred_anomalies)
     f1 = f1_score(y_bin_test, pred_anomalies, average="macro")
 
-
     metrics = {
         "model_name": "Deep Autoencoder",
         "type": "Unsupervised Deep Representation",
@@ -291,7 +290,6 @@ def main():
 
     _, ae_metrics = train_autoencoder(X_train, X_test, y_bin_train, y_bin_test, epochs=15)
     _, mlp_metrics = train_dl_classifier(X_train, X_test, y_train, y_test, epochs=20)
-
 
     all_dl_metrics = {
         "deep_autoencoder": ae_metrics,

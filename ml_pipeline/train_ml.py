@@ -11,7 +11,6 @@ from __future__ import annotations
 import json
 import sys
 import time
-from typing import Any
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
@@ -81,7 +80,6 @@ def train_isolation_forest(
     print(f"[ISO FOREST] Model saved to {model_path}")
 
     return iso_forest, metrics
-
 
 
 def train_random_forest(

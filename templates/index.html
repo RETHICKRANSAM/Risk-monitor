@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Pre-Release Risk Monitor — Login to monitor and evaluate deployment risks for regulated enterprises.">
+    <meta name="description" content="Pre-Release Risk Monitor — Enterprise Login & Deployment Risk Assessment Control Center.">
     <title>Login — Pre-Release Risk Monitor</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=2.0">
-    <link rel="stylesheet" href="static/css/style.css?v=2.0">
+    <link rel="stylesheet" href="css/style.css?v=2.1">
+    <link rel="stylesheet" href="static/css/style.css?v=2.1">
     <style>
         :root {
-            --color-bg-primary: #09090b;
-            --color-bg-secondary: #0d0e15;
-            --color-bg-card: rgba(18, 19, 26, 0.72);
-            --color-bg-input: rgba(0, 0, 0, 0.65);
-            --color-accent-primary: #ffffff;
-            --color-accent-primary-glow: rgba(255, 255, 255, 0.2);
-            --color-text-primary: #f4f4f5;
-            --color-text-secondary: #a1a1aa;
-            --color-text-muted: #71717a;
-            --color-border: rgba(255, 255, 255, 0.1);
+            --color-bg-primary: #06080f;
+            --color-bg-secondary: #090d16;
+            --color-bg-card: rgba(13, 19, 33, 0.78);
+            --color-bg-input: rgba(7, 11, 22, 0.75);
+            --color-accent-primary: #38bdf8;
+            --color-accent-deep: #0284c7;
+            --color-text-primary: #f8fafc;
+            --color-text-secondary: #94a3b8;
+            --color-text-muted: #64748b;
+            --color-border: rgba(255, 255, 255, 0.08);
+            --color-border-glow: rgba(56, 189, 248, 0.28);
             --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
+            --radius-lg: 0.875rem;
             --radius-xl: 1.25rem;
         }
+
         *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: var(--color-bg-primary);
@@ -40,10 +43,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1.5rem;
+            padding: 2rem 1rem;
             position: relative;
             overflow-x: hidden;
         }
+
         .login-container {
             width: 100%;
             display: flex;
@@ -52,56 +56,152 @@
             position: relative;
             z-index: 10;
         }
+
         .login-card {
             width: 100%;
-            max-width: 440px;
-            background: rgba(18, 19, 26, 0.75);
-            backdrop-filter: blur(28px) saturate(130%);
-            -webkit-backdrop-filter: blur(28px) saturate(130%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-top: 1px solid rgba(255, 255, 255, 0.28);
+            max-width: 480px;
+            background: var(--color-bg-card);
+            backdrop-filter: blur(28px) saturate(140%);
+            -webkit-backdrop-filter: blur(28px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            border-top: 1px solid var(--color-border-glow);
             border-radius: var(--radius-xl);
-            padding: 2.5rem 2rem;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 0 rgba(255, 255, 255, 0.1);
+            padding: 2.75rem 2.25rem 2.25rem;
+            box-shadow: 
+                0 24px 60px -12px rgba(0, 0, 0, 0.85),
+                0 0 35px -8px rgba(14, 165, 233, 0.12),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.12);
             text-align: center;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        .login-card:hover {
+            border-top-color: rgba(56, 189, 248, 0.45);
+            box-shadow: 
+                0 28px 70px -12px rgba(0, 0, 0, 0.9),
+                0 0 45px -8px rgba(14, 165, 233, 0.18),
+                inset 0 1px 0 0 rgba(255, 255, 255, 0.18);
+        }
+
+        /* Ambient Glow Pill at Top */
+        .login-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(14, 165, 233, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.24);
+            color: #38bdf8;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 0 14px rgba(14, 165, 233, 0.08);
+        }
+
+        .login-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #38bdf8;
+            box-shadow: 0 0 8px #38bdf8;
+            animation: pulseDot 2.2s infinite;
+        }
+
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.45; transform: scale(0.85); }
+        }
+
+        .login-logo {
+            width: 175px;
+            height: auto;
+            margin: 0 auto 1.15rem;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(14, 165, 233, 0.25));
+        }
+
+        .login-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #f8fafc;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.35rem;
+            line-height: 1.35;
+        }
+
         .login-subtitle {
             color: var(--color-text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8125rem;
             margin-bottom: 1.75rem;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.01em;
+            line-height: 1.4;
         }
+
         .form-group {
             margin-bottom: 1.25rem;
             text-align: left;
         }
+
         .form-label {
-            display: block;
-            font-size: 0.8125rem;
-            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.78rem;
+            font-weight: 600;
             color: #cbd5e1;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.45rem;
+            letter-spacing: 0.01em;
         }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 0.85rem;
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+        }
+
         .form-input {
             width: 100%;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1rem 0.75rem 2.45rem;
             background: var(--color-bg-input);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 0.5rem;
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.6rem;
             color: #ffffff;
             font-size: 0.875rem;
             font-family: inherit;
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.45);
         }
+
         .form-input:focus {
-            border-color: rgba(255, 255, 255, 0.45);
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
-            background: rgba(0, 0, 0, 0.85);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 
+                0 0 0 3px rgba(14, 165, 233, 0.2),
+                0 0 16px rgba(14, 165, 233, 0.15),
+                inset 0 1px 2px rgba(0, 0, 0, 0.45);
+            background: rgba(7, 11, 22, 0.9);
         }
+
         .form-input::placeholder {
-            color: #71717a;
+            color: #64748b;
         }
+
         .btn {
             display: inline-flex;
             align-items: center;
@@ -110,67 +210,184 @@
             padding: 0.8rem 1.25rem;
             font-size: 0.9375rem;
             font-weight: 600;
-            border-radius: 0.5rem;
+            border-radius: 0.6rem;
             border: none;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
             text-decoration: none;
         }
+
         .btn-primary {
-            background: #ffffff;
-            color: #000000;
-            box-shadow: 0 4px 18px rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            color: #ffffff;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
+
         .btn-primary:hover {
-            background: #e4e4e7;
-            box-shadow: 0 6px 24px rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 6px 28px rgba(14, 165, 233, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
             transform: translateY(-1px);
         }
+
         .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
         }
+
         .login-error {
-            color: #ef4444;
+            color: #f87171;
             font-size: 0.8125rem;
-            margin-bottom: 1rem;
-            padding: 0.5rem 0.75rem;
-            background: rgba(239, 68, 68, 0.15);
+            margin-bottom: 1.25rem;
+            padding: 0.65rem 0.85rem;
+            background: rgba(239, 68, 68, 0.12);
             border: 1px solid rgba(239, 68, 68, 0.3);
             border-radius: 0.5rem;
             display: none;
             text-align: left;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.1);
         }
+
         .login-error.visible {
             display: block;
         }
-        .demo-box {
+
+        /* Secondary Glass Panel — Instant Demo Access */
+        .demo-panel {
             margin-top: 1.75rem;
-            padding-top: 1.25rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.25rem;
+            background: rgba(8, 13, 24, 0.62);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-top: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: var(--radius-lg);
             text-align: left;
+            box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+        }
+
+        .demo-panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .demo-panel-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .demo-panel-tag {
+            font-size: 0.68rem;
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(14, 165, 233, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+        }
+
+        .demo-roles-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
             font-size: 0.75rem;
             color: var(--color-text-secondary);
         }
-        .demo-box code {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 0.15rem 0.4rem;
-            border-radius: 0.25rem;
-            color: #ffffff;
-            font-family: 'JetBrains Mono', monospace;
+
+        .demo-role-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.35rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.025);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.15s ease;
+            cursor: pointer;
         }
+
+        .demo-role-item:hover {
+            background: rgba(14, 165, 233, 0.08);
+            border-color: rgba(56, 189, 248, 0.25);
+            transform: translateX(2px);
+        }
+
+        .demo-role-item code {
+            background: rgba(14, 165, 233, 0.08);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 0.12rem 0.45rem;
+            border-radius: 0.25rem;
+            color: #38bdf8;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.72rem;
+        }
+
+        .demo-role-desc {
+            color: #94a3b8;
+            font-size: 0.7rem;
+        }
+
+        .btn-launch-demo {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(16, 185, 129, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            text-decoration: none;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+            padding: 0.78rem 1.1rem;
+            border-radius: 0.6rem;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .btn-launch-demo:hover {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+            transform: translateY(-1px);
+            color: #ffffff;
+        }
+
         .toast-container {
             position: fixed;
             bottom: 1.5rem;
             right: 1.5rem;
             z-index: 9999;
         }
+
+        .security-footer {
+            margin-top: 1.5rem;
+            font-size: 0.68rem;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        .security-footer span.material-symbols-outlined {
+            font-size: 14px;
+            color: #38bdf8;
+        }
     </style>
 </head>
 <body>
-    <!-- Pure Refined Monochrome Ambient Radial Gradients & Star Field Canvas -->
+    <!-- Subtle Pixel Stars & Ambient Blue/Cyan Lighting Layer -->
     <div class="star-field">
         <div class="shooting-star-1"></div>
         <div class="shooting-star-2"></div>
@@ -178,62 +395,136 @@
 
     <div class="login-container">
         <div class="login-card glass-card">
-            <img src="logo.png" alt="Risk Monitor" style="width: 180px; height: auto; margin: 0 auto 1rem; display: block; filter: drop-shadow(0 0 16px rgba(180,50,50,0.4));" />
-            <p class="login-subtitle">Pre-Release Deployment Risk Assessment</p>
+            <!-- Security Header Badge -->
+            <div class="login-badge">
+                <span class="login-badge-dot"></span>
+                <span>Regulated Change Assurance · SRE Gate</span>
+            </div>
 
+            <!-- Brand Logo -->
+            <img src="logo.png" alt="Pre-Release Risk Monitor Logo" class="login-logo" />
+
+            <!-- Title & Subtitle -->
+            <h1 class="login-title">Pre-Release Deployment Risk Assessment</h1>
+            <p class="login-subtitle">Canary Telemetry Evaluation & Automated Release Gating</p>
+
+            <!-- Login Error Feedback -->
             <div id="loginError" class="login-error"></div>
 
+            <!-- Authentication Form -->
             <form id="loginForm" action="dashboard.html" method="get" autocomplete="off">
                 <div class="form-group">
-                    <label class="form-label" for="username">Username</label>
-                    <input
-                        type="text"
-                        id="username"
-                        class="form-input"
-                        placeholder="Enter your username"
-                        value="bob_co"
-                        required
-                        autocomplete="username"
-                    >
+                    <label class="form-label" for="username">
+                        <span>Username</span>
+                        <span style="font-size: 0.68rem; color: #64748b; font-family: 'JetBrains Mono', monospace;">demo: bob_co</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">person</span>
+                        <input
+                            type="text"
+                            id="username"
+                            class="form-input"
+                            placeholder="Enter your username"
+                            value="bob_co"
+                            required
+                            autocomplete="username"
+                        >
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        class="form-input"
-                        placeholder="Enter your password"
-                        value="demo123"
-                        required
-                        autocomplete="current-password"
-                    >
+                    <label class="form-label" for="password">
+                        <span>Password</span>
+                        <span style="font-size: 0.68rem; color: #64748b; font-family: 'JetBrains Mono', monospace;">demo123</span>
+                    </label>
+                    <div class="input-wrapper">
+                        <span class="material-symbols-outlined input-icon">key</span>
+                        <input
+                            type="password"
+                            id="password"
+                            class="form-input"
+                            placeholder="Enter your password"
+                            value="demo123"
+                            required
+                            autocomplete="current-password"
+                        >
+                    </div>
                 </div>
+
                 <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span class="material-symbols-outlined" style="font-size: 18px; margin-right: 6px;">login</span>
                     Sign In
                 </button>
 
-                <div style="margin: 1.25rem 0 0.75rem; position: relative; text-align: center;">
-                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(75,85,99,0.4);"></div>
-                    <span style="position: relative; background: #111827; padding: 0 0.75rem; font-size: 0.725rem; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.05em;">Or Instant Demo Access</span>
+                <!-- Divider -->
+                <div style="margin: 1.5rem 0 1rem; position: relative; text-align: center;">
+                    <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: rgba(56, 189, 248, 0.15);"></div>
+                    <span style="position: relative; background: #0c1220; padding: 0 0.85rem; font-size: 0.68rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.1);">Or Instant Demo Access</span>
                 </div>
 
-                <a href="dashboard.html?walkthrough=true" class="btn" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4); text-decoration: none; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; padding: 0.75rem 1rem; border-radius: 0.5rem;" onclick="preAuthDemo();">
-                    🚀 Launch Risk Dashboard & Walkthrough
+                <!-- Instant Zero-Click Demo Access -->
+                <a href="dashboard.html?walkthrough=true" class="btn-launch-demo" onclick="preAuthDemo();">
+                    <span class="material-symbols-outlined" style="font-size: 18px;">rocket_launch</span>
+                    <span>Launch Risk Dashboard & Walkthrough</span>
                 </a>
-                <p style="font-size: 0.725rem; color: #94a3b8; margin-top: 0.4rem;">
-                    Instant zero-click access to live telemetry, Allow/Pause/Block decisions & audit records.
+                <p style="font-size: 0.72rem; color: #94a3b8; margin-top: 0.5rem; line-height: 1.4;">
+                    Instant access with live telemetry, Allow/Pause/Block decisions & signed evidence records.
                 </p>
             </form>
 
-            <div class="demo-box">
-                <p><strong>Demo Accounts</strong> (password: demo123)</p>
-                <div style="margin-top: 0.5rem; text-align: left; font-size: 0.75rem; line-height: 1.8; color: var(--color-text-muted);">
-                    <div><code>alice_re</code> — Release Engineer (BankA)</div>
-                    <div><code>bob_co</code> — Compliance Officer (BankA)</div>
-                    <div><code>charlie_sre</code> — SRE (BankA)</div>
-                    <div><code>diana_re</code> — Release Engineer (HealthCo)</div>
-                    <div><code>iris_audit</code> — Auditor (All Orgs)</div>
+            <!-- Secondary Glass Panel: Demo Accounts & Personas -->
+            <div class="demo-panel">
+                <div class="demo-panel-header">
+                    <div class="demo-panel-title">
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #38bdf8;">badge</span>
+                        <span>Authorized Demo Personas</span>
+                    </div>
+                    <span class="demo-panel-tag">PWD: demo123</span>
                 </div>
+
+                <div class="demo-roles-list">
+                    <div class="demo-role-item" onclick="quickFillUser('alice_re');" title="Click to autofill alice_re">
+                        <div>
+                            <code>alice_re</code>
+                            <span class="demo-role-desc" style="margin-left: 6px;">Release Engineer (BankA)</span>
+                        </div>
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #64748b;">arrow_forward</span>
+                    </div>
+                    <div class="demo-role-item" onclick="quickFillUser('bob_co');" title="Click to autofill bob_co">
+                        <div>
+                            <code>bob_co</code>
+                            <span class="demo-role-desc" style="margin-left: 6px;">Compliance Officer (BankA)</span>
+                        </div>
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #64748b;">arrow_forward</span>
+                    </div>
+                    <div class="demo-role-item" onclick="quickFillUser('charlie_sre');" title="Click to autofill charlie_sre">
+                        <div>
+                            <code>charlie_sre</code>
+                            <span class="demo-role-desc" style="margin-left: 6px;">SRE (BankA)</span>
+                        </div>
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #64748b;">arrow_forward</span>
+                    </div>
+                    <div class="demo-role-item" onclick="quickFillUser('diana_re');" title="Click to autofill diana_re">
+                        <div>
+                            <code>diana_re</code>
+                            <span class="demo-role-desc" style="margin-left: 6px;">Release Engineer (HealthCo)</span>
+                        </div>
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #64748b;">arrow_forward</span>
+                    </div>
+                    <div class="demo-role-item" onclick="quickFillUser('iris_audit');" title="Click to autofill iris_audit">
+                        <div>
+                            <code>iris_audit</code>
+                            <span class="demo-role-desc" style="margin-left: 6px;">Auditor (All Organizations)</span>
+                        </div>
+                        <span class="material-symbols-outlined" style="font-size: 14px; color: #64748b;">arrow_forward</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Certification Footer -->
+            <div class="security-footer">
+                <span class="material-symbols-outlined">lock</span>
+                <span>TLS Encrypted · Cryptographically Verified Audit Governance</span>
             </div>
         </div>
     </div>
@@ -244,6 +535,13 @@
     <script src="js/offline-queue.js"></script>
     <script src="js/app.js"></script>
     <script>
+        function quickFillUser(u) {
+            const uInput = document.getElementById('username');
+            const pInput = document.getElementById('password');
+            if (uInput) uInput.value = u;
+            if (pInput) pInput.value = 'demo123';
+        }
+
         function preAuthDemo() {
             const demoUser = {
                 user_id: 'alice_re',
@@ -311,6 +609,5 @@
             window.location.href = 'dashboard.html';
         });
     </script>
-
 </body>
 </html>

@@ -17,17 +17,16 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")  # type: ignore[attr-defined]
 
 
-import joblib
-import numpy as np
-import pandas as pd
-import torch
-from sklearn.metrics import accuracy_score, f1_score
+import joblib  # noqa: E402
+import pandas as pd  # noqa: E402
+import torch  # noqa: E402
+from sklearn.metrics import accuracy_score, f1_score  # noqa: E402
 
-from ml_pipeline.preprocess import (
+from ml_pipeline.preprocess import (  # noqa: E402
     MODELS_DIR,
     load_and_preprocess,
 )
-from ml_pipeline.train_dl import DeepAutoencoder, DeepRiskClassifier
+from ml_pipeline.train_dl import DeepAutoencoder, DeepRiskClassifier  # noqa: E402
 
 
 def evaluate_all() -> list[dict[str, Any]]:
