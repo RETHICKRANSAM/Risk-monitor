@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 80" width="100%" height="100%">
+  <defs>
+    <linearGradient id="lightBgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f8fafc" />
+    </linearGradient>
+  </defs>
+
+  <!-- Light Theme Background Plate -->
+  <rect width="320" height="80" rx="12" fill="url(#lightBgGrad)" stroke="#e2e8f0" stroke-width="1" />
+
+  <!-- Falcon Icon Group -->
+  <g transform="translate(16, 16)">
+    <!-- Aerodynamic Falcon Head Silhouette (Deep Charcoal / Navy) -->
+    <path d="
+      M 6 24
+      L 13 17
+      L 24 10
+      L 37 10
+      L 29 17
+      L 41 17
+      L 32 25
+      L 41 25
+      L 27 39
+      L 24 33
+      L 18 33
+      L 10 27
+      L 14 24
+      Z" 
+      fill="#0f172a" />
+
+    <!-- Sharp Under-Beak Hook -->
+    <path d="
+      M 6 24
+      L 12 25
+      L 9 29
+      L 6 25
+      Z" 
+      fill="#1e293b" />
+
+    <!-- Intelligent Radar Aperture Eye (Vivid Cyan / Blue Accent) -->
+    <g transform="translate(21, 21.5)">
+      <circle cx="0" cy="0" r="6.2" fill="none" stroke="#0284c7" stroke-width="1.8" stroke-dasharray="9 3" />
+      <circle cx="0" cy="0" r="3.2" fill="#0284c7" />
+      <circle cx="1" cy="-1" r="0.9" fill="#ffffff" />
+    </g>
+  </g>
+
+  <!-- Typography: FALCON EYE Wordmark -->
+  <g transform="translate(76, 42)">
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="22" font-weight="800" letter-spacing="4.5" fill="#0f172a">
+      FALCON<tspan fill="#0284c7" font-weight="800"> </tspan><tspan fill="#334155" font-weight="300">EYE</tspan>
+    </text>
+  </g>
+
+  <!-- Subtitle Tagline -->
+  <g transform="translate(77, 56)">
+    <text font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif" font-size="7.5" font-weight="700" letter-spacing="2.8" fill="#64748b">
+      AUTOMATED RISK INTELLIGENCE
+    </text>
+  </g>
+</svg>

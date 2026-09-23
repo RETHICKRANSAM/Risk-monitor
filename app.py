@@ -125,6 +125,26 @@ def create_app():
                 return send_from_directory(candidate, filename)
         return {"error": "JS not found"}, 404
 
+    @app.route("/img/<path:filename>")
+    def serve_img(filename):
+        for candidate in [
+            os.path.join(os.path.dirname(__file__), "img"),
+            os.path.join(os.path.dirname(__file__), "static", "img"),
+        ]:
+            if os.path.exists(os.path.join(candidate, filename)):
+                return send_from_directory(candidate, filename)
+        return {"error": "Image not found"}, 404
+
+    @app.route("/logo.png")
+    def serve_root_logo():
+        for candidate in [
+            os.path.dirname(__file__),
+            os.path.join(os.path.dirname(__file__), "static"),
+        ]:
+            if os.path.exists(os.path.join(candidate, "logo.png")):
+                return send_from_directory(candidate, "logo.png")
+        return {"error": "Logo not found"}, 404
+
     @app.route("/api/dashboard-summary")
     def dashboard_summary():
         """Returns risk monitor summary and evaluations."""

@@ -171,8 +171,14 @@
   <aside id="sidebar" class="w-64 flex-shrink-0 glass-panel flex flex-col transition-all duration-300 absolute md:relative z-40 h-full -translate-x-full md:translate-x-0">
     
     <!-- Logo Area -->
-    <div class="h-16 flex items-center px-6 border-b border-soc-border justify-center sm:justify-start">
-      <img src="{{ url_for('static', filename='logo.png') }}" alt="Falcon Eye" class="max-h-12 w-auto object-contain drop-shadow-md" style="filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.4));">
+    <div class="h-16 flex items-center px-5 border-b border-soc-border justify-start gap-3">
+      <div class="w-9 h-9 rounded-xl bg-sky-500/10 border border-sky-400/30 flex items-center justify-center p-1.5 shadow-[0_0_15px_rgba(0,229,255,0.25)]">
+        <img src="{{ url_for('static', filename='img/falcon-eye-icon.svg') }}" alt="Falcon Eye" class="w-full h-full object-contain">
+      </div>
+      <div class="flex flex-col">
+        <span class="font-extrabold text-white tracking-[2px] text-sm leading-tight">FALCON <span class="font-light text-slate-300">EYE</span></span>
+        <span class="text-[9px] uppercase tracking-wider text-sky-400 font-mono font-semibold">Risk Monitor</span>
+      </div>
     </div>
 
     <!-- Navigation Links -->
