@@ -1,5 +1,75 @@
 [
   {
+    "run_id": "c8890857",
+    "branch": "test-branch",
+    "commit_sha": "bb7a069",
+    "triggered_by": "unit-test",
+    "start_time": "2026-09-23T06:47:41.129935+00:00",
+    "end_time": "2026-09-23T06:51:42.259935+00:00",
+    "total_duration_seconds": 241.13,
+    "duration_seconds": 241.13,
+    "status": "failed",
+    "overall_status": "failed",
+    "tests_passed": 416,
+    "tests_failed": 0,
+    "stages": [
+      {
+        "name": "build",
+        "status": "passed",
+        "start_time": "2026-09-23T06:47:41.129935+00:00",
+        "end_time": "2026-09-23T06:47:59.989935+00:00",
+        "duration_seconds": 18.86,
+        "details": "Build successful. Artifact size: 17MB."
+      },
+      {
+        "name": "unit_tests",
+        "status": "passed",
+        "start_time": "2026-09-23T06:47:59.989935+00:00",
+        "end_time": "2026-09-23T06:48:38.639935+00:00",
+        "duration_seconds": 38.65,
+        "details": "382/382 tests passed. Coverage: 91%."
+      },
+      {
+        "name": "integration_tests",
+        "status": "passed",
+        "start_time": "2026-09-23T06:48:38.639935+00:00",
+        "end_time": "2026-09-23T06:50:53.519935+00:00",
+        "duration_seconds": 134.88,
+        "details": "34/34 integration tests passed."
+      },
+      {
+        "name": "security_scan",
+        "status": "failed",
+        "start_time": "2026-09-23T06:50:53.519935+00:00",
+        "end_time": "2026-09-23T06:51:42.259935+00:00",
+        "duration_seconds": 48.74,
+        "details": "Critical vulnerabilities detected. Deployment blocked by security policy."
+      },
+      {
+        "name": "container_scan",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      },
+      {
+        "name": "deployment",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 5,
+      "high": 12,
+      "medium": 5,
+      "low": 16
+    }
+  },
+  {
     "run_id": "d06feb67",
     "branch": "test-branch",
     "commit_sha": "89ced1e",
