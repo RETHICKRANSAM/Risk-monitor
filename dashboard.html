@@ -123,6 +123,55 @@
             color: #0f172a;
         }
 
+        /* Non-Technical User Tooltips */
+        .info-tooltip-trigger {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+        }
+        .info-tooltip-trigger::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 130%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 0.45rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.72rem;
+            font-weight: 500;
+            line-height: 1.4;
+            white-space: normal;
+            width: max-content;
+            max-width: 250px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+        }
+        .info-tooltip-trigger:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+        html.light .info-tooltip-trigger::after {
+            background: #ffffff;
+            color: #0f172a;
+            border-color: #cbd5e1;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+        }
+
+        .tech-details-drawer summary {
+            list-style: none;
+            user-select: none;
+        }
+        .tech-details-drawer summary::-webkit-details-marker {
+            display: none;
+        }
+
         body {
             background-color: var(--bg-canvas);
             color: var(--text-primary);
@@ -1199,72 +1248,171 @@
                 </div>
             </div>
 
+            <!-- Needs Your Attention (High Priority Executive Summary) -->
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 8px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="material-symbols-outlined" style="color: #f87171; font-size: 20px;">priority_high</span>
+                        <strong style="font-size: 0.95rem; color: var(--text-primary);">Needs Your Attention</strong>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); display: none; sm:inline;">— Prioritized summary of releases requiring action</span>
+                    </div>
+                    <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">🔴 Critical · 🟠 Review · 🟢 Safe</span>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.75rem;">
+                    <!-- Critical Alert Item -->
+                    <div onclick="switchDemoRelease('v2.4.1')" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 0.75rem 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.25rem;">🔴</span>
+                            <div>
+                                <div style="font-size: 0.8rem; font-weight: 700; color: #f87171;">Critical: v2.4.1 Stopped</div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary);">Error rate 4.2% & canary errors tripped circuit breaker</div>
+                            </div>
+                        </div>
+                        <span class="badge badge-block" style="font-size: 0.68rem;">Inspect →</span>
+                    </div>
+
+                    <!-- Review Required Alert Item -->
+                    <div onclick="switchDemoRelease('v2.3.9')" style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); padding: 0.75rem 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.25rem;">🟠</span>
+                            <div>
+                                <div style="font-size: 0.8rem; font-weight: 700; color: #fbbf24;">Review Required: v2.3.9 Paused</div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary);">Failure allowance low (18%); review before promoting</div>
+                            </div>
+                        </div>
+                        <span class="badge badge-pause" style="font-size: 0.68rem;">Review →</span>
+                    </div>
+
+                    <!-- Safe Verified Item -->
+                    <div onclick="switchDemoRelease('v2.4.0')" style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 0.75rem 1rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.25rem;">🟢</span>
+                            <div>
+                                <div style="font-size: 0.8rem; font-weight: 700; color: #34d399;">Safe: v2.4.0 Promoted</div>
+                                <div style="font-size: 0.7rem; color: var(--text-secondary);">All 4 safety signals compliant; 100% production rollout</div>
+                            </div>
+                        </div>
+                        <span class="badge badge-allow" style="font-size: 0.68rem;">View →</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- 2. Current Release Risk Card at the Top -->
             <div class="current-release-hero is-block" id="currentReleaseHero">
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-                    <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Top Row: Environmental Context & Quick Actions -->
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.85rem; margin-bottom: 1.25rem;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <span class="hero-top-badge" id="heroBadge">CURRENT RELEASE UNDER CANARY GATING</span>
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">Environment: <strong>Staging / Canary Ring 1</strong></span>
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">
+                            Testing Stage: <strong style="color: var(--text-primary);">Limited 25% Rollout (Ring 1)</strong>
+                            <span class="info-tooltip-trigger" data-tooltip="Canary Deployment: The update is currently routed to only 25% of users to test safety before full release.">
+                                <span class="material-symbols-outlined" style="font-size: 14px; vertical-align: middle; margin-left: 3px; color: var(--color-accent-primary);">help</span>
+                            </span>
+                        </span>
                     </div>
                     <div style="display: flex; gap: 8px;">
                         <a href="risk-detail.html?id=v2.4.1" id="heroReviewBtn" class="btn btn-outline btn-sm">
-                            <span>🔍</span> Review Release
+                            <span class="material-symbols-outlined" style="font-size: 15px;">search</span> Review Indicators
                         </a>
                         <a href="evidence.html?id=R0042" id="heroEvidenceBtn" class="btn btn-primary btn-sm">
-                            <span>📄</span> View Evidence
+                            <span class="material-symbols-outlined" style="font-size: 15px;">description</span> View Evidence
                         </a>
                     </div>
                 </div>
 
-                <div class="hero-grid">
-                    <!-- Release ID & Status -->
-                    <div>
-                        <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 2px;">Release Identifier</div>
-                        <div style="font-size: 1.75rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px;">
+                <!-- 1. WHAT IS HAPPENING & IS THERE A PROBLEM? (Big Clear Status Banner) -->
+                <div id="heroStatusBanner" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div id="heroStatusIconBox" style="width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #ef4444; shrink-0: 0;">
+                            <span class="material-symbols-outlined" id="heroStatusIcon" style="font-size: 24px;">cancel</span>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);" id="heroQuestionIsSafe">
+                                Question 2: Is there a problem?
+                            </div>
+                            <h2 style="font-size: 1.35rem; font-weight: 800; margin: 2px 0; color: #ffffff;" id="heroStatusHeadline">
+                                Release Should Be Stopped
+                            </h2>
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0; line-height: 1.4;" id="heroStatusSub">
+                                Critical risk indicators were detected. Further rollout should be stopped to prevent user downtime.
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Current Decision</div>
+                        <span class="badge badge-block" id="heroDecisionBadge" style="font-size: 1rem; font-weight: 800; padding: 0.35rem 1rem; margin-top: 4px; display: inline-block;">
+                            BLOCK
+                        </span>
+                    </div>
+                </div>
+
+                <!-- 2. The 3 Core Pillars: Release Info | Human Risk Score | What Should I Do? -->
+                <div class="hero-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem;">
+                    <!-- Column 1: Release What is Happening -->
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem;">
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Question 1: What is happening?
+                        </div>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #ffffff; display: flex; align-items: center; gap: 8px;">
                             <code id="heroReleaseId" style="font-family: var(--font-mono); color: var(--color-accent-text);">v2.4.1</code>
                         </div>
-                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 4px;">
+                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin: 6px 0 8px 0;">
                             Status: <span class="badge" style="background: var(--color-accent-bg); color: var(--color-accent-text); border: 1px solid var(--color-accent-border);" id="heroStatusText">Canary Active</span>
                         </div>
-                    </div>
-
-                    <!-- Canary Progress -->
-                    <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Canary Progress</span>
-                            <span style="font-size: 0.85rem; font-weight: 700; font-family: var(--font-mono); color: var(--text-primary);" id="heroCanaryPercent">25%</span>
-                        </div>
-                        <div class="progress-track">
-                            <div class="progress-fill" id="heroProgressBar" style="width: 25%;"></div>
-                        </div>
-                        <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px;">
-                            Gated traffic before 100% production rollout
-                        </div>
-                    </div>
-
-                    <!-- Risk Score -->
-                    <div>
-                        <div style="font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 2px;">Evaluated Risk Score</div>
-                        <div class="score-circle-box">
-                            <div class="score-big-num" id="heroScoreVal" style="color: var(--color-block-text);">65</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); line-height: 1.2;">
-                                <div>/ 100</div>
-                                <div style="font-size: 0.68rem; color: var(--text-secondary);">Rule Stacking</div>
+                        <!-- Progress -->
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.72rem; color: var(--text-muted);">
+                                <span>Users Testing Update</span>
+                                <strong id="heroCanaryPercent" style="color: var(--text-primary); font-family: var(--font-mono);">25%</strong>
+                            </div>
+                            <div class="progress-track" style="height: 6px; margin-top: 4px;">
+                                <div class="progress-fill" id="heroProgressBar" style="width: 25%;"></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Decision & Action Required -->
-                    <div style="background: rgba(0, 0, 0, 0.25); border-radius: var(--radius-md); padding: 0.85rem 1rem; border: 1px solid var(--border-subtle);">
-                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em;">Automated Decision</div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
-                            <span class="badge badge-block" id="heroDecisionBadge" style="font-size: 0.95rem; font-weight: 800; padding: 0.25rem 0.85rem;">
-                                BLOCK
-                            </span>
+                    <!-- Column 2: Plain Language Risk Score -->
+                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem;">
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Risk Score & Level
                         </div>
-                        <div style="font-size: 0.75rem; color: var(--text-secondary);">
-                            Action Required: <strong id="heroActionText" style="color: var(--color-block-text);">Rollback Triggered</strong>
+                        <div style="display: flex; align-items: baseline; gap: 6px;">
+                            <span class="score-big-num" id="heroScoreVal" style="color: var(--color-block-text); font-size: 2.25rem; font-weight: 800; font-family: var(--font-mono);">65</span>
+                            <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">/ 100</span>
+                            <span class="badge badge-block" id="heroRiskLevelBadge" style="margin-left: auto; font-size: 0.75rem;">High Risk</span>
                         </div>
+                        <p style="font-size: 0.74rem; color: var(--text-secondary); margin: 6px 0 0 0; line-height: 1.4;" id="heroScoreExplain">
+                            This release has several indicators that require attention.
+                        </p>
+                    </div>
+
+                    <!-- Column 3: What Should I Do? (Action Required) -->
+                    <div style="background: rgba(0, 0, 0, 0.25); border-radius: var(--radius-md); padding: 1rem; border: 1px solid var(--border-subtle); border-left: 3px solid var(--color-block);">
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 4px;">
+                            Question 4: What should I do?
+                        </div>
+                        <div style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin: 4px 0;" id="heroActionText">
+                            Rollback Triggered
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0; line-height: 1.45;" id="heroActionInstruction">
+                            Stop the rollout immediately and investigate the critical indicators before proceeding.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3. WHY DID THIS HAPPEN? ("Why did we make this decision?") -->
+                <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1rem 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 6px;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 16px; color: var(--color-accent-primary);">lightbulb</span>
+                            <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-primary);">Question 3: Why did we make this decision?</span>
+                        </div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">Simple explanation + Technical evidence</span>
+                    </div>
+
+                    <div id="heroWhyList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.65rem;">
+                        <!-- Will be dynamically populated by switchDemoRelease -->
                     </div>
                 </div>
             </div>
@@ -1341,77 +1489,112 @@
                 </div>
 
                 <div class="signals-grid">
-                    <!-- Signal 1: Error Rate -->
+                    <!-- Signal 1: System Error Rate -->
                     <div class="signal-card" id="sigCardError">
                         <div class="signal-header">
-                            <span>Service Error Rate</span>
+                            <span style="display: flex; align-items: center; gap: 5px;">
+                                <span>System Error Rate</span>
+                                <span class="info-tooltip-trigger" data-tooltip="Error Rate: The percentage of user requests that failed. Safe limit is below 3.0%.">
+                                    <span class="material-symbols-outlined" style="font-size: 14px; color: var(--color-accent-primary);">help</span>
+                                </span>
+                            </span>
                             <span class="signal-points pts-danger" id="sigPtsError">+40 pts</span>
                         </div>
                         <div class="signal-val" id="sigValError" style="color: var(--color-block-text);">4.2%</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 2px 0 6px 0;">Percentage of requests that failed</div>
                         <div class="signal-threshold">
-                            <span>Threshold: &gt; 3.0%</span>
+                            <span>Safe limit: &lt; 3.0%</span>
                             <span style="color: var(--color-block-text); font-weight: 700;" id="sigStatError">HIGH</span>
                         </div>
                     </div>
 
-                    <!-- Signal 2: Latency -->
+                    <!-- Signal 2: Response Time -->
                     <div class="signal-card" id="sigCardLatency">
                         <div class="signal-header">
-                            <span>P95 Service Latency</span>
+                            <span style="display: flex; align-items: center; gap: 5px;">
+                                <span>Response Time (Latency)</span>
+                                <span class="info-tooltip-trigger" data-tooltip="Latency: How long the system takes to process a user request. Safe limit is under 500ms.">
+                                    <span class="material-symbols-outlined" style="font-size: 14px; color: var(--color-accent-primary);">help</span>
+                                </span>
+                            </span>
                             <span class="signal-points pts-ok" id="sigPtsLatency">+0 pts</span>
                         </div>
                         <div class="signal-val" id="sigValLatency" style="color: var(--color-allow-text);">320 ms</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 2px 0 6px 0;">How long system takes to respond</div>
                         <div class="signal-threshold">
-                            <span>Threshold: &gt; 500 ms</span>
+                            <span>Safe limit: &lt; 500 ms</span>
                             <span style="color: var(--color-allow-text); font-weight: 700;" id="sigStatLatency">NORMAL</span>
                         </div>
                     </div>
 
-                    <!-- Signal 3: Canary Error Rate -->
+                    <!-- Signal 3: Errors During Canary Test -->
                     <div class="signal-card" id="sigCardCanary">
                         <div class="signal-header">
-                            <span>Canary Error Rate</span>
+                            <span style="display: flex; align-items: center; gap: 5px;">
+                                <span>Errors During Canary Test</span>
+                                <span class="info-tooltip-trigger" data-tooltip="Canary Test: Failure rate in the limited 25% test user group compared to the existing stable version.">
+                                    <span class="material-symbols-outlined" style="font-size: 14px; color: var(--color-accent-primary);">help</span>
+                                </span>
+                            </span>
                             <span class="signal-points pts-danger" id="sigPtsCanary">+25 pts</span>
                         </div>
                         <div class="signal-val" id="sigValCanary" style="color: var(--color-block-text);">2.8%</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 2px 0 6px 0;">Failures during limited rollout</div>
                         <div class="signal-threshold">
-                            <span>Threshold: &gt; 2.0%</span>
+                            <span>Safe limit: &lt; 2.0%</span>
                             <span style="color: var(--color-block-text); font-weight: 700;" id="sigStatCanary">HIGH</span>
                         </div>
                     </div>
 
-                    <!-- Signal 4: Error Budget Remaining -->
+                    <!-- Signal 4: Remaining Error Budget -->
                     <div class="signal-card" id="sigCardBudget">
                         <div class="signal-header">
-                            <span>SLO Error Budget Remaining</span>
+                            <span style="display: flex; align-items: center; gap: 5px;">
+                                <span>Remaining Error Budget</span>
+                                <span class="info-tooltip-trigger" data-tooltip="Error Budget: How much failure allowance remains before our service agreement is breached.">
+                                    <span class="material-symbols-outlined" style="font-size: 14px; color: var(--color-accent-primary);">help</span>
+                                </span>
+                            </span>
                             <span class="signal-points pts-ok" id="sigPtsBudget">+0 pts</span>
                         </div>
                         <div class="signal-val" id="sigValBudget" style="color: var(--color-allow-text);">48%</div>
+                        <div style="font-size: 0.72rem; color: var(--text-secondary); margin: 2px 0 6px 0;">Failure allowance left for release</div>
                         <div class="signal-threshold">
-                            <span>Threshold: &lt; 20%</span>
+                            <span>Safe limit: &gt; 20%</span>
                             <span style="color: var(--color-allow-text); font-weight: 700;" id="sigStatBudget">NORMAL</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Score Formula Callout -->
-                <div class="math-equation-callout">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.15rem;">🧮</span>
-                        <div>
-                            <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Mathematical Rule Stacking:</span>
-                            <div style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: #ffffff; margin-top: 2px;" id="mathEquationDisplay">
-                                Risk Score = 40 (Error Rate) + 25 (Canary Error) = 65 / 100
+                <!-- Secondary Technical View: Expandable Engineering Math Drawer -->
+                <details class="tech-details-drawer" style="margin-top: 1rem; background: rgba(0, 0, 0, 0.25); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0.75rem 1rem;">
+                    <summary style="font-size: 0.78rem; font-weight: 700; color: var(--color-accent-text); cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                            <span class="material-symbols-outlined" style="font-size: 16px;">terminal</span>
+                            <span>🔬 View Technical Details & Formula Math (For Engineers)</span>
+                        </div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">Click to Expand ▼</span>
+                    </summary>
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle);">
+                        <div class="math-equation-callout" style="margin: 0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-size: 1.15rem;">🧮</span>
+                                <div>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary); font-weight: 600;">Mathematical Rule Stacking:</span>
+                                    <div style="font-family: var(--font-mono); font-size: 0.9rem; font-weight: 700; color: #ffffff; margin-top: 2px;" id="mathEquationDisplay">
+                                        Risk Score = 40 (Error Rate) + 25 (Canary Error) = 65 / 100
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 0.78rem; color: var(--text-muted);">Gating Outcome:</span>
+                                <span class="badge badge-block" id="mathDecisionBadge" style="font-size: 0.8rem; font-weight: 800; padding: 0.25rem 0.75rem;">
+                                    Decision: BLOCK
+                                </span>
                             </div>
                         </div>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <span style="font-size: 0.78rem; color: var(--text-muted);">Gating Outcome:</span>
-                        <span class="badge badge-block" id="mathDecisionBadge" style="font-size: 0.8rem; font-weight: 800; padding: 0.25rem 0.75rem;">
-                            Decision: BLOCK
-                        </span>
-                    </div>
-                </div>
+                </details>
             </div>
 
             <!-- 5. Deployment Pipeline / Canary Progress -->
@@ -1601,7 +1784,7 @@
                     <div>
                         <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">Release Risk Analytics & Telemetry Trends</h3>
                         <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">
-                            Telemetry trends comparing canary vs baseline over time and risk distribution.
+                            Shows whether release risk is increasing or decreasing over time, comparing the canary test group against stable production.
                         </p>
                     </div>
                 </div>
@@ -1609,13 +1792,18 @@
                 <div class="split-grid-2" style="display: grid; grid-template-columns: 1.8fr 1fr; gap: 1.25rem;">
                     <!-- Line Chart: Risk Score & Error Rate Trend -->
                     <div class="glass-card" style="padding: 1.25rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Risk Score Over Time & Canary Error Rate</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                            <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">
+                                Risk Score Over Time & Canary Error Rate
+                            </span>
                             <div style="display: flex; gap: 6px;">
                                 <span class="badge" style="background: var(--color-block-bg); color: var(--color-block-text); border: 1px solid var(--color-block-border); font-size: 0.68rem;">Canary Error (%)</span>
                                 <span class="badge" style="background: var(--color-accent-bg); color: var(--color-accent-text); border: 1px solid var(--color-accent-border); font-size: 0.68rem;">Baseline Error (%)</span>
                             </div>
                         </div>
+                        <p style="font-size: 0.72rem; color: var(--text-muted); margin: 0 0 0.75rem 0;">
+                            Shows whether errors spiked during recent testing windows. Lower lines are safer.
+                        </p>
                         <div style="height: 240px; position: relative;">
                             <canvas id="riskTrendChart"></canvas>
                         </div>
@@ -1623,10 +1811,13 @@
 
                     <!-- Donut Chart: Release Risk Distribution -->
                     <div class="glass-card" style="padding: 1.25rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
                             <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Release Risk Distribution</span>
                             <span style="font-size: 0.72rem; color: var(--text-muted);">100 Releases Monitored</span>
                         </div>
+                        <p style="font-size: 0.72rem; color: var(--text-muted); margin: 0 0 0.75rem 0;">
+                            Breakdown of how many releases passed safely vs needed intervention.
+                        </p>
                         <div style="height: 240px; position: relative; display: flex; align-items: center; justify-content: center;">
                             <canvas id="riskDistributionChart"></canvas>
                         </div>
@@ -1679,20 +1870,45 @@
                 <!-- 12. Release History Table -->
                 <div class="glass-card" style="padding: 1.2rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                        <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin: 0;">
-                            📋 Curated Release History
-                        </h3>
-                        <span style="font-size: 0.7rem; color: var(--text-muted);">Recent Deployments</span>
+                        <div>
+                            <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                                📋 Curated Release History
+                            </h3>
+                            <p style="font-size: 0.72rem; color: var(--text-muted); margin: 2px 0 0 0;">
+                                Click any row to preview its telemetry and decision details above.
+                            </p>
+                        </div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">5 Most Recent</span>
                     </div>
                     <div class="data-table-container" style="max-height: 250px; overflow-y: auto;">
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Release</th>
-                                    <th>Risk Score</th>
-                                    <th>Canary</th>
-                                    <th>Decision</th>
-                                    <th>Status</th>
+                                    <th>
+                                        Release Version
+                                        <span class="info-tooltip-trigger" data-tooltip="Unique build identifier evaluated during this rollout.">
+                                            <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle;">help</span>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        Risk Score
+                                        <span class="info-tooltip-trigger" data-tooltip="Overall risk points (0–100). 0-39: Safe, 40-59: Review, 60+: Blocked.">
+                                            <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle;">help</span>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        Testing Stage
+                                        <span class="info-tooltip-trigger" data-tooltip="Percentage of real user traffic routed to this release during evaluation.">
+                                            <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle;">help</span>
+                                        </span>
+                                    </th>
+                                    <th>
+                                        Decision
+                                        <span class="info-tooltip-trigger" data-tooltip="Automated gating outcome: ALLOW (Proceed), PAUSE (Hold for review), or BLOCK (Abort & rollback).">
+                                            <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle;">help</span>
+                                        </span>
+                                    </th>
+                                    <th>Outcome</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -1700,42 +1916,42 @@
                                 <tr style="cursor: pointer;" onclick="switchDemoRelease('v2.4.1')">
                                     <td><strong style="color: var(--color-accent-text); font-family: var(--font-mono);">v2.4.1</strong></td>
                                     <td><span style="font-weight: 700; font-family: var(--font-mono); color: var(--color-block-text);">65</span></td>
-                                    <td><span class="metric-pill danger">25%</span></td>
+                                    <td><span class="metric-pill danger">25% (Ring 1)</span></td>
                                     <td><span class="badge badge-block" style="font-size: 0.68rem;">BLOCK</span></td>
                                     <td><span style="color: var(--color-block-text); font-weight: 500;">Rolled Back</span></td>
-                                    <td><a href="evidence.html?id=R0042" class="btn btn-outline btn-xs">Evidence</a></td>
+                                    <td><a href="evidence.html?id=R0042" class="btn btn-outline btn-xs">View Evidence</a></td>
                                 </tr>
                                 <tr style="cursor: pointer;" onclick="switchDemoRelease('v2.4.0')">
                                     <td><strong style="color: var(--color-accent-text); font-family: var(--font-mono);">v2.4.0</strong></td>
                                     <td><span style="font-weight: 700; font-family: var(--font-mono); color: var(--color-allow-text);">18</span></td>
-                                    <td><span class="metric-pill success">25%</span></td>
+                                    <td><span class="metric-pill success">100% (Full)</span></td>
                                     <td><span class="badge badge-allow" style="font-size: 0.68rem;">ALLOW</span></td>
-                                    <td><span style="color: var(--color-allow-text); font-weight: 500;">Released</span></td>
-                                    <td><a href="evidence.html?id=R0041" class="btn btn-outline btn-xs">Evidence</a></td>
+                                    <td><span style="color: var(--color-allow-text); font-weight: 500;">Deployed Safely</span></td>
+                                    <td><a href="evidence.html?id=R0041" class="btn btn-outline btn-xs">View Evidence</a></td>
                                 </tr>
                                 <tr style="cursor: pointer;" onclick="switchDemoRelease('v2.3.9')">
                                     <td><strong style="color: var(--color-accent-text); font-family: var(--font-mono);">v2.3.9</strong></td>
                                     <td><span style="font-weight: 700; font-family: var(--font-mono); color: var(--color-pause-text);">47</span></td>
-                                    <td><span class="metric-pill warning">10%</span></td>
+                                    <td><span class="metric-pill warning">10% (Canary)</span></td>
                                     <td><span class="badge badge-pause" style="font-size: 0.68rem;">PAUSE</span></td>
                                     <td><span style="color: var(--color-pause-text); font-weight: 500;">Under Review</span></td>
-                                    <td><a href="risk-detail.html?id=R0042" class="btn btn-outline btn-xs">Review</a></td>
+                                    <td><a href="risk-detail.html?id=R0042" class="btn btn-outline btn-xs">Review Risk</a></td>
                                 </tr>
                                 <tr>
                                     <td><strong style="color: var(--color-accent-text); font-family: var(--font-mono);">v2.3.8</strong></td>
                                     <td><span style="font-weight: 700; font-family: var(--font-mono); color: var(--color-allow-text);">15</span></td>
-                                    <td><span class="metric-pill success">100%</span></td>
+                                    <td><span class="metric-pill success">100% (Full)</span></td>
                                     <td><span class="badge badge-allow" style="font-size: 0.68rem;">ALLOW</span></td>
-                                    <td><span style="color: var(--color-allow-text); font-weight: 500;">Released</span></td>
-                                    <td><a href="evidence.html?id=R0038" class="btn btn-outline btn-xs">Evidence</a></td>
+                                    <td><span style="color: var(--color-allow-text); font-weight: 500;">Deployed Safely</span></td>
+                                    <td><a href="evidence.html?id=R0038" class="btn btn-outline btn-xs">View Evidence</a></td>
                                 </tr>
                                 <tr>
                                     <td><strong style="color: var(--color-accent-text); font-family: var(--font-mono);">v2.3.7</strong></td>
                                     <td><span style="font-weight: 700; font-family: var(--font-mono); color: var(--color-block-text);">82</span></td>
-                                    <td><span class="metric-pill danger">10%</span></td>
+                                    <td><span class="metric-pill danger">10% (Canary)</span></td>
                                     <td><span class="badge badge-block" style="font-size: 0.68rem;">BLOCK</span></td>
                                     <td><span style="color: var(--color-block-text); font-weight: 500;">Rolled Back</span></td>
-                                    <td><a href="evidence.html?id=R0037" class="btn btn-outline btn-xs">Evidence</a></td>
+                                    <td><a href="evidence.html?id=R0037" class="btn btn-outline btn-xs">View Evidence</a></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2128,6 +2344,81 @@
             const heroAction = document.getElementById('heroActionText');
             heroAction.textContent = data.action;
             heroAction.style.color = data.decision === 'BLOCK' ? 'var(--color-block-text)' : (data.decision === 'PAUSE' ? 'var(--color-pause-text)' : 'var(--color-allow-text)');
+
+            // Humanized Status Headline & Questions
+            const statusHeadline = document.getElementById('heroStatusHeadline');
+            const statusSub = document.getElementById('heroStatusSub');
+            const statusIcon = document.getElementById('heroStatusIcon');
+            const statusIconBox = document.getElementById('heroStatusIconBox');
+            const riskLevelBadge = document.getElementById('heroRiskLevelBadge');
+            const scoreExplain = document.getElementById('heroScoreExplain');
+            const actionInstruction = document.getElementById('heroActionInstruction');
+            const whyList = document.getElementById('heroWhyList');
+
+            if (data.decision === 'BLOCK') {
+                if (statusHeadline) statusHeadline.textContent = 'Release Should Be Stopped';
+                if (statusSub) statusSub.textContent = 'Critical risk indicators were detected. Further rollout should be stopped to prevent user downtime.';
+                if (statusIcon) statusIcon.textContent = 'cancel';
+                if (statusIconBox) statusIconBox.style.cssText = 'width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(239, 68, 68, 0.15); border: 2px solid #ef4444; color: #ef4444;';
+                if (riskLevelBadge) {
+                    riskLevelBadge.className = 'badge badge-block';
+                    riskLevelBadge.textContent = 'High Risk';
+                }
+                if (scoreExplain) scoreExplain.textContent = 'This release has several critical indicators that require attention before proceeding.';
+                if (actionInstruction) actionInstruction.textContent = 'Stop the rollout immediately and investigate the critical indicators before proceeding.';
+            } else if (data.decision === 'PAUSE') {
+                if (statusHeadline) statusHeadline.textContent = 'Review Required Before Continuing';
+                if (statusSub) statusSub.textContent = 'Some warning indicators were detected. Keep traffic capped while engineers inspect telemetry.';
+                if (statusIcon) statusIcon.textContent = 'warning';
+                if (statusIconBox) statusIconBox.style.cssText = 'width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(245, 158, 11, 0.15); border: 2px solid #f59e0b; color: #f59e0b;';
+                if (riskLevelBadge) {
+                    riskLevelBadge.className = 'badge badge-pause';
+                    riskLevelBadge.textContent = 'Needs Review';
+                }
+                if (scoreExplain) scoreExplain.textContent = 'Observed telemetry is approaching cautionary limits. Needs manual sign-off.';
+                if (actionInstruction) actionInstruction.textContent = 'Hold canary traffic at current percentage. Verify error budget before proceeding.';
+            } else {
+                if (statusHeadline) statusHeadline.textContent = 'Release Looks Safe to Deploy';
+                if (statusSub) statusSub.textContent = 'All health indicators are well within safe thresholds. Canary test passed with zero regressions.';
+                if (statusIcon) statusIcon.textContent = 'check_circle';
+                if (statusIconBox) statusIconBox.style.cssText = 'width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(16, 185, 129, 0.15); border: 2px solid #10b981; color: #10b981;';
+                if (riskLevelBadge) {
+                    riskLevelBadge.className = 'badge badge-allow';
+                    riskLevelBadge.textContent = 'Safe to Deploy';
+                }
+                if (scoreExplain) scoreExplain.textContent = 'Telemetry is strictly within healthy tolerances. Risk is low.';
+                if (actionInstruction) actionInstruction.textContent = 'Continue rollout safely. Traffic can be advanced to 100% production.';
+            }
+
+            // Populate Why List
+            if (whyList) {
+                if (data.decision === 'ALLOW') {
+                    whyList.innerHTML = `
+                        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 10px;">
+                            <span class="material-symbols-outlined" style="color: #10b981; font-size: 20px;">check_circle</span>
+                            <div>
+                                <div style="font-size: 0.8rem; font-weight: 600; color: #10b981;">No Anomalies Detected</div>
+                                <div style="font-size: 0.72rem; color: var(--text-secondary);">All 4 SLA metrics (error rate, latency, canary delta, budget) are healthy.</div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    whyList.innerHTML = data.factors.map(f => `
+                        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 0.65rem 0.85rem; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span class="material-symbols-outlined" style="color: ${data.decision === 'BLOCK' ? 'var(--color-block-text)' : 'var(--color-pause-text)'}; font-size: 18px;">
+                                    ${data.decision === 'BLOCK' ? 'error' : 'warning'}
+                                </span>
+                                <div>
+                                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-primary);">${f.rule}</div>
+                                    <div style="font-size: 0.72rem; color: var(--text-secondary);">${f.detail}</div>
+                                </div>
+                            </div>
+                            <span class="badge ${data.decision === 'BLOCK' ? 'badge-block' : 'badge-pause'}" style="font-size: 0.7rem; white-space: nowrap;">${f.pts}</span>
+                        </div>
+                    `).join('');
+                }
+            }
 
             document.getElementById('heroReviewBtn').href = `risk-detail.html?id=${data.release_id}`;
 

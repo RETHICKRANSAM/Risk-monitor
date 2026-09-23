@@ -22,6 +22,58 @@
             }
         })();
     </script>
+    <style>
+        /* Custom Tooltip Styling */
+        .info-tooltip-trigger {
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+            position: relative;
+            color: var(--text-muted, #94a3b8);
+        }
+        .info-tooltip-trigger:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a;
+            color: #f8fafc;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 400;
+            line-height: 1.4;
+            white-space: normal;
+            width: max-content;
+            max-width: 260px;
+            z-index: 1000;
+            pointer-events: none;
+            text-transform: none;
+            letter-spacing: normal;
+            font-family: var(--font-sans, -apple-system, sans-serif);
+        }
+        .tech-details-drawer {
+            border: 1px dashed var(--border-subtle, rgba(255,255,255,0.12));
+            background: rgba(255,255,255,0.02);
+            border-radius: var(--radius-md, 8px);
+            padding: 0.75rem 1rem;
+            margin-top: 1rem;
+        }
+        .tech-details-drawer summary {
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-accent-text, #38bdf8);
+            outline: none;
+            user-select: none;
+        }
+        .tech-details-drawer summary:hover {
+            text-decoration: underline;
+        }
+    </style>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 </head>
 <body>
@@ -96,69 +148,142 @@
             <!-- How Decision Reasoning Works Helper Banner -->
             <div style="background: rgba(14, 165, 233, 0.05); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 0.75rem; padding: 0.85rem 1.25rem; margin-bottom: 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
                 <div style="display: flex; align-items: center; gap: 0.75rem;">
-                    <span class="material-symbols-outlined" style="color: #38bdf8; font-size: 20px;">psychology</span>
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">
-                        <strong>Automated Reasoning Breakdown:</strong> This page reveals the mathematical rule evaluation applied to canary telemetry. Penalties stack additively: Error Rate (&gt;3% = +40), Latency (&gt;500ms = +25), Canary Delta (&gt;2% = +25), Error Budget (&lt;20% = +10). Thresholds: 0–39 (ALLOW), 40–59 (PAUSE), 60+ (BLOCK).
+                    <span class="material-symbols-outlined" style="color: #38bdf8; font-size: 20px;">info</span>
+                    <span style="font-size: 0.82rem; color: var(--text-secondary);">
+                        <strong>What this page tells you:</strong> This inspection details whether this specific release was safe to deploy, the plain-language reasons why this decision was reached, and what action engineers must take next.
                     </span>
                 </div>
                 <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.7rem; font-family: var(--font-mono);">
-                    Non-Repudiation Verified
+                    Gating Policy Active
                 </span>
             </div>
 
-            <!-- Risk Score & Decision Cards -->
-            <div class="summary-cards" style="grid-template-columns: 1fr 1fr 1fr;">
-                <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h3 class="text-sm text-muted mb-md">Calculated Risk Score</h3>
-                    <div class="text-3xl" id="riskScoreValue" style="font-weight: 800; font-size: 3rem; margin: 0.5rem 0;">75</div>
-                    <div class="risk-meter" style="width: 80%; margin: 0 auto 0.5rem auto;">
-                        <div class="risk-meter-fill block" id="riskMeterFill" style="width: 75%;"></div>
+            <!-- Question Hierarchy: 1. What is happening? 2. Is there a problem? 3. Action Required -->
+            <div class="summary-cards" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem;">
+                <!-- Card 1: What is happening? -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 6px;">
+                            Question 1: What is happening?
+                        </div>
+                        <h3 class="text-sm text-muted mb-sm">Release Identity & Stage</h3>
+                        <div style="font-size: 1.5rem; font-weight: 800; color: #ffffff; margin-bottom: 0.5rem;">
+                            <code id="releaseVersion" style="font-family: var(--font-mono); color: var(--color-accent-text);">v2.4.2</code>
+                        </div>
                     </div>
-                    <div class="text-xs text-muted">Range: 0–39 (ALLOW), 40–59 (PAUSE), 60+ (BLOCK)</div>
-                </div>
-
-                <div class="glass-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                    <h3 class="text-sm text-muted mb-md">Gating Decision</h3>
-                    <div style="margin: 1rem 0;">
-                        <span class="badge badge-block" id="decisionBadge" style="font-size: 1.25rem; padding: 0.5rem 1.5rem;">BLOCK</span>
-                    </div>
-                    <p class="text-xs text-muted" id="decisionDescription">
-                        High risk detected in canary telemetry. Release halted before customer exposure.
-                    </p>
-                </div>
-
-                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: center;">
-                    <h3 class="text-sm text-muted mb-md">Deployment Metadata</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.85rem;">
-                        <div><span class="text-muted">Version:</span> <strong id="releaseVersion">v2.4.2</strong></div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.825rem; background: var(--bg-input); padding: 0.65rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                        <div><span class="text-muted">Organization:</span> <strong id="releaseOrg">BankA</strong></div>
                         <div><span class="text-muted">Stage:</span> <span class="badge" id="releaseStage">canary</span></div>
-                        <div><span class="text-muted">Org:</span> <strong id="releaseOrg">BankA</strong></div>
-                        <div><span class="text-muted">Audited:</span> <span id="releaseDeployed">Sep 8, 2026, 09:30 UTC</span></div>
+                        <div style="grid-column: 1 / -1;"><span class="text-muted">Audited:</span> <span id="releaseDeployed" style="color: var(--text-secondary);">Sep 8, 2026, 09:30 UTC</span></div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Is there a problem? (Decision & Risk Score) -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; text-align: center;">
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 6px;">
+                            Question 2: Is there a problem?
+                        </div>
+                        <h3 class="text-sm text-muted mb-sm">Decision & Calculated Risk</h3>
+                        <div style="display: flex; justify-content: center; align-items: baseline; gap: 6px; margin: 0.35rem 0;">
+                            <span class="text-3xl" id="riskScoreValue" style="font-weight: 800; font-size: 2.75rem; font-family: var(--font-mono);">75</span>
+                            <span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600;">/ 100</span>
+                        </div>
+                        <div class="risk-meter" style="width: 85%; margin: 0 auto 0.5rem auto;">
+                            <div class="risk-meter-fill block" id="riskMeterFill" style="width: 75%;"></div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg-input); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+                        <span class="text-xs text-muted">Automated Gate:</span>
+                        <span class="badge badge-block" id="decisionBadge" style="font-size: 0.95rem; font-weight: 800; padding: 0.25rem 0.85rem;">BLOCK</span>
+                    </div>
+                </div>
+
+                <!-- Card 3: What should I do? -->
+                <div class="glass-card" style="display: flex; flex-direction: column; justify-content: space-between; border-left: 3px solid var(--color-block);" id="actionCard">
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 6px;">
+                            Question 4: What should I do?
+                        </div>
+                        <h3 class="text-sm text-muted mb-sm">Recommended Action</h3>
+                        <div style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin: 0.35rem 0;" id="actionHeadline">
+                            Rollback Triggered
+                        </div>
+                        <p class="text-xs text-muted" id="decisionDescription" style="line-height: 1.45;">
+                            High risk detected in canary telemetry. Release halted before customer exposure.
+                        </p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.75rem; color: var(--text-secondary);" id="actionGuidance">
+                        🛑 Keep live user traffic on previous stable version until engineers resolve the root cause.
                     </div>
                 </div>
             </div>
 
-            <!-- Risk Factor Breakdown -->
-            <div class="glass-card mb-lg" style="margin-top: 1.5rem;">
-                <h3>Multi-Factor Risk Breakdown (Value Stacking)</h3>
-                <p class="text-xs text-muted mb-md">Transparent decision logic with additive penalties per PRD Section 13</p>
+            <!-- Risk Factor Breakdown: Why was this decision made? -->
+            <div class="glass-card mb-lg" style="margin-top: 1.5rem; padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 6px;">
+                    <div>
+                        <div style="font-size: 0.7rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 2px;">
+                            Question 3: Why was this decision made?
+                        </div>
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                            Identified Risk Factors
+                        </h3>
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">
+                        Additive Penalty Rules
+                    </span>
+                </div>
                 <div id="riskBreakdownContainer">
                     <!-- Populated dynamically -->
                 </div>
+
+                <!-- Expandable Technical Details Drawer -->
+                <details class="tech-details-drawer">
+                    <summary>🔬 View Technical Details & Mathematical Scoring Formula</summary>
+                    <div style="margin-top: 0.65rem; font-size: 0.78rem; color: var(--text-secondary); line-height: 1.5;">
+                        <p style="margin: 0 0 0.4rem 0;">
+                            The risk engine calculates points additively based on predefined SLA violation rules:
+                        </p>
+                        <code style="display: block; background: rgba(0,0,0,0.3); padding: 0.5rem 0.75rem; border-radius: 4px; font-family: var(--font-mono); color: var(--color-accent-text); margin-bottom: 0.5rem;" id="mathEquationDetail">
+                            Risk Score = 40 (Error Rate &gt; 3%) + 25 (Canary Divergence &gt; 2%) + 10 (Budget &lt; 20%) = 75 / 100
+                        </code>
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-dim);">
+                            <span>🟢 0–39: ALLOW (Safe)</span>
+                            <span>🟠 40–59: PAUSE (Review Required)</span>
+                            <span>🔴 60+: BLOCK (Circuit Breaker Tripped)</span>
+                        </div>
+                    </div>
+                </details>
             </div>
 
             <!-- Metrics Table vs Thresholds -->
-            <div class="glass-card mb-lg" style="margin-top: 1.5rem;">
-                <h3>Telemetry Observations vs. Enterprise SLA Thresholds</h3>
+            <div class="glass-card mb-lg" style="margin-top: 1.5rem; padding: 1.25rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 6px;">
+                    <div>
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-primary); margin: 0;">
+                            Telemetry Observations vs. Enterprise Safe Limits
+                        </h3>
+                        <p style="font-size: 0.78rem; color: var(--text-muted); margin: 2px 0 0 0;">
+                            Detailed readings collected from live servers and compared against safety standards.
+                        </p>
+                    </div>
+                    <span style="font-size: 0.72rem; color: var(--text-muted);">Real-time Telemetry</span>
+                </div>
                 <div class="data-table-container">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Telemetry Dimension</th>
-                                <th>Observed Value</th>
-                                <th>SLA / Policy Threshold</th>
+                                <th>
+                                    Metric (What We Measure)
+                                    <span class="info-tooltip-trigger" data-tooltip="Core health signal collected during this deployment window.">
+                                        <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle;">help</span>
+                                    </span>
+                                </th>
+                                <th>Measured Reading</th>
+                                <th>Safe Limit (Policy Threshold)</th>
                                 <th>Status</th>
-                                <th>Cleaning / Pre-processing State</th>
+                                <th>Data Health State</th>
                             </tr>
                         </thead>
                         <tbody id="metricsTableBody">
@@ -177,6 +302,16 @@
 
         document.getElementById('evidenceLink').href = `evidence.html?id=${releaseId}`;
 
+        // Human-friendly explanations dictionary for metric names
+        const metricFriendlyNames = {
+            'Error Rate': { label: 'System Error Rate', tooltip: 'Percentage of user requests that failed with errors. Safe limit is under 3%.' },
+            'Canary Error Rate': { label: 'Errors During Canary Test', tooltip: 'Failure rate among users specifically testing this new update. Safe limit is under 2%.' },
+            'Service Latency': { label: 'Response Time (Latency)', tooltip: 'Average duration to respond to user requests in milliseconds. Safe limit is under 500 ms.' },
+            'Error Budget Remaining': { label: 'Remaining Failure Allowance (Error Budget)', tooltip: 'Percentage of allowable monthly errors still remaining. Safe limit is above 20%.' },
+            'Canary Latency Delta': { label: 'Canary Slowdown vs Baseline', tooltip: 'How much slower this canary version responded compared to the existing stable build.' },
+            'Service Availability': { label: 'System Uptime & Availability', tooltip: 'Percentage of total evaluation time the service was healthy and operational.' }
+        };
+
         // Demo release profiles
         const mockProfiles = {
             'R0042': {
@@ -187,9 +322,9 @@
                 score: 75,
                 decision: 'BLOCK',
                 reasons: [
-                    { rule: 'High error rate (>3%)', value: 4.8, threshold: 3.0, score_added: 40 },
-                    { rule: 'Canary error rate elevated (>2%)', value: 3.6, threshold: 2.0, score_added: 25 },
-                    { rule: 'Low error budget remaining (<20%)', value: 14.2, threshold: 20.0, score_added: 10 }
+                    { rule: 'High System Error Rate', detail: 'Observed 4.8% error rate exceeds SLA safety threshold of 3.0%', score_added: 40 },
+                    { rule: 'Elevated Canary Errors', detail: 'Observed 3.6% failure rate in canary ring exceeds tolerance of 2.0%', score_added: 25 },
+                    { rule: 'Low Error Budget Remaining', detail: 'Only 14.2% error budget remains, breaching the 20% safe buffer', score_added: 10 }
                 ],
                 metrics: [
                     { name: 'Error Rate', val: '4.80%', thresh: '< 3.0%', status: 'VIOLATION (+40 pts)', ok: false, prep: 'Smoothed via 3-point moving average' },
@@ -198,6 +333,45 @@
                     { name: 'Error Budget Remaining', val: '14.20%', thresh: '> 20.0%', status: 'VIOLATION (+10 pts)', ok: false, prep: 'Rolling 30-day budget burn' },
                     { name: 'Canary Latency Delta', val: '+140 ms', thresh: '< 100 ms', status: 'ELEVATED', ok: false, prep: 'Canary vs baseline delta' },
                     { name: 'Service Availability', val: '99.45%', thresh: '> 99.0%', status: 'COMPLIANT', ok: true, prep: 'Cleaned: clamped to <= 100%' }
+                ]
+            },
+            'v2.4.1': {
+                release_id: 'v2.4.1',
+                org: 'BankA',
+                version: '2.4.1',
+                stage: 'canary (25%)',
+                score: 65,
+                decision: 'BLOCK',
+                reasons: [
+                    { rule: 'High System Error Rate', detail: 'Observed 4.2% error rate exceeds SLA safety threshold of 3.0%', score_added: 40 },
+                    { rule: 'Elevated Canary Errors', detail: 'Observed 2.8% failure rate in canary ring exceeds tolerance of 2.0%', score_added: 25 }
+                ],
+                metrics: [
+                    { name: 'Error Rate', val: '4.20%', thresh: '< 3.0%', status: 'VIOLATION (+40 pts)', ok: false, prep: 'Smoothed via 3-point moving average' },
+                    { name: 'Canary Error Rate', val: '2.80%', thresh: '< 2.0%', status: 'VIOLATION (+25 pts)', ok: false, prep: 'Real-time telemetry stream' },
+                    { name: 'Service Latency', val: '320 ms', thresh: '< 500 ms', status: 'COMPLIANT', ok: true, prep: 'Validated & in-range' },
+                    { name: 'Error Budget Remaining', val: '48.0%', thresh: '> 20.0%', status: 'COMPLIANT', ok: true, prep: 'Rolling 30-day budget burn' },
+                    { name: 'Canary Latency Delta', val: '+45 ms', thresh: '< 100 ms', status: 'COMPLIANT', ok: true, prep: 'Canary vs baseline delta' },
+                    { name: 'Service Availability', val: '99.82%', thresh: '> 99.0%', status: 'COMPLIANT', ok: true, prep: 'Cleaned: clamped to <= 100%' }
+                ]
+            },
+            'v2.4.0': {
+                release_id: 'v2.4.0',
+                org: 'BankA',
+                version: '2.4.0',
+                stage: 'production (100%)',
+                score: 18,
+                decision: 'ALLOW',
+                reasons: [
+                    { rule: 'All Health Signals Normal', detail: 'Zero SLA breaches observed during 100% rollout', score_added: 0 }
+                ],
+                metrics: [
+                    { name: 'Error Rate', val: '0.80%', thresh: '< 3.0%', status: 'COMPLIANT', ok: true, prep: 'Smoothed via 3-point moving average' },
+                    { name: 'Canary Error Rate', val: '0.40%', thresh: '< 2.0%', status: 'COMPLIANT', ok: true, prep: 'Real-time telemetry stream' },
+                    { name: 'Service Latency', val: '180 ms', thresh: '< 500 ms', status: 'COMPLIANT', ok: true, prep: 'Validated & in-range' },
+                    { name: 'Error Budget Remaining', val: '88.0%', thresh: '> 20.0%', status: 'COMPLIANT', ok: true, prep: 'Rolling 30-day budget burn' },
+                    { name: 'Canary Latency Delta', val: '+12 ms', thresh: '< 100 ms', status: 'COMPLIANT', ok: true, prep: 'Canary vs baseline delta' },
+                    { name: 'Service Availability', val: '99.98%', thresh: '> 99.0%', status: 'COMPLIANT', ok: true, prep: 'Cleaned: clamped to <= 100%' }
                 ]
             }
         };
@@ -212,12 +386,48 @@
             document.getElementById('riskScoreValue').style.color = data.decision === 'ALLOW' ? '#10b981' : (data.decision === 'PAUSE' ? '#f59e0b' : '#ef4444');
 
             const fill = document.getElementById('riskMeterFill');
-            fill.style.width = `${data.score}%`;
+            fill.style.width = `${Math.min(100, Math.max(0, data.score))}%`;
             fill.className = `risk-meter-fill ${data.decision.toLowerCase()}`;
 
             const badge = document.getElementById('decisionBadge');
             badge.textContent = data.decision;
             badge.className = `badge badge-${data.decision.toLowerCase()}`;
+
+            // Action Card styling and text
+            const actionCard = document.getElementById('actionCard');
+            const actionHeadline = document.getElementById('actionHeadline');
+            const decisionDesc = document.getElementById('decisionDescription');
+            const actionGuidance = document.getElementById('actionGuidance');
+
+            if (data.decision === 'BLOCK') {
+                if (actionCard) actionCard.style.borderLeft = '3px solid var(--color-block, #ef4444)';
+                if (actionHeadline) actionHeadline.textContent = 'Rollback Triggered';
+                if (decisionDesc) decisionDesc.textContent = 'Critical risk detected in canary telemetry. Release halted before customer exposure.';
+                if (actionGuidance) actionGuidance.innerHTML = '🛑 <strong>Action:</strong> Stop rollout immediately and keep user traffic on previous stable version.';
+            } else if (data.decision === 'PAUSE') {
+                if (actionCard) actionCard.style.borderLeft = '3px solid var(--color-pause, #f59e0b)';
+                if (actionHeadline) actionHeadline.textContent = 'Manual Review Required';
+                if (decisionDesc) decisionDesc.textContent = 'Caution indicators detected. Traffic is held while engineers review metrics.';
+                if (actionGuidance) actionGuidance.innerHTML = '⏸️ <strong>Action:</strong> Keep canary traffic capped. Review error budget burn before continuing.';
+            } else {
+                if (actionCard) actionCard.style.borderLeft = '3px solid var(--color-allow, #10b981)';
+                if (actionHeadline) actionHeadline.textContent = 'Promote to Production';
+                if (decisionDesc) decisionDesc.textContent = 'All health indicators are well within safe thresholds. Canary test passed with zero regressions.';
+                if (actionGuidance) actionGuidance.innerHTML = '✅ <strong>Action:</strong> Safe to proceed. Traffic can be advanced to 100% production.';
+            }
+
+            // Math formula display
+            const mathEl = document.getElementById('mathEquationDetail');
+            if (mathEl) {
+                if (data.reasons && data.reasons.length > 0) {
+                    const terms = data.reasons.filter(r => r.score_added > 0).map(r => `${r.score_added} (${r.rule})`);
+                    if (terms.length > 0) {
+                        mathEl.textContent = `Risk Score = ${terms.join(' + ')} = ${data.score} / 100 → ${data.decision}`;
+                    } else {
+                        mathEl.textContent = `Risk Score = 0 (Signals Healthy) = ${data.score} / 100 → ${data.decision}`;
+                    }
+                }
+            }
 
             // Reasons
             const rContainer = document.getElementById('riskBreakdownContainer');
@@ -237,17 +447,28 @@
 
             // Metrics table
             const tbody = document.getElementById('metricsTableBody');
-            tbody.innerHTML = data.metrics.map(m => `
+            tbody.innerHTML = data.metrics.map(m => {
+                const info = metricFriendlyNames[m.name] || { label: m.name, tooltip: 'Telemetry metric monitored by the risk engine.' };
+                return `
                 <tr>
-                    <td><strong>${m.name}</strong></td>
-                    <td><code>${m.val}</code></td>
-                    <td>${m.thresh}</td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--text-primary); display: flex; align-items: center; gap: 4px;">
+                            ${info.label}
+                            <span class="info-tooltip-trigger" data-tooltip="${info.tooltip}">
+                                <span class="material-symbols-outlined" style="font-size: 13px; vertical-align: middle; color: var(--color-accent-primary);">help</span>
+                            </span>
+                        </div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted); font-family: var(--font-mono);">${m.name}</div>
+                    </td>
+                    <td><code style="font-weight: 600; font-size: 0.85rem;">${m.val}</code></td>
+                    <td><span style="font-size: 0.8rem; color: var(--text-secondary);">${m.thresh}</span></td>
                     <td>
                         <span class="badge ${m.ok ? 'badge-allow' : 'badge-block'}">${m.status}</span>
                     </td>
-                    <td class="text-muted" style="font-size: 0.8rem;">${m.prep}</td>
+                    <td class="text-muted" style="font-size: 0.78rem;">${m.prep}</td>
                 </tr>
-            `).join('');
+                `;
+            }).join('');
         }
 
         async function loadDetail() {
