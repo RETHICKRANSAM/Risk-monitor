@@ -7,7 +7,7 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Compliance](https://img.shields.io/badge/compliance-SOX%20%7C%20PCI--DSS-orange.svg)](#production-deployment--compliance-checklist)
 
-> **Live Interactive Demo:** [https://rethikransem.github.io/Riskmonitor/](https://rethikransem.github.io/Riskmonitor/) *(Features 1-click zero-login **Guided Risk Dashboard Walkthrough** mode)*  
+> **Live Interactive Demo:** [https://rethickransam.github.io/Risk-monitor/](https://rethickransam.github.io/Risk-monitor/) *(Features 1-click zero-login **Guided Risk Dashboard Walkthrough** mode)*  
 > **Empirical Evaluation Report:** [`EXPERIMENT_REPORT.md`](EXPERIMENT_REPORT.md)  
 > **Stakeholder Validation:** [`STAKEHOLDER_VALIDATION.md`](STAKEHOLDER_VALIDATION.md)  
 > **Product Requirements Document:** [`prd.md`](prd.md)
@@ -119,8 +119,8 @@ We executed an end-to-end empirical experiment evaluating 100 historical change 
 ### 5.2 Local Installation
 ```powershell
 # 1. Clone the repository
-git clone https://github.com/rethikransem/Riskmonitor.git
-cd Riskmonitor
+git clone https://github.com/RETHICKRANSAM/Risk-monitor.git
+cd Risk-monitor
 
 # 2. Create and activate virtual environment
 python -m venv venv

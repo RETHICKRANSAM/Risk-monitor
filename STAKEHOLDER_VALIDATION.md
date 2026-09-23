@@ -129,7 +129,7 @@ Evaluators can directly replicate the stakeholder validation study on the live i
 ```
 
 ### Execution Steps:
-1. Open the [Live Web Application](https://rethikransem.github.io/Riskmonitor/) and click **"🚀 Launch Risk Dashboard & Walkthrough"** (or append `?walkthrough=true` to `dashboard.html`).
+1. Open the [Live Web Application](https://rethickransam.github.io/Risk-monitor/) and click **"🚀 Launch Risk Dashboard & Walkthrough"** (or append `?walkthrough=true` to `dashboard.html`).
 2. The guided tour controller will automatically spotlight **Step 1 (ALLOW)**, highlighting `R0001` with zero penalty points.
 3. Click **"Next Step ▶"** to cycle through **Step 2 (PAUSE)** on `R0042` and **Step 3 (BLOCK)** on `R0015`.
 4. Click **"View Full Evidence Dossier 📄"** to inspect the non-repudiation signature, test logs, and SHA-256 verification hash.
