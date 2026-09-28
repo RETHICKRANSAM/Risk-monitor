@@ -8,6 +8,7 @@
 [![Compliance](https://img.shields.io/badge/compliance-SOX%20%7C%20PCI--DSS-orange.svg)](#production-deployment--compliance-checklist)
 
 > **Live Interactive Demo:** [https://rethickransam.github.io/Risk-monitor/](https://rethickransam.github.io/Risk-monitor/) *(Features 1-click zero-login **Guided Risk Dashboard Walkthrough** mode)*  
+> **Project Review #2 Report (70%+ Milestone):** [`REVIEW_2_REPORT.md`](REVIEW_2_REPORT.md)  
 > **Empirical Evaluation Report:** [`EXPERIMENT_REPORT.md`](EXPERIMENT_REPORT.md)  
 > **Stakeholder Validation:** [`STAKEHOLDER_VALIDATION.md`](STAKEHOLDER_VALIDATION.md)  
 > **Product Requirements Document:** [`prd.md`](prd.md)
