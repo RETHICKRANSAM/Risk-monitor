@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "webhook_url": "https://argocd.corp.internal/api/webhook",
+  "auto_rollback_on_block": true,
+  "target_orchestrator": "kubernetes-argocd"
+}

@@ -7,6 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Listen for global refresh
     document.addEventListener('dashboard:refresh', initDashboard);
+
+    // Live Server-Sent Events (SSE) stream listener
+    if (window.EventSource) {
+        try {
+            const evtSource = new EventSource('/api/events/stream');
+            evtSource.addEventListener('decision_update', () => initDashboard());
+            evtSource.addEventListener('rollback_executed', () => initDashboard());
+            evtSource.addEventListener('webhook_received', () => initDashboard());
+        } catch (e) {
+            console.log('SSE not active:', e);
+        }
+    }
 });
 
 async function initDashboard() {

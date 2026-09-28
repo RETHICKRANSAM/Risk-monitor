@@ -1,0 +1,54 @@
+[
+  {
+    "source": "github",
+    "event_type": "push",
+    "repo": "enterprise/service",
+    "branch": "main",
+    "commit_sha": "abcdef12",
+    "commit_message": "CI webhook test",
+    "author": "github-bot",
+    "release_tag": null,
+    "received_at": "2026-09-28T10:31:27.923948+00:00",
+    "status": "PROCESSED"
+  },
+  {
+    "source": "jenkins",
+    "job_name": "deploy-production-canary",
+    "build_number": 42,
+    "status": "SUCCESS",
+    "commit_sha": "9a8b7c6d",
+    "received_at": "2026-09-28T10:31:23.554196+00:00"
+  },
+  {
+    "source": "github",
+    "event_type": "push",
+    "repo": "fintech/core-payments",
+    "branch": "release-v2.5",
+    "commit_sha": "e4f5a6b7",
+    "commit_message": "fix: update transaction reconciliation logic",
+    "author": "alex.dev",
+    "release_tag": null,
+    "received_at": "2026-09-28T10:31:23.526284+00:00",
+    "status": "PROCESSED"
+  },
+  {
+    "source": "jenkins",
+    "job_name": "deploy-production-canary",
+    "build_number": 42,
+    "status": "SUCCESS",
+    "commit_sha": "9a8b7c6d",
+    "received_at": "2026-09-28T10:30:36.727177+00:00"
+  },
+  {
+    "source": "github",
+    "event_type": "push",
+    "repo": "fintech/core-payments",
+    "branch": "release-v2.5",
+    "commit_sha": "e4f5a6b7",
+    "commit_message": "fix: update transaction reconciliation logic",
+    "author": "alex.dev",
+    "release_tag": null,
+    "received_at": "2026-09-28T10:30:36.698209+00:00",
+    "status": "PROCESSED"
+  }
+]

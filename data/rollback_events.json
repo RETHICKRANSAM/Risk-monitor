@@ -1,0 +1,67 @@
+[
+  {
+    "event_id": "4386be66bd",
+    "release_id": "LIVE-EVAL",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Circuit breaker activated: Critical risk score >= 60",
+    "risk_score": 100,
+    "target_version": "previous_stable",
+    "metrics_snapshot": {
+      "error_rate": 4.5,
+      "latency_ms": 650,
+      "canary_error_rate": 3.2,
+      "error_budget_remaining": 10.0
+    },
+    "triggered_at": "2026-09-28T10:31:27.977798+00:00",
+    "circuit_breaker_hash": "263ddcf752202a80a7f720a0502db75a588b27a6481242bc221dd0452454ccbd"
+  },
+  {
+    "event_id": "e821194e2c",
+    "release_id": "API-TEST-01",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Test circuit breaker invocation",
+    "risk_score": 90,
+    "target_version": "v1.0-stable",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:31:22.718499+00:00",
+    "circuit_breaker_hash": "9d13cc04d07d4fe9a71a42813848a142628a9bc7da3707015260ddd3e7c4e6c4"
+  },
+  {
+    "event_id": "fa14115d5b",
+    "release_id": "REL-SEC-999",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Canary divergence > 4.5%",
+    "risk_score": 85,
+    "target_version": "v2.4.0",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:31:22.617682+00:00",
+    "circuit_breaker_hash": "1018321c6c282752b44256fd8e358f9dca8a501cb6ddca311e0cdcffc5867e0c"
+  },
+  {
+    "event_id": "a963727af1",
+    "release_id": "API-TEST-01",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Test circuit breaker invocation",
+    "risk_score": 90,
+    "target_version": "v1.0-stable",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:30:35.969339+00:00",
+    "circuit_breaker_hash": "5320df43abee46d6ef64bc50932b02e88f0aecd4c2506157043bfb9831b36d25"
+  },
+  {
+    "event_id": "07c1e1f9d1",
+    "release_id": "REL-SEC-999",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Canary divergence > 4.5%",
+    "risk_score": 85,
+    "target_version": "v2.4.0",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:30:35.940019+00:00",
+    "circuit_breaker_hash": "8dc5c7c8968cde80e74f2155872a6f10c1efb76f356b612ab204493990cce009"
+  }
+]

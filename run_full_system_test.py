@@ -294,6 +294,22 @@ def main():
             if not ok:
                 api_pass = False
 
+            # Inbound Webhook Ingestion API
+            ok, _ = check_http_endpoint(
+                "GitHub Webhook Ingestion API",
+                f"{BASE_URL}/api/webhooks/github",
+                method="POST",
+                data={"ref": "refs/heads/main", "head_commit": {"id": "abcdef12", "message": "CI webhook test"}},
+                expected_status=200,
+            )
+            if not ok:
+                api_pass = False
+
+            # Automated Rollback Circuit-Breaker API
+            ok, _ = check_http_endpoint("Rollback Circuit Breaker API", f"{BASE_URL}/api/rollbacks")
+            if not ok:
+                api_pass = False
+
             results.append(("Core REST APIs & Microservices", api_pass))
 
             # =========================================================================

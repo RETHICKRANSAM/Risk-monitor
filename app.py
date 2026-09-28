@@ -62,12 +62,16 @@ def create_app():
     from routes.metrics import metrics_bp
     from routes.auth import auth_bp
     from routes.ml import ml_bp
+    from routes.webhooks import webhooks_bp
+    from routes.rollbacks import rollbacks_bp
 
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(releases_bp)
     app.register_blueprint(metrics_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(ml_bp)
+    app.register_blueprint(webhooks_bp)
+    app.register_blueprint(rollbacks_bp)
 
     with app.app_context():
         try:
@@ -120,6 +124,54 @@ def create_app():
     @app.route("/audit.html")
     def audit():
         return render_template("audit.html")
+
+    @app.route("/evidence/print/<release_id>")
+    def printable_evidence(release_id):
+        """Render print-ready regulatory compliance dossier."""
+        import hashlib
+        from models import Release, RiskDecision, DeploymentMetric
+
+        release = Release.query.filter_by(release_id=release_id).first()
+        if not release:
+            return {"error": "Release not found"}, 404
+
+        latest_decision = (
+            RiskDecision.query.filter_by(release_id=release.id)
+            .order_by(RiskDecision.decided_at.desc())
+            .first()
+        )
+        latest_metric = (
+            DeploymentMetric.query.filter_by(release_id=release.id)
+            .order_by(DeploymentMetric.created_at.desc())
+            .first()
+        )
+
+        sig_data = f"{release.release_id}:{latest_decision.risk_score if latest_decision else 0}:{release.deployed_at}"
+        signature = hashlib.sha256(sig_data.encode("utf-8")).hexdigest()
+
+        return render_template(
+            "printable_evidence.html",
+            release=release,
+            decision=latest_decision,
+            latest_metric=latest_metric,
+            signature=signature,
+        )
+
+    @app.route("/api/events/stream")
+    def sse_stream():
+        """Server-Sent Events endpoint for real-time frontend updates."""
+        from flask import Response
+        from services.event_stream import event_generator, subscribe, unsubscribe
+
+        q = subscribe()
+
+        def stream():
+            try:
+                yield from event_generator(q)
+            finally:
+                unsubscribe(q)
+
+        return Response(stream(), mimetype="text/event-stream")
 
     @app.route("/css/<path:filename>")
     def serve_css(filename):
@@ -372,6 +424,21 @@ def create_app():
                 result = evaluate_release(data)
             else:
                 result = evaluate_deployment_risk(data)
+
+            # Automated circuit breaker rollback on BLOCK
+            if result.get("decision") == "BLOCK":
+                from services.rollback_service import trigger_automated_rollback
+                trigger_automated_rollback(
+                    release_id=data.get("release_id", "LIVE-EVAL"),
+                    reason="Circuit breaker activated: Critical risk score >= 60",
+                    risk_score=result.get("risk_score", 100),
+                    metrics=data,
+                )
+
+            # Broadcast live decision event to dashboard
+            from services.event_stream import broadcast_event
+            broadcast_event("decision_update", result)
+
             return jsonify(result)
         except (ValueError, TypeError) as e:
             return jsonify({"error": f"Invalid input: {e!s}"}), 400

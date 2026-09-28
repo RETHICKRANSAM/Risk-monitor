@@ -1,5 +1,215 @@
 [
   {
+    "run_id": "be5b42a1",
+    "branch": "main",
+    "commit_sha": "a1b2c3d4",
+    "triggered_by": "test_suite",
+    "start_time": "2026-09-28T10:25:23.099582+00:00",
+    "end_time": "2026-09-28T10:31:27.889582+00:00",
+    "total_duration_seconds": 364.79,
+    "duration_seconds": 364.79,
+    "status": "passed",
+    "overall_status": "passed",
+    "tests_passed": 425,
+    "tests_failed": 0,
+    "stages": [
+      {
+        "name": "build",
+        "status": "passed",
+        "start_time": "2026-09-28T10:25:23.099582+00:00",
+        "end_time": "2026-09-28T10:25:43.189582+00:00",
+        "duration_seconds": 20.09,
+        "details": "Build successful. Artifact size: 13MB."
+      },
+      {
+        "name": "unit_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:25:43.189582+00:00",
+        "end_time": "2026-09-28T10:25:58.079582+00:00",
+        "duration_seconds": 14.89,
+        "details": "351/351 tests passed. Coverage: 81%."
+      },
+      {
+        "name": "integration_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:25:58.079582+00:00",
+        "end_time": "2026-09-28T10:28:39.329582+00:00",
+        "duration_seconds": 161.25,
+        "details": "74/74 integration tests passed."
+      },
+      {
+        "name": "security_scan",
+        "status": "passed",
+        "start_time": "2026-09-28T10:28:39.329582+00:00",
+        "end_time": "2026-09-28T10:29:45.309582+00:00",
+        "duration_seconds": 65.98,
+        "details": "No critical vulnerabilities found. Review recommended for medium findings."
+      },
+      {
+        "name": "container_scan",
+        "status": "passed",
+        "start_time": "2026-09-28T10:29:45.309582+00:00",
+        "end_time": "2026-09-28T10:30:01.529582+00:00",
+        "duration_seconds": 16.22,
+        "details": "Container image scanned. Base image up to date. Size: 192MB."
+      },
+      {
+        "name": "deployment",
+        "status": "passed",
+        "start_time": "2026-09-28T10:30:01.529582+00:00",
+        "end_time": "2026-09-28T10:31:27.889582+00:00",
+        "duration_seconds": 86.36,
+        "details": "Deployed to target environment. Health check passed after 17s."
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 0,
+      "high": 2,
+      "medium": 1,
+      "low": 2
+    }
+  },
+  {
+    "run_id": "cea7754a",
+    "branch": "test-branch",
+    "commit_sha": "b8b3106",
+    "triggered_by": "unit-test",
+    "start_time": "2026-09-28T10:26:01.688312+00:00",
+    "end_time": "2026-09-28T10:31:22.118312+00:00",
+    "total_duration_seconds": 320.43,
+    "duration_seconds": 320.43,
+    "status": "passed",
+    "overall_status": "passed",
+    "tests_passed": 337,
+    "tests_failed": 0,
+    "stages": [
+      {
+        "name": "build",
+        "status": "passed",
+        "start_time": "2026-09-28T10:26:01.688312+00:00",
+        "end_time": "2026-09-28T10:26:18.168312+00:00",
+        "duration_seconds": 16.48,
+        "details": "Build successful. Artifact size: 33MB."
+      },
+      {
+        "name": "unit_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:26:18.168312+00:00",
+        "end_time": "2026-09-28T10:26:45.158312+00:00",
+        "duration_seconds": 26.99,
+        "details": "281/281 tests passed. Coverage: 86%."
+      },
+      {
+        "name": "integration_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:26:45.158312+00:00",
+        "end_time": "2026-09-28T10:28:07.028312+00:00",
+        "duration_seconds": 81.87,
+        "details": "56/56 integration tests passed."
+      },
+      {
+        "name": "security_scan",
+        "status": "passed",
+        "start_time": "2026-09-28T10:28:07.028312+00:00",
+        "end_time": "2026-09-28T10:28:51.118312+00:00",
+        "duration_seconds": 44.09,
+        "details": "No critical vulnerabilities found. Review recommended for medium findings."
+      },
+      {
+        "name": "container_scan",
+        "status": "passed",
+        "start_time": "2026-09-28T10:28:51.118312+00:00",
+        "end_time": "2026-09-28T10:29:15.208312+00:00",
+        "duration_seconds": 24.09,
+        "details": "Container image scanned. Base image up to date. Size: 110MB."
+      },
+      {
+        "name": "deployment",
+        "status": "passed",
+        "start_time": "2026-09-28T10:29:15.208312+00:00",
+        "end_time": "2026-09-28T10:31:22.118312+00:00",
+        "duration_seconds": 126.91,
+        "details": "Deployed to target environment. Health check passed after 15s."
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 0,
+      "high": 0,
+      "medium": 3,
+      "low": 14
+    }
+  },
+  {
+    "run_id": "5ba4b9a7",
+    "branch": "test-branch",
+    "commit_sha": "2d6ca44",
+    "triggered_by": "unit-test",
+    "start_time": "2026-09-28T10:26:34.235053+00:00",
+    "end_time": "2026-09-28T10:30:35.235053+00:00",
+    "total_duration_seconds": 241.0,
+    "duration_seconds": 241.0,
+    "status": "failed",
+    "overall_status": "failed",
+    "tests_passed": 348,
+    "tests_failed": 0,
+    "stages": [
+      {
+        "name": "build",
+        "status": "passed",
+        "start_time": "2026-09-28T10:26:34.235053+00:00",
+        "end_time": "2026-09-28T10:27:54.515053+00:00",
+        "duration_seconds": 80.28,
+        "details": "Build successful. Artifact size: 30MB."
+      },
+      {
+        "name": "unit_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:27:54.515053+00:00",
+        "end_time": "2026-09-28T10:28:20.695053+00:00",
+        "duration_seconds": 26.18,
+        "details": "301/301 tests passed. Coverage: 94%."
+      },
+      {
+        "name": "integration_tests",
+        "status": "passed",
+        "start_time": "2026-09-28T10:28:20.695053+00:00",
+        "end_time": "2026-09-28T10:29:30.345053+00:00",
+        "duration_seconds": 69.65,
+        "details": "47/47 integration tests passed."
+      },
+      {
+        "name": "security_scan",
+        "status": "passed",
+        "start_time": "2026-09-28T10:29:30.345053+00:00",
+        "end_time": "2026-09-28T10:29:52.455053+00:00",
+        "duration_seconds": 22.11,
+        "details": "No critical vulnerabilities found. Review recommended for medium findings."
+      },
+      {
+        "name": "container_scan",
+        "status": "failed",
+        "start_time": "2026-09-28T10:29:52.455053+00:00",
+        "end_time": "2026-09-28T10:30:35.235053+00:00",
+        "duration_seconds": 42.78,
+        "details": "Container scan failed: outdated base image with known CVEs."
+      },
+      {
+        "name": "deployment",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 0,
+      "high": 0,
+      "medium": 3,
+      "low": 9
+    }
+  },
+  {
     "run_id": "69902727",
     "branch": "main",
     "commit_sha": "a1b2c3d4",
