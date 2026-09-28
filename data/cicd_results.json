@@ -1,5 +1,75 @@
 [
   {
+    "run_id": "ba0a6ff2",
+    "branch": "test-branch",
+    "commit_sha": "d28c3d7",
+    "triggered_by": "unit-test",
+    "start_time": "2026-09-28T10:34:24.483108+00:00",
+    "end_time": "2026-09-28T10:35:13.693108+00:00",
+    "total_duration_seconds": 49.21,
+    "duration_seconds": 49.21,
+    "status": "failed",
+    "overall_status": "failed",
+    "tests_passed": 315,
+    "tests_failed": 5,
+    "stages": [
+      {
+        "name": "build",
+        "status": "passed",
+        "start_time": "2026-09-28T10:34:24.483108+00:00",
+        "end_time": "2026-09-28T10:34:50.033108+00:00",
+        "duration_seconds": 25.55,
+        "details": "Build successful. Artifact size: 26MB."
+      },
+      {
+        "name": "unit_tests",
+        "status": "failed",
+        "start_time": "2026-09-28T10:34:50.033108+00:00",
+        "end_time": "2026-09-28T10:35:13.693108+00:00",
+        "duration_seconds": 23.66,
+        "details": "315/320 tests passed, 5 failed. Coverage: 63%."
+      },
+      {
+        "name": "integration_tests",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      },
+      {
+        "name": "security_scan",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      },
+      {
+        "name": "container_scan",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      },
+      {
+        "name": "deployment",
+        "status": "skipped",
+        "start_time": null,
+        "end_time": null,
+        "duration_seconds": 0.0,
+        "details": "Skipped due to previous stage failure"
+      }
+    ],
+    "vulnerabilities": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    }
+  },
+  {
     "run_id": "be5b42a1",
     "branch": "main",
     "commit_sha": "a1b2c3d4",

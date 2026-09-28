@@ -1,5 +1,31 @@
 [
   {
+    "event_id": "9bedb27f821b",
+    "release_id": "API-TEST-01",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Test circuit breaker invocation",
+    "risk_score": 90,
+    "target_version": "v1.0-stable",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:35:14.282138+00:00",
+    "circuit_breaker_hash": "9bedb27f821b0e814d51fc546344b199fb0c41ac6d26f9e754349facf1a73539",
+    "dispatch_status": "FAILED: <urlopen error [Errno 11001] getaddrinfo failed>"
+  },
+  {
+    "event_id": "e52dd357c191",
+    "release_id": "REL-SEC-999",
+    "status": "ROLLBACK_EXECUTED",
+    "action": "HALT_AND_ROLLBACK",
+    "reason": "Canary divergence > 4.5%",
+    "risk_score": 85,
+    "target_version": "v2.4.0",
+    "metrics_snapshot": {},
+    "triggered_at": "2026-09-28T10:35:14.172327+00:00",
+    "circuit_breaker_hash": "e52dd357c191499028ed200f9e9cea9eef756be4d318cd09a855fd2fccb34200",
+    "dispatch_status": "FAILED: <urlopen error [Errno 11001] getaddrinfo failed>"
+  },
+  {
     "event_id": "4386be66bd",
     "release_id": "LIVE-EVAL",
     "status": "ROLLBACK_EXECUTED",

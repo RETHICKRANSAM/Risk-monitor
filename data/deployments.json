@@ -1,13 +1,13 @@
 [
   {
-    "deployment_id": "beef465f",
+    "deployment_id": "b258ea7c",
     "version": "3.0.0",
     "environment": "staging",
     "triggered_by": "qa_bot",
-    "start_time": "2026-09-28T10:31:22.178022+00:00",
-    "end_time": "2026-09-28T10:31:22.193559+00:00",
+    "start_time": "2026-09-28T10:35:13.743501+00:00",
+    "end_time": "2026-09-28T10:35:13.754746+00:00",
     "status": "success",
-    "duration_seconds": 0.02
+    "duration_seconds": 0.01
   },
   {
     "deployment_id": "test001",

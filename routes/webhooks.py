@@ -1,9 +1,11 @@
 """Inbound Webhook Ingestion Routes for GitHub Actions and Jenkins CI."""
 
-from datetime import datetime, timezone
 import json
 import os
+from datetime import datetime, timezone
+
 from flask import Blueprint, jsonify, request
+
 from services.event_stream import broadcast_event
 
 webhooks_bp = Blueprint("webhooks", __name__)
@@ -19,10 +21,10 @@ def _save_webhook_event(event_data: dict):
     if os.path.exists(WEBHOOK_LOGS_FILE):
         try:
             with open(WEBHOOK_LOGS_FILE, encoding="utf-8") as f:
-                events = json.load(f)
-                if not isinstance(events, list):
-                    events = []
-        except Exception:
+                data = json.load(f)
+                if isinstance(data, list):
+                    events = data
+        except (OSError, json.JSONDecodeError):
             events = []
 
     events.insert(0, event_data)
@@ -33,8 +35,12 @@ def _save_webhook_event(event_data: dict):
         with open(temp_file, "w", encoding="utf-8") as f:
             json.dump(events, f, indent=2)
         os.replace(temp_file, WEBHOOK_LOGS_FILE)
-    except Exception:
-        pass
+    except OSError:
+        if os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+            except OSError:
+                pass
 
 
 @webhooks_bp.route("/api/webhooks/github", methods=["POST"])
@@ -117,5 +123,5 @@ def get_webhook_logs():
         with open(WEBHOOK_LOGS_FILE, encoding="utf-8") as f:
             events = json.load(f)
             return jsonify({"events": events, "count": len(events)})
-    except Exception:
+    except (OSError, json.JSONDecodeError):
         return jsonify({"events": [], "count": 0})

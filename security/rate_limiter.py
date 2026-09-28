@@ -1,9 +1,10 @@
 """In-Memory Sliding-Window Rate Limiter for Brute-Force & DoS Protection."""
 
-from collections import defaultdict
-from functools import wraps
 import threading
 import time
+from collections import defaultdict
+from functools import wraps
+
 from flask import jsonify, request
 
 _attempts = defaultdict(list)

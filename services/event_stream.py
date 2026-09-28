@@ -8,7 +8,7 @@ import json
 import queue
 import threading
 import time
-from typing import Generator
+from collections.abc import Generator
 
 # Thread-safe subscriber list
 _subscribers: list[queue.Queue] = []
