@@ -76,6 +76,18 @@ def create_app():
         except Exception as e:
             print(f"[DB] Notice on init: {e}")
 
+    # Pre-warm ML / DL models in background thread
+    import threading
+
+    def _warmup_ml():
+        try:
+            from ml_pipeline.service import MLRiskEngine
+            MLRiskEngine.get_instance()
+        except Exception as e:
+            print(f"[ML] Warmup notice: {e}")
+
+    threading.Thread(target=_warmup_ml, daemon=True).start()
+
     # ── Page Routes ──────────────────────────────────────────────
 
     @app.route("/")
@@ -398,4 +410,5 @@ if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     host = os.environ.get("HOST", "0.0.0.0")
     debug = os.environ.get("FLASK_DEBUG", "false").lower() in ("true", "1", "yes")
-    app.run(host=host, port=port, debug=debug)
+    use_reloader = os.environ.get("FLASK_USE_RELOADER", "false").lower() in ("true", "1", "yes")
+    app.run(host=host, port=port, debug=debug, use_reloader=use_reloader)
