@@ -87,7 +87,7 @@ def evaluate_all() -> list[dict[str, Any]]:
     # 4. Evaluate PyTorch Deep MLP
     dl_mlp_path = MODELS_DIR / "dl_classifier.pth"
     if dl_mlp_path.exists():
-        ckpt = torch.load(dl_mlp_path, map_location="cpu", weights_only=False)
+        ckpt = torch.load(dl_mlp_path, map_location="cpu", weights_only=True)
         dl_model = DeepRiskClassifier(ckpt["input_dim"], ckpt["num_classes"])
         dl_model.load_state_dict(ckpt["model_state_dict"])
         dl_model.eval()
@@ -145,7 +145,7 @@ def evaluate_all() -> list[dict[str, Any]]:
     # 6. Evaluate Deep Autoencoder (Anomaly)
     ae_path = MODELS_DIR / "autoencoder.pth"
     if ae_path.exists():
-        ckpt = torch.load(ae_path, map_location="cpu", weights_only=False)
+        ckpt = torch.load(ae_path, map_location="cpu", weights_only=True)
         ae = DeepAutoencoder(ckpt["input_dim"], ckpt["latent_dim"])
         ae.load_state_dict(ckpt["model_state_dict"])
         ae.eval()

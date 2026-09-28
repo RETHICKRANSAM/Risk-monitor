@@ -24,7 +24,15 @@ def test_routes(client):
 
 
 def test_api_endpoints(client):
-    # Test dashboard API
+    # Test unauthenticated access is rejected (401)
+    unauth_resp = client.get("/api/dashboard")
+    assert unauth_resp.status_code == 401
+
+    # Authenticate with valid credentials
+    login_resp = client.post("/api/login", json={"username": "alice_re", "password": "demo123"})
+    assert login_resp.status_code == 200
+
+    # Test dashboard API with valid session
     resp = client.get("/api/dashboard")
     assert resp.status_code == 200
     data = resp.get_json()

@@ -88,10 +88,10 @@ class MLRiskEngine:
         if xgb_path.exists():
             self.xgboost = joblib.load(xgb_path)
 
-        # 3. DL Models (PyTorch)
+        # 3. DL Models (PyTorch) - Loaded safely with weights_only=True
         ae_path = MODELS_DIR / "autoencoder.pth"
         if ae_path.exists():
-            ckpt = torch.load(ae_path, map_location="cpu", weights_only=False)
+            ckpt = torch.load(ae_path, map_location="cpu", weights_only=True)
             self.ae_metadata = ckpt
             self.autoencoder = DeepAutoencoder(
                 input_dim=ckpt["input_dim"], latent_dim=ckpt["latent_dim"]
@@ -101,7 +101,7 @@ class MLRiskEngine:
 
         dl_cls_path = MODELS_DIR / "dl_classifier.pth"
         if dl_cls_path.exists():
-            ckpt = torch.load(dl_cls_path, map_location="cpu", weights_only=False)
+            ckpt = torch.load(dl_cls_path, map_location="cpu", weights_only=True)
             self.dl_classifier = DeepRiskClassifier(
                 input_dim=ckpt["input_dim"], num_classes=ckpt["num_classes"]
             )

@@ -17,6 +17,12 @@ import sys
 import time
 import urllib.error
 import urllib.request
+import http.cookiejar
+
+# Enable session cookie persistence across HTTP requests
+cookie_jar = http.cookiejar.CookieJar()
+opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookie_jar))
+urllib.request.install_opener(opener)
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 APP_PY = PROJECT_ROOT / "app.py"
@@ -233,6 +239,26 @@ def main():
 
             # Health API
             ok, _ = check_http_endpoint("Health Check API", f"{BASE_URL}/health")
+            if not ok:
+                api_pass = False
+
+            # Security Verification: Block impersonation without authentication
+            ok, _ = check_http_endpoint(
+                "Auth Security: ?user=iris_audit Blocked",
+                f"{BASE_URL}/api/dashboard?user=iris_audit",
+                expected_status=401,
+            )
+            if not ok:
+                api_pass = False
+
+            # Authenticate Session
+            ok, _ = check_http_endpoint(
+                "User Authentication API",
+                f"{BASE_URL}/api/login",
+                method="POST",
+                data={"username": "alice_re", "password": "demo123"},
+                expected_status=200,
+            )
             if not ok:
                 api_pass = False
 

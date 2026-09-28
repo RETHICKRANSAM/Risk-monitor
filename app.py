@@ -40,10 +40,14 @@ def create_app():
         template_folder="templates",
     )
 
-    from config import Config
+    from config import Config, config_by_name, get_secret_key
     from models import db
 
-    app.config.from_object(Config)
+    flask_env = os.getenv("FLASK_ENV", "development").lower()
+    if flask_env == "production":
+        get_secret_key(is_production=True)
+    config_class = config_by_name.get(flask_env, Config)
+    app.config.from_object(config_class)
     CORS(app, supports_credentials=True)
 
     # Initialize database

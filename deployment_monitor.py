@@ -25,10 +25,21 @@ def _load_deployments():
 
 
 def _save_deployments(deployments):
-    """Persist deployments list to the JSON file."""
+    """Persist deployments list to the JSON file atomically."""
     os.makedirs(DATA_DIR, exist_ok=True)
-    with open(DEPLOYMENTS_FILE, "w", encoding="utf-8") as f:
-        json.dump(deployments, f, indent=2, default=str)
+    temp_file = f"{DEPLOYMENTS_FILE}.tmp"
+    try:
+        with open(temp_file, "w", encoding="utf-8") as f:
+            json.dump(deployments, f, indent=2, default=str)
+        os.replace(temp_file, DEPLOYMENTS_FILE)
+    except OSError:
+        with open(DEPLOYMENTS_FILE, "w", encoding="utf-8") as f:
+            json.dump(deployments, f, indent=2, default=str)
+        if os.path.exists(temp_file):
+            try:
+                os.remove(temp_file)
+            except OSError:
+                pass
 
 
 def start_deployment(version, environment, triggered_by):
