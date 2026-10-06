@@ -620,9 +620,13 @@
             <span class="material-symbols-outlined theme-toggle-icon" style="font-size: 16px;">dark_mode</span>
             <span class="theme-toggle-text">Dark Mode</span>
         </button>
-    </div>
+    </    <div class="login-container">
+        <!-- Global Simulated Demo Notice -->
+        <div class="demo-disclaimer-banner" style="grid-column: 1 / -1; margin-bottom: 0.25rem;">
+            <span class="material-symbols-outlined" style="font-size: 16px; color: #38bdf8;">info</span>
+            <span>Simulated demo data - no real production systems, authentication or audit ledger.</span>
+        </div>
 
-    <div class="login-container">
         <!-- LEFT COLUMN: What is the Use Case & How It Works -->
         <div class="usecase-hero glass-card">
             <!-- Header Badges -->
@@ -632,7 +636,7 @@
                     <span>Regulated Enterprise Safety Gate</span>
                 </div>
                 <span style="font-size: 0.68rem; font-family: 'JetBrains Mono', monospace; color: #38bdf8; background: rgba(56, 189, 248, 0.1); padding: 2px 8px; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.2);">
-                    SOX 404 · PCI-DSS
+                    Designed to support SOX 404 / PCI-DSS change-control evidence
                 </span>
             </div>
 
@@ -641,7 +645,7 @@
                 Pre-Release Deployment Risk Monitor
             </h2>
             <p style="font-size: 0.85rem; color: var(--color-text-secondary); line-height: 1.5; margin-bottom: 1.25rem;">
-                Prevent production outages before broad rollout. Evaluates progressive canary telemetry in real-time, tripping automated circuit breakers and generating immutable audit dossiers.
+                Prevent production outages before broad rollout. Evaluates progressive canary telemetry in real-time, tripping automated circuit breakers and generating tamper-evident audit dossiers.
             </p>
 
             <!-- Card 1: The Real-World Use Case -->
@@ -656,7 +660,7 @@
                 <p style="font-size: 0.78rem; color: var(--color-text-secondary); line-height: 1.45;">
                     <strong>The Problem:</strong> Traditional CI/CD passes unit tests in staging, but subtle memory leaks, latency spikes, and error deltas only emerge under live traffic.
                     <br>
-                    <strong>The Solution:</strong> This monitor gates releases during the <strong>Canary phase (10% → 25% traffic)</strong>, ensuring harmful versions are halted before reaching 100% of customers.
+                    <strong>The Solution:</strong> This monitor gates releases across the <strong>progressive rollout ladder (10% → 25% → 50% → 100%)</strong>, ensuring harmful versions are halted before reaching 100% of customers.
                 </p>
             </div>
 
@@ -714,7 +718,7 @@
 
                 <div class="sandbox-slider-row">
                     <label>
-                        <span>Canary Latency:</span>
+                        <span>Avg Latency (ms):</span>
                         <strong id="simLatVal" style="color: var(--color-accent-primary); font-family: 'JetBrains Mono', monospace;">280 ms</strong>
                     </label>
                     <input type="range" id="simLatSlider" min="50" max="800" step="10" value="280" oninput="updateSimulator()">
@@ -722,7 +726,7 @@
 
                 <div class="sandbox-slider-row">
                     <label>
-                        <span>Canary Error Rate Delta:</span>
+                        <span>Canary Error Rate Delta (canary minus baseline): <span title="Excess failure percentage among canary test users vs stable baseline." style="cursor: help;">ℹ️</span></span>
                         <strong id="simCanaryVal" style="color: var(--color-accent-primary); font-family: 'JetBrains Mono', monospace;">0.8%</strong>
                     </label>
                     <input type="range" id="simCanarySlider" min="0" max="5" step="0.1" value="0.8" oninput="updateSimulator()">
@@ -751,8 +755,37 @@
                         ALLOW
                     </div>
                 </div>
+
+                <!-- Visible Scoring Model Documentation Panel -->
+                <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.85rem; margin-top: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <strong style="font-size: 0.78rem; color: #ffffff;">📊 Canonical Scoring Model (Max = 100 pts)</strong>
+                        <span style="font-size: 0.65rem; color: #38bdf8; font-family: 'JetBrains Mono', monospace;">4 Additive Rules</span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; font-size: 0.7rem;">
+                        <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.5rem; border-radius: 4px; border-left: 2px solid #ef4444;">
+                            <div style="font-weight: 600; color: #fca5a5;">1. Error Rate (>3.0%)</div>
+                            <div style="color: #94a3b8;">Weight: <strong style="color: #fff;">+40 pts</strong></div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.5rem; border-radius: 4px; border-left: 2px solid #38bdf8;">
+                            <div style="font-weight: 600; color: #7dd3fc;">2. P95 Latency (>500ms)</div>
+                            <div style="color: #94a3b8;">Weight: <strong style="color: #fff;">+25 pts</strong></div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.5rem; border-radius: 4px; border-left: 2px solid #f59e0b;">
+                            <div style="font-weight: 600; color: #fcd34d;">3. Canary Delta (>2.0%)</div>
+                            <div style="color: #94a3b8;">Weight: <strong style="color: #fff;">+25 pts</strong></div>
+                        </div>
+                        <div style="background: rgba(0,0,0,0.3); padding: 0.4rem 0.5rem; border-radius: 4px; border-left: 2px solid #a855f7;">
+                            <div style="font-weight: 600; color: #d8b4fe;">4. Error Budget (<20%)</div>
+                            <div style="color: #94a3b8;">Weight: <strong style="color: #fff;">+10 pts</strong></div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.68rem; color: #cbd5e1; margin-top: 0.5rem; text-align: center; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.35rem;">
+                        40 + 25 + 25 + 10 = 100 max | 0–39: <strong>ALLOW</strong> · 40–59: <strong>PAUSE</strong> · 60–100: <strong>BLOCK</strong>
+                    </div>
+                </div>
             </div>
-        </div>
+        </div>   </div>
 
         <!-- RIGHT COLUMN: Login Card -->
         <div class="login-card glass-card">
@@ -778,6 +811,11 @@
 
             <!-- Login Error Feedback -->
             <div id="loginError" class="login-error"></div>
+
+            <!-- Demo Authentication Notice -->
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 6px; padding: 0.5rem 0.75rem; margin-bottom: 1rem; font-size: 0.72rem; color: #fbbf24; text-align: center;">
+                🔒 Demo authentication only - credentials are public and checked client-side.
+            </div>
 
             <!-- Authentication Form -->
             <form id="loginForm" action="dashboard.html" method="get" autocomplete="off">
@@ -892,14 +930,20 @@
             <!-- Security Certification Footer -->
             <div class="security-footer">
                 <span class="material-symbols-outlined">lock</span>
-                <span>TLS Encrypted · Cryptographically Verified Audit Governance</span>
+                <span>Served over HTTPS · Hash-verified Audit Governance</span>
             </div>
         </div>
+    </div>
+
+    <!-- Visible Simulated Demo Footer -->
+    <div class="demo-disclaimer-footer">
+        Simulated demo data - no real production systems, authentication or audit ledger.
     </div>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="js/releases-data.js"></script>
     <script src="js/offline-queue.js"></script>
     <script src="js/app.js"></script>
     <script>
@@ -990,7 +1034,7 @@
             document.querySelectorAll('.theme-toggle-text').forEach(el => el.textContent = isLight ? 'Dark Mode' : 'Light Mode');
         }
 
-        // Live Interactive Gating Playground Calculation
+        // Live Interactive Gating Playground Calculation (Bound to SCORING_MODEL config)
         function updateSimulator() {
             const errEl = document.getElementById('simErrSlider');
             if (!errEl) return;
@@ -1005,24 +1049,22 @@
             document.getElementById('simCanaryVal').textContent = canaryErr.toFixed(1) + '%';
             document.getElementById('simBudgetVal').textContent = budget + '%';
 
-            let score = 0;
-            const reasons = [];
-
-            if (err > 3.0) {
-                score += 40;
-                reasons.push('High Error Rate (>3%) [+40]');
-            }
-            if (lat > 500) {
-                score += 25;
-                reasons.push('High Latency (>500ms) [+25]');
-            }
-            if (canaryErr > 2.0) {
-                score += 25;
-                reasons.push('Canary Error Rate (>2%) [+25]');
-            }
-            if (budget < 20) {
-                score += 10;
-                reasons.push('Low Error Budget (<20%) [+10]');
+            let res;
+            if (window.RiskData && window.RiskData.evaluateMetrics) {
+                res = window.RiskData.evaluateMetrics({
+                    error_rate: err,
+                    latency_p95: lat,
+                    canary_error_delta: canaryErr,
+                    error_budget_remaining: budget
+                });
+            } else {
+                let score = 0;
+                const reasons = [];
+                if (err > 3.0) { score += 40; reasons.push({ name: 'High System Error Rate (>3%)', pts: '+40 pts' }); }
+                if (lat > 500) { score += 25; reasons.push({ name: 'P95 Latency (>500ms)', pts: '+25 pts' }); }
+                if (canaryErr > 2.0) { score += 25; reasons.push({ name: 'Canary Error Rate Delta (canary minus baseline) Elevated (>2%)', pts: '+25 pts' }); }
+                if (budget < 20) { score += 10; reasons.push({ name: 'Low Error Budget (<20%)', pts: '+10 pts' }); }
+                res = { score, decision: score >= 60 ? 'BLOCK' : (score >= 40 ? 'PAUSE' : 'ALLOW'), triggeredRules: reasons };
             }
 
             const scoreDisplay = document.getElementById('simScoreDisplay');
@@ -1030,7 +1072,10 @@
             const badge = document.getElementById('simDecisionBadge');
             const box = document.getElementById('simResultBox');
 
-            if (score >= 60) {
+            const score = res.score;
+            const reasons = (res.triggeredRules || []).map(r => typeof r === 'string' ? r : `${r.name} (${r.pts})`);
+
+            if (res.decision === 'BLOCK') {
                 badge.textContent = 'BLOCK';
                 badge.style.background = '#ef4444';
                 badge.style.color = '#ffffff';
@@ -1038,7 +1083,7 @@
                 box.style.background = 'rgba(239, 68, 68, 0.12)';
                 box.style.borderColor = 'rgba(248, 113, 113, 0.35)';
                 scoreDisplay.innerHTML = `${score} / 100 <span style="font-size:0.75rem; color:#f87171;">(High Risk — Circuit Breaker Tripped)</span>`;
-            } else if (score >= 40) {
+            } else if (res.decision === 'PAUSE') {
                 badge.textContent = 'PAUSE';
                 badge.style.background = '#f59e0b';
                 badge.style.color = '#000000';

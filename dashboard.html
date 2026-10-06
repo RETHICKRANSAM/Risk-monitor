@@ -961,7 +961,7 @@
                     <a href="dashboard.html" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all bg-sky-500/15 text-sky-200 border border-sky-400/30 shadow-[0_0_15px_rgba(14,165,233,0.15)]" id="nav-dashboard">Rollout Dashboard</a>
                     <a href="risk-detail.html?id=v2.4.1" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-sky-500/10 hover:text-sky-200 transition-all border border-transparent hover:border-sky-400/20" id="nav-risk">Risk Reasoning View</a>
                     <a href="evidence.html?id=R0042" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-sky-500/10 hover:text-sky-200 transition-all border border-transparent hover:border-sky-400/20" id="nav-evidence">Evidence Report</a>
-                    <a href="audit.html" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-sky-500/10 hover:text-sky-200 transition-all border border-transparent hover:border-sky-400/20" id="nav-audit">Immutable Audit Trail</a>
+                    <a href="audit.html" class="px-3.5 py-1.5 rounded-lg text-zinc-400 text-xs font-medium hover:bg-sky-500/10 hover:text-sky-200 transition-all border border-transparent hover:border-sky-400/20" id="nav-audit">Tamper-evident Audit Trail</a>
                 </nav>
             </div>
             <div class="flex items-center gap-3 shrink-0">
@@ -995,6 +995,12 @@
     <div class="app-layout">
         <!-- Main Content (Full-width with top spacing for fixed header) -->
         <main class="main-content" style="margin-left: 0 !important; width: 100% !important; max-width: 1780px; margin: 0 auto; padding: 5.5rem 1.5rem 3rem 1.5rem; box-sizing: border-box;">
+
+            <!-- Global Simulated Demo Notice -->
+            <div class="demo-disclaimer-banner">
+                <span class="material-symbols-outlined" style="font-size: 16px; color: #38bdf8;">info</span>
+                <span>Simulated demo data - no real production systems, authentication or audit ledger.</span>
+            </div>
 
             <!-- 5-Metric KPI Row (Dark Enterprise Glassmorphic Floating Cards) -->
             <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-6">
@@ -1066,7 +1072,7 @@
                     </div>
                     <div class="flex items-center gap-1.5 text-[11px] text-rose-300 pt-1 border-t border-white/[0.08]">
                         <span class="material-symbols-outlined text-[14px] text-rose-400">shield</span>
-                        <span>8 Prevented Major Outages</span>
+                        <span>8 simulated blocks</span>
                     </div>
                     <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-rose-400/80 via-rose-500/30 to-transparent"></div>
                 </div>
@@ -1084,7 +1090,7 @@
                     </div>
                     <div class="flex items-center gap-1.5 text-[11px] text-cyan-200 pt-1 border-t border-white/[0.08]">
                         <span class="material-symbols-outlined text-[14px] text-cyan-400">verified</span>
-                        <span>Cryptographically Signed</span>
+                        <span>Hash-verified</span>
                     </div>
                     <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-cyan-400/80 via-sky-500/40 to-transparent"></div>
                 </div>
@@ -1111,7 +1117,7 @@
                         </div>
                         <div class="badge badge-allow" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.35rem 0.75rem;">
                             <span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:#10b981;"></span>
-                            Canary Telemetry Active (25% Ring)
+                            Canary Telemetry Active (10% → 25% → 50% → 100%)
                         </div>
                         <button id="toggleGuideBtn" onclick="toggleUseCaseGuide()" class="btn btn-secondary" style="display: inline-flex; align-items: center; gap: 6px; padding: 0.35rem 0.85rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--color-accent-text, #38bdf8);">
                             <span class="material-symbols-outlined" style="font-size: 16px;">help</span>
@@ -1157,7 +1163,7 @@
                             <span>2. Progressive Canary Gating</span>
                         </div>
                         <p style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
-                            Traffic starts in a <strong>25% Canary Ring</strong> alongside the stable baseline. The multi-factor engine monitors latency deltas, error budget burn, and error rates, deciding automatically whether to promote or roll back.
+                            Traffic advances through progressive rings (<strong>10% → 25% → 50% → 100%</strong>) alongside the stable baseline. The multi-factor engine monitors latency deltas, error budget burn, and error rates, deciding automatically whether to promote or roll back.
                         </p>
                     </div>
 
@@ -1168,7 +1174,7 @@
                             <span>3. Automated Decision Gate</span>
                         </div>
                         <div style="font-size: 0.72rem; line-height: 1.5; color: var(--text-secondary);">
-                            <span style="color: #10b981; font-weight: 700;">🟢 ALLOW (0–39 pts):</span> Promote canary to 100%.<br>
+                            <span style="color: #10b981; font-weight: 700;">🟢 ALLOW (0–39 pts):</span> Promote canary to next ring.<br>
                             <span style="color: #f59e0b; font-weight: 700;">🟡 PAUSE (40–59 pts):</span> Hold canary; alert SRE.<br>
                             <span style="color: #ef4444; font-weight: 700;">🔴 BLOCK (60+ pts):</span> Instant circuit-breaker rollback.
                         </div>
@@ -1182,7 +1188,7 @@
                         <span>Resilience Built-In: Imputes missing telemetry (median) and smooths noisy spikes (3-window moving average).</span>
                     </div>
                     <span style="font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; color: var(--text-muted);">
-                        100% Immutable Evidence Generated Per Decision
+                        Hash-verified Audit Evidence Generated Per Decision
                     </span>
                 </div>
             </div>
@@ -1243,7 +1249,7 @@
                     <div class="wf-node">
                         <div class="wf-icon-box">📜</div>
                         <span class="wf-label">Audit Evidence</span>
-                        <span class="wf-sub">Cryptographic</span>
+                        <span class="wf-sub">Hash-verified</span>
                     </div>
                 </div>
             </div>
