@@ -117,11 +117,13 @@
             color: var(--color-text-primary);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 2rem 1rem;
+            justify-content: flex-start;
+            padding: 5.75rem 1.5rem 3rem;
             position: relative;
             overflow-x: hidden;
+            box-sizing: border-box;
         }
 
         .login-container {
@@ -129,18 +131,38 @@
             max-width: 1220px;
             display: grid;
             grid-template-columns: 1.25fr 1fr;
-            gap: 2.25rem;
+            gap: 2rem;
             align-items: start;
             position: relative;
             z-index: 10;
             margin: 0 auto;
+            box-sizing: border-box;
         }
 
-        @media (max-width: 980px) {
+        @media (max-width: 1024px) {
             .login-container {
                 grid-template-columns: 1fr;
-                max-width: 520px;
+                max-width: 600px;
+                gap: 1.5rem;
             }
+        }
+
+        @media (max-width: 767px) {
+            body {
+                padding: 7rem 1rem 2.5rem;
+            }
+        }
+
+        .header-logo-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .header-btn-action .material-symbols-outlined {
+            font-size: 15px;
+            color: #38bdf8;
         }
 
         .usecase-hero {
@@ -280,7 +302,7 @@
 
         .login-card {
             width: 100%;
-            max-width: 480px;
+            max-width: 100%;
             background: var(--color-bg-card);
             backdrop-filter: blur(28px) saturate(140%);
             -webkit-backdrop-filter: blur(28px) saturate(140%);
@@ -614,15 +636,55 @@
         <div class="shooting-star-2"></div>
     </div>
 
-    <!-- Fixed Theme Toggle Button -->
-    <div style="position: fixed; top: 1.25rem; right: 1.25rem; z-index: 100;">
-        <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme();" title="Toggle Light / Dark Mode">
-            <span class="material-symbols-outlined theme-toggle-icon" style="font-size: 16px;">dark_mode</span>
-            <span class="theme-toggle-text">Dark Mode</span>
-        </button>
-    </    <div class="login-container">
+    <!-- Top Enterprise Header -->
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div class="header-top-row">
+                <a href="dashboard.html" class="header-brand">
+                    <div class="header-logo-icon">
+                        <img src="img/falcon-eye-icon.svg" alt="Falcon Eye Logo" />
+                    </div>
+                    <div class="header-brand-text">
+                        <span class="header-brand-title">Falcon Eye</span>
+                        <span class="header-brand-badge">Regulated Change Assurance</span>
+                    </div>
+                </a>
+
+                <!-- Mobile Header Controls (< 768px) -->
+                <div class="header-mobile-actions">
+                    <button class="theme-toggle-btn" onclick="toggleTheme();" title="Toggle Light / Dark Mode">
+                        <span class="material-symbols-outlined theme-toggle-icon" style="font-size: 16px;">dark_mode</span>
+                    </button>
+                    <a href="dashboard.html" class="header-btn-action" style="text-decoration: none; height: 2rem; padding: 0 0.65rem; font-size: 0.72rem;">
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Desktop & Tablet Controls Right -->
+            <div class="header-controls">
+                <!-- Top Information Banner -->
+                <div class="header-info-banner">
+                    <span class="header-info-banner-dot"></span>
+                    <span class="header-info-banner-text">Canary Telemetry Active</span>
+                </div>
+
+                <a href="dashboard.html" class="header-btn-action" style="text-decoration: none;">
+                    <span class="material-symbols-outlined" style="font-size: 15px; color: #38bdf8;">dashboard</span>
+                    <span>Direct Dashboard</span>
+                </a>
+
+                <button id="themeToggleBtn" class="theme-toggle-btn" onclick="toggleTheme();" title="Toggle Light / Dark Mode">
+                    <span class="material-symbols-outlined theme-toggle-icon" style="font-size: 16px;">dark_mode</span>
+                    <span class="theme-toggle-text">Dark Mode</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="login-container">
         <!-- Global Simulated Demo Notice -->
-        <div class="demo-disclaimer-banner" style="grid-column: 1 / -1; margin-bottom: 0.25rem;">
+        <div class="demo-disclaimer-banner" style="grid-column: 1 / -1; margin-bottom: 0.75rem;">
             <span class="material-symbols-outlined" style="font-size: 16px; color: #38bdf8;">info</span>
             <span>Simulated demo data - no real production systems, authentication or audit ledger.</span>
         </div>
@@ -785,7 +847,7 @@
                     </div>
                 </div>
             </div>
-        </div>   </div>
+        </div>
 
         <!-- RIGHT COLUMN: Login Card -->
         <div class="login-card glass-card">
@@ -800,8 +862,8 @@
                 <div style="width: 76px; height: 76px; border-radius: 20px; background: rgba(14, 165, 233, 0.1); border: 1px solid rgba(56, 189, 248, 0.35); display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: 0 0 25px rgba(14, 165, 233, 0.25);">
                     <img src="img/falcon-eye-icon.svg" alt="Falcon Eye Logo" style="width: 100%; height: 100%; object-fit: contain;" />
                 </div>
-                <div style="margin-top: 10px; font-size: 1.35rem; font-weight: 800; letter-spacing: 4px; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
-                    FALCON <span style="font-weight: 300; color: #e2e8f0;">EYE</span>
+                <div class="brand-wordmark" style="margin-top: 10px; font-size: 1.35rem; font-weight: 800; letter-spacing: 4px; color: var(--color-text-primary); font-family: -apple-system, BlinkMacSystemFont, sans-serif;">
+                    FALCON <span class="brand-wordmark-light" style="font-weight: 300; color: var(--color-text-secondary);">EYE</span>
                 </div>
             </div>
 
